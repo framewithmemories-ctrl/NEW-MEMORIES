@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Important SEO pages
+Allow: /shop
+Allow: /customize
+Allow: /gift-finder
+Allow: /reviews
+Allow: /about
+
+# Sitemap location
+Sitemap: https://photogifthub.preview.emergentagent.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
