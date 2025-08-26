@@ -1119,6 +1119,190 @@ const FeaturesSection = () => {
   );
 };
 
+// FAQ Section for SEO
+const FAQSection = () => {
+  const faqs = [
+    {
+      question: "What types of photo frames do you offer?",
+      answer: "We offer a wide variety of premium photo frames including wooden frames (oak, teak, mahogany), acrylic frames, metal frames, and LED backlit frames. All frames come in multiple sizes from 8x10 to 20x24 inches with various color options."
+    },
+    {
+      question: "Can I get same-day pickup in Coimbatore?",
+      answer: "Yes! We offer same-day pickup for orders placed before 4 PM. Our store is located in RS Puram, Coimbatore. We also provide express delivery across Tamil Nadu within 24-48 hours."
+    },
+    {
+      question: "What image quality do you recommend for best results?",
+      answer: "For best print quality, we recommend high-resolution images (minimum 1000x1000 pixels). Our AI quality checker automatically analyzes your photos and suggests optimal frame sizes. We also provide guidance on improving image quality."
+    },
+    {
+      question: "Do you offer custom sizes and bulk orders?",
+      answer: "Absolutely! We specialize in custom sizes and bulk orders for corporate gifts, wedding favors, and events. Contact us at +91 98765 43210 for special pricing on orders of 10+ frames."
+    },
+    {
+      question: "What's included with my photo frame order?",
+      answer: "Every order includes professional printing, premium frame materials, protective packaging, and free gift wrapping. We also provide wall mounting hardware and a quality guarantee certificate."
+    },
+    {
+      question: "How does the AI Gift Finder work?",
+      answer: "Our AI Gift Finder asks 5 simple questions about the recipient, occasion, and budget. Using advanced algorithms, it suggests personalized frame styles, sizes, and customization options that match your preferences perfectly."
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <Badge className="bg-blue-100 text-blue-800 mb-4">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            Got Questions?
+          </Badge>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Frequently Asked 
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Questions</span>
+          </h2>
+          <p className="text-xl text-gray-600">
+            Everything you need to know about PhotoGiftHub's custom photo frames and services
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {faqs.map((faq, index) => (
+            <Card key={index} className="border-blue-200 hover:border-blue-300 transition-colors">
+              <CardHeader>
+                <CardTitle className="text-lg text-blue-900 flex items-start">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm mr-3 mt-0.5 flex-shrink-0">
+                    {index + 1}
+                  </div>
+                  {faq.question}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pl-12">
+                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <p className="text-gray-600 mb-4">Still have questions?</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              className="bg-green-600 hover:bg-green-700 text-white"
+              onClick={() => window.open('https://wa.me/919876543210?text=Hi! I have a question about custom photo frames', '_blank')}
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              WhatsApp Us
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-blue-200 text-blue-700 hover:bg-blue-50"
+              onClick={() => window.open('tel:+919876543210', '_blank')}
+            >
+              <Phone className="w-4 h-4 mr-2" />
+              Call: +91 98765 43210
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Blog Section for SEO
+const BlogSection = () => {
+  const blogPosts = [
+    {
+      title: "10 Creative Ways to Display Family Photos in Your Home",
+      excerpt: "Transform your living space with these innovative photo display ideas that go beyond traditional frames...",
+      image: "https://images.unsplash.com/photo-1505841468529-d99f8d82ef8f?auto=format&fit=crop&w=400&h=200",
+      date: "January 20, 2025",
+      readTime: "5 min read",
+      category: "Home Decor"
+    },
+    {
+      title: "The Ultimate Guide to Photo Frame Sizes and Placement",
+      excerpt: "Learn the perfect dimensions and positioning techniques for creating stunning gallery walls that impress...",
+      image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=400&h=200",
+      date: "January 18, 2025",
+      readTime: "8 min read",
+      category: "Photography Tips"
+    },
+    {
+      title: "Wedding Photo Ideas: Capturing Memories That Last Forever",
+      excerpt: "Discover the most romantic and creative wedding photography ideas for frames that tell your love story...",
+      image: "https://images.unsplash.com/photo-1465161191540-aac346fcbaff?auto=format&fit=crop&w=400&h=200",
+      date: "January 15, 2025",
+      readTime: "6 min read",
+      category: "Wedding"
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <Badge className="bg-purple-100 text-purple-800 mb-4">
+            <Camera className="w-3 h-3 mr-1" />
+            Expert Tips & Ideas
+          </Badge>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Photography & 
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"> Framing </span>
+            Blog
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Get inspired with our latest tips, trends, and creative ideas for displaying your precious memories
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {blogPosts.map((post, index) => (
+            <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-purple-100 hover:border-purple-200 overflow-hidden">
+              <div className="relative overflow-hidden">
+                <img 
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <Badge className="absolute top-3 left-3 bg-purple-500 text-white">
+                  {post.category}
+                </Badge>
+              </div>
+              
+              <CardHeader>
+                <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+                  <span>{post.date}</span>
+                  <span>{post.readTime}</span>
+                </div>
+                <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2">
+                  {post.title}
+                </CardTitle>
+                <CardDescription className="text-gray-600 line-clamp-3">
+                  {post.excerpt}
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                <Button variant="ghost" className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-0">
+                  Read More
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+            View All Articles
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // Enhanced Footer Component
 const Footer = () => {
   return (
