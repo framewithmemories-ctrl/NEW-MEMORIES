@@ -1452,6 +1452,307 @@ const FeaturesSection = () => {
   );
 };
 
+// Customer Testimonials Section
+const TestimonialsSection = () => {
+  const testimonials = [
+    {
+      name: 'Priya Sharma',
+      location: 'Saravanampatti',
+      rating: 5,
+      text: 'Amazing quality frames! The sublimation printing is crystal clear and the wooden frame is beautifully crafted. Highly recommend Memories for all your photo frame needs.',
+      image: 'https://images.unsplash.com/photo-1494790108755-2616c0763c65?auto=format&fit=crop&w=150&h=150',
+      product: 'Custom Photo Frame'
+    },
+    {
+      name: 'Rajesh Kumar',
+      location: 'RS Puram',
+      rating: 5,
+      text: 'Ordered 50 corporate mugs for our company event. Exceptional quality and delivered on time. The team at Memories is very professional and helpful.',
+      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150',
+      product: 'Corporate Mugs'
+    },
+    {
+      name: 'Meera Krishnan',
+      location: 'Peelamedu',
+      rating: 5,
+      text: 'Got custom t-shirts made for my daughter\'s birthday party. The prints are vibrant and the fabric quality is excellent. Kids loved them!',
+      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&h=150',
+      product: 'Custom T-Shirts'
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-rose-50 to-pink-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <Badge className="bg-green-100 text-green-800 mb-4">
+            <ThumbsUp className="w-3 h-3 mr-1" />
+            Customer Reviews
+          </Badge>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            What Our 
+            <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent"> Customers </span>
+            Say
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Real reviews from real customers who love their personalized memories
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <Card key={index} className="border-green-200 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  {/* Rating */}
+                  <div className="flex items-center space-x-1">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  
+                  {/* Review Text */}
+                  <blockquote className="text-gray-700 leading-relaxed">
+                    <Quote className="w-5 h-5 text-gray-400 mb-2" />
+                    "{testimonial.text}"
+                  </blockquote>
+                  
+                  {/* Product Badge */}
+                  <Badge variant="secondary" className="bg-rose-100 text-rose-800">
+                    {testimonial.product}
+                  </Badge>
+                  
+                  {/* Customer Info */}
+                  <div className="flex items-center space-x-3 pt-4 border-t border-gray-200">
+                    <img 
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                      <div className="text-sm text-gray-600 flex items-center">
+                        <MapPin className="w-3 h-3 mr-1" />
+                        {testimonial.location}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Google Reviews CTA */}
+        <div className="text-center mt-12">
+          <div className="bg-white rounded-2xl p-8 shadow-lg border border-green-200 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center space-x-4 mb-4">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+                alt="Google"
+                className="w-8 h-8"
+              />
+              <div className="text-2xl font-bold text-gray-900">4.9★ on Google Reviews</div>
+            </div>
+            <p className="text-gray-600 mb-6">Join 263+ happy customers who rated us 5 stars!</p>
+            <div className="space-x-4">
+              <Button 
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => window.open('https://g.page/r/memories-photo-frames', '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Read All Reviews
+              </Button>
+              <Button 
+                variant="outline"
+                className="border-green-200 text-green-700 hover:bg-green-50"
+                onClick={() => window.open('https://g.page/r/memories-photo-frames/review', '_blank')}
+              >
+                <Star className="w-4 h-4 mr-2" />
+                Write a Review
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Enhanced Footer
+const Footer = () => {
+  return (
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-16">
+          {/* Company Info */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3">
+              <AnimatedLogo size="w-12 h-12" />
+              <div>
+                <div className="text-xl font-bold text-white">Memories</div>
+                <div className="text-sm text-gray-400">Photo Frames & Gifts</div>
+              </div>
+            </div>
+            
+            <p className="text-gray-300 leading-relaxed">
+              Creating beautiful personalized memories since 2020. Your trusted partner for premium photo frames, 
+              custom gifts, and sublimation printing in Coimbatore.
+            </p>
+            
+            <div className="flex space-x-4">
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-gray-400 hover:text-white hover:bg-gray-800"
+                onClick={() => window.open('https://instagram.com/memories_photoframes', '_blank')}
+              >
+                <Instagram className="w-5 h-5" />
+              </Button>
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-gray-400 hover:text-white hover:bg-gray-800"
+                onClick={() => window.open('https://facebook.com/memories.photoframes', '_blank')}
+              >
+                <Facebook className="w-5 h-5" />
+              </Button>
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-gray-400 hover:text-white hover:bg-gray-800"
+                onClick={() => window.open('https://wa.me/918148040148', '_blank')}
+              >
+                <MessageCircle className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-6">Quick Links</h3>
+            <div className="space-y-3">
+              <a href="#shop" className="block text-gray-300 hover:text-white transition-colors">Shop Products</a>
+              <a href="#customizer" className="block text-gray-300 hover:text-white transition-colors">Photo Customizer</a>
+              <a href="#ai-finder" className="block text-gray-300 hover:text-white transition-colors">AI Gift Finder</a>
+              <a href="#about" className="block text-gray-300 hover:text-white transition-colors">About Us</a>
+              <Button 
+                variant="ghost" 
+                className="p-0 text-gray-300 hover:text-white h-auto"
+                onClick={() => window.open('tel:+918148040148', '_blank')}
+              >
+                Bulk Orders
+              </Button>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-6">Contact Info</h3>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <MapPin className="w-5 h-5 text-rose-400 mt-1 flex-shrink-0" />
+                <div className="text-gray-300">
+                  <div className="font-medium text-white">Visit Our Store</div>
+                  <div>19B Kani Illam, Keeranatham Road</div>
+                  <div>Near Ruby School, Saravanampatti</div>
+                  <div>Coimbatore, Tamil Nadu 641035</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Phone className="w-5 h-5 text-rose-400" />
+                <div>
+                  <div className="font-medium text-white">Call Us</div>
+                  <a href="tel:+918148040148" className="text-gray-300 hover:text-white transition-colors">
+                    +91 81480 40148
+                  </a>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Clock className="w-5 h-5 text-rose-400" />
+                <div>
+                  <div className="font-medium text-white">Store Hours</div>
+                  <div className="text-gray-300">Mon-Sat: 9:30AM - 9:00PM</div>
+                  <div className="text-gray-300">Sunday: Closed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-6">Our Services</h3>
+            <div className="space-y-3 text-gray-300">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Custom Photo Frames</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Sublimation Printing</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Personalized Mugs</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Custom T-Shirts</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Corporate Gifts</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-400" />
+                <span>Bulk Orders</span>
+              </div>
+              
+              <div className="pt-4">
+                <Button 
+                  className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white w-full"
+                  onClick={() => window.open('https://wa.me/918148040148?text=Hi! I need help with custom gifts', '_blank')}
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Get Quote
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="text-gray-400 text-center md:text-left">
+              <p>&copy; 2025 Memories - Photo Frames & Customized Gift Shop. All rights reserved.</p>
+              <p className="text-sm mt-1">Proudly serving Coimbatore since 2020 | 4.9★ Google Rating</p>
+            </div>
+            
+            <div className="flex items-center space-x-6 text-gray-400">
+              <Badge className="bg-green-100 text-green-800">
+                <Shield className="w-3 h-3 mr-1" />
+                Secure Payments
+              </Badge>
+              <Badge className="bg-blue-100 text-blue-800">
+                <Truck className="w-3 h-3 mr-1" />
+                Free Delivery
+              </Badge>
+              <Badge className="bg-purple-100 text-purple-800">
+                <Award className="w-3 h-3 mr-1" />
+                Quality Guaranteed
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
