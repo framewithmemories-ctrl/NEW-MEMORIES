@@ -1800,6 +1800,8 @@ const Home = () => {
       <PhotoCustomizer />
       <AIGiftFinder />
       <FeaturesSection />
+      <TestimonialsSection />
+      <Footer />
       <WhatsAppFloat />
       <Toaster />
     </div>
