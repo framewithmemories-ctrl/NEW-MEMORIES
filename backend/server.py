@@ -106,106 +106,133 @@ class GiftQuizResponse(BaseModel):
     recipient: str
     occasion: str
     age_group: str
-    interests: List[str]
+    interests: List[str] = []
     budget: str
     relationship: str
 
-# Initialize sample products
+# Initialize sample products for Memories
 sample_products = [
     {
-        "name": "Classic Wooden Frame",
-        "description": "Handcrafted wooden frame perfect for cherished memories",
+        "name": "Premium Wooden Photo Frame",
+        "description": "Handcrafted wooden frame perfect for your precious memories",
         "category": "frames",
         "base_price": 899.0,
         "sizes": [
             {"name": "8x10", "price_add": 0},
-            {"name": "12x16", "price_add": 200},
-            {"name": "16x20", "price_add": 400}
+            {"name": "12x16", "price_add": 300},
+            {"name": "16x20", "price_add": 600},
+            {"name": "20x24", "price_add": 1000}
         ],
         "materials": [
-            {"name": "Oak", "price_add": 0},
-            {"name": "Teak", "price_add": 300},
-            {"name": "Mahogany", "price_add": 500}
+            {"name": "Teak Wood", "price_add": 0},
+            {"name": "Mahogany", "price_add": 200},
+            {"name": "Oak Wood", "price_add": 150}
         ],
         "colors": [
-            {"name": "Natural", "price_add": 0},
+            {"name": "Natural Wood", "price_add": 0},
             {"name": "Dark Brown", "price_add": 50},
-            {"name": "Black", "price_add": 50}
+            {"name": "Black Finish", "price_add": 75}
         ],
         "image_url": "https://images.unsplash.com/photo-1465161191540-aac346fcbaff"
     },
     {
-        "name": "Premium Acrylic Frame",
-        "description": "Modern acrylic frame with crystal-clear finish",
-        "category": "frames",
+        "name": "Crystal Clear Acrylic Frame",
+        "description": "Modern acrylic frame with crystal-clear transparency",
+        "category": "acrylic",
         "base_price": 1299.0,
         "sizes": [
             {"name": "8x10", "price_add": 0},
-            {"name": "12x16", "price_add": 300},
-            {"name": "16x20", "price_add": 600}
+            {"name": "12x16", "price_add": 400},
+            {"name": "16x20", "price_add": 700},
+            {"name": "20x24", "price_add": 1100}
         ],
         "materials": [
-            {"name": "Clear Acrylic", "price_add": 0},
-            {"name": "Frosted Acrylic", "price_add": 200}
+            {"name": "Premium Acrylic", "price_add": 0},
+            {"name": "UV Protected", "price_add": 300}
         ],
         "colors": [
-            {"name": "Clear", "price_add": 0},
-            {"name": "Smoky", "price_add": 100}
+            {"name": "Crystal Clear", "price_add": 0},
+            {"name": "Frosted", "price_add": 150}
         ],
         "image_url": "https://images.unsplash.com/photo-1505841468529-d99f8d82ef8f"
     },
     {
-        "name": "Custom Photo Mug",
-        "description": "Personalized ceramic mug with your favorite photo",
+        "name": "Personalized Photo Mug",
+        "description": "Custom ceramic mug with sublimation printing - perfect gift",
         "category": "mugs",
-        "base_price": 349.0,
+        "base_price": 299.0,
         "sizes": [
-            {"name": "11oz", "price_add": 0},
-            {"name": "15oz", "price_add": 100}
+            {"name": "11oz Standard", "price_add": 0},
+            {"name": "15oz Large", "price_add": 100},
+            {"name": "Magic Color Changing", "price_add": 200}
         ],
         "materials": [
             {"name": "Ceramic", "price_add": 0},
-            {"name": "Magic Mug", "price_add": 200}
+            {"name": "Premium Ceramic", "price_add": 100}
         ],
         "colors": [
             {"name": "White", "price_add": 0},
             {"name": "Black", "price_add": 50},
-            {"name": "Blue", "price_add": 50}
+            {"name": "Colored Handle", "price_add": 75}
         ],
-        "image_url": "https://images.unsplash.com/photo-1513885535751-8b9238bd345a"
+        "image_url": "https://images.unsplash.com/photo-1628313388777-9b9a751dfc6a"
     },
     {
-        "name": "LED Photo Frame",
-        "description": "Illuminated frame that brings your photos to life",
-        "category": "led",
-        "base_price": 1999.0,
+        "name": "Custom T-Shirt Printing",
+        "description": "High-quality sublimation printed t-shirts with your design",
+        "category": "t-shirts",
+        "base_price": 399.0,
         "sizes": [
-            {"name": "8x10", "price_add": 0},
-            {"name": "12x16", "price_add": 500}
+            {"name": "S", "price_add": 0},
+            {"name": "M", "price_add": 0},
+            {"name": "L", "price_add": 50},
+            {"name": "XL", "price_add": 100},
+            {"name": "XXL", "price_add": 150}
         ],
         "materials": [
-            {"name": "LED Backlit", "price_add": 0},
-            {"name": "RGB LED", "price_add": 800}
+            {"name": "100% Cotton", "price_add": 0},
+            {"name": "Cotton Blend", "price_add": 50},
+            {"name": "Premium Cotton", "price_add": 150}
         ],
         "colors": [
-            {"name": "White Light", "price_add": 0},
-            {"name": "Warm Light", "price_add": 0},
-            {"name": "Cool Light", "price_add": 0}
+            {"name": "White", "price_add": 0},
+            {"name": "Black", "price_add": 25},
+            {"name": "Colored", "price_add": 50}
         ],
-        "image_url": "https://images.unsplash.com/photo-1510284876186-b1a84b94418f"
+        "image_url": "https://images.unsplash.com/photo-1576566588028-4147f3842f27"
+    },
+    {
+        "name": "Corporate Gift Package",
+        "description": "Professional corporate gifts with custom branding solutions",
+        "category": "corporate",
+        "base_price": 999.0,
+        "sizes": [
+            {"name": "Basic Package", "price_add": 0},
+            {"name": "Standard Package", "price_add": 500},
+            {"name": "Premium Package", "price_add": 1000}
+        ],
+        "materials": [
+            {"name": "Standard Quality", "price_add": 0},
+            {"name": "Premium Quality", "price_add": 300}
+        ],
+        "colors": [
+            {"name": "Corporate Theme", "price_add": 0},
+            {"name": "Custom Branding", "price_add": 200}
+        ],
+        "image_url": "https://images.unsplash.com/photo-1513885535751-8b9238bd345a"
     }
 ]
 
 # API Routes
 @api_router.get("/")
 async def root():
-    return {"message": "PhotoGiftHub API Ready!"}
+    return {"message": "Memories - Photo Frames & Customized Gift Shop API Ready! 📸🎁"}
 
 @api_router.get("/products", response_model=List[Product])
 async def get_products(category: Optional[str] = None):
     query = {}
-    if category:
-        query["category"] = category
+    if category and category != 'All':
+        query["category"] = category.lower()
     
     products = await db.products.find(query).to_list(100)
     if not products:
@@ -262,7 +289,7 @@ async def get_user_designs(user_id: str):
 @api_router.post("/upload-image")
 async def upload_image(file: UploadFile = File(...)):
     if not file.content_type.startswith('image/'):
-        raise HTTPException(status_code=400, detail="File must be an image")
+        raise HTTPException(status_code=400, detail="File must be an image (JPG, PNG, HEIC)")
     
     # Read and process image
     contents = await file.read()
@@ -270,23 +297,29 @@ async def upload_image(file: UploadFile = File(...)):
     # Convert to base64 for storage/preview
     image_base64 = base64.b64encode(contents).decode('utf-8')
     
-    # Basic image validation
+    # Basic image validation with enhanced feedback
     try:
         image = Image.open(io.BytesIO(contents))
         width, height = image.size
         
-        # Quality warning if too small
-        quality_warning = width < 1000 or height < 1000
+        # Quality warning with specific recommendations
+        quality_warning = width < 1500 or height < 1500
+        
+        if quality_warning:
+            message = f"⚠️ Image resolution is {width}x{height}px. For best print quality, we recommend minimum 2000x2000px. Current image is suitable for smaller sizes (8x10 or 12x16)."
+        else:
+            message = f"✅ Excellent quality image ({width}x{height}px) - Perfect for all frame sizes!"
         
         return {
             "success": True,
             "image_data": image_base64,
             "dimensions": {"width": width, "height": height},
             "quality_warning": quality_warning,
-            "message": "Low resolution detected. Consider a larger image for best print quality." if quality_warning else "Image uploaded successfully"
+            "message": message,
+            "recommended_sizes": ["8x10", "12x16"] if quality_warning else ["8x10", "12x16", "16x20", "20x24"]
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail="Invalid image file")
+        raise HTTPException(status_code=400, detail="Invalid image file. Please upload JPG, PNG, or HEIC format.")
 
 @api_router.post("/gift-suggestions")
 async def get_gift_suggestions(quiz_data: GiftQuizResponse):
@@ -294,54 +327,87 @@ async def get_gift_suggestions(quiz_data: GiftQuizResponse):
         # Initialize LLM chat for gift suggestions
         emergent_key = os.environ.get('EMERGENT_LLM_KEY', '')
         if not emergent_key:
-            raise HTTPException(status_code=500, detail="LLM service not configured")
+            raise HTTPException(status_code=500, detail="AI service temporarily unavailable")
         
         chat = LlmChat(
             api_key=emergent_key,
-            session_id=f"gift_quiz_{uuid.uuid4()}",
-            system_message="""You are a gifting expert for PhotoGiftHub, a premium photo frames and custom gifts shop. 
-            Based on user's quiz responses, suggest 3-4 personalized gift recommendations from these categories:
-            - Photo Frames (wooden, acrylic, LED)
-            - Custom Mugs 
-            - Photo Collages
-            - Personalized Gifts
+            session_id=f"memories_gift_quiz_{uuid.uuid4()}",
+            system_message="""You are a gifting expert for "Memories - Photo Frames & Customized Gift Shop" located in Coimbatore. 
+            We specialize in:
+            - Premium Photo Frames (wooden, acrylic, LED)
+            - Sublimation Printing (mugs, t-shirts)
+            - Corporate Gifts & Bulk Orders
+            - Personalized Memory Products
             
-            For each suggestion, provide:
-            1. Product name and brief description
+            Based on the user's quiz responses, suggest 3-4 specific gift recommendations with:
+            1. Product name with personalization ideas
             2. Why it's perfect for this recipient/occasion
-            3. Personalization ideas
-            4. Estimated price range
+            3. Estimated price range
+            4. Customization suggestions
             
-            Keep suggestions warm, personal, and focused on preserving memories."""
+            Keep suggestions warm, personal, and focused on creating lasting memories. Always mention we're located in Keeranatham Road, Coimbatore and offer free home delivery."""
         ).with_model("openai", "gpt-4o-mini")
         
         quiz_text = f"""
         Gift recipient: {quiz_data.recipient}
         Occasion: {quiz_data.occasion}
         Age group: {quiz_data.age_group}
-        Interests: {', '.join(quiz_data.interests)}
+        Interests: {', '.join(quiz_data.interests) if quiz_data.interests else 'Not specified'}
         Budget: {quiz_data.budget}
         Relationship: {quiz_data.relationship}
         """
         
-        user_message = UserMessage(text=f"Based on this information, suggest personalized photo gifts: {quiz_text}")
+        user_message = UserMessage(text=f"Based on this information, suggest personalized gifts from Memories shop: {quiz_text}")
         response = await chat.send_message(user_message)
         
         return {
             "suggestions": response,
-            "quiz_data": quiz_data.dict()
+            "quiz_data": quiz_data.dict(),
+            "shop_info": {
+                "name": "Memories - Photo Frames & Customized Gift Shop",
+                "phone": "+91 81480 40148",
+                "address": "19B Kani Illam, Keeranatham Road, Coimbatore",
+                "specialties": ["Photo Frames", "Sublimation Printing", "Corporate Gifts"]
+            }
         }
         
     except Exception as e:
+        # Fallback suggestions based on quiz data
+        fallback_suggestions = f"""Based on your preferences for {quiz_data.recipient} on {quiz_data.occasion}:
+
+🎁 **Recommended Gifts from Memories:**
+
+1. **Premium Photo Frame Set** (₹899-1599)
+   - Perfect for showcasing precious memories
+   - Available in wooden, acrylic, and LED options
+   - Ideal for {quiz_data.occasion} celebrations
+
+2. **Custom Photo Mug** (₹299-499)
+   - Personalized with favorite photos
+   - Great for daily use and memories
+   - Sublimation printing for durability
+
+3. **Personalized T-Shirt** (₹399-599)
+   - Custom design with photos or text
+   - High-quality sublimation printing
+   - Perfect casual gift
+
+📍 **Visit Us:** 19B Kani Illam, Keeranatham Road, Coimbatore
+📞 **Call:** +91 81480 40148
+🚚 **Free Home Delivery Available!**
+
+*We specialize in creating lasting memories through quality craftsmanship.*"""
+        
         return {
-            "suggestions": "I'd recommend a beautiful wooden photo frame or a custom photo mug based on your preferences. Our team can help you create something special!",
-            "error": str(e)
+            "suggestions": fallback_suggestions,
+            "quiz_data": quiz_data.dict(),
+            "note": "Generated using our curated recommendations"
         }
 
 @api_router.post("/orders", response_model=Order)
 async def create_order(order: OrderCreate):
-    # Calculate points earned (2% of order value)
-    points_earned = int(order.total_amount * 0.02)
+    # Calculate points earned (3% of order value for Memories customers)
+    points_earned = int(order.total_amount * 0.03)
     
     order_dict = order.dict()
     order_dict["points_earned"] = points_earned
@@ -354,9 +420,12 @@ async def create_order(order: OrderCreate):
         user = await db.users.find_one({"id": order.user_id})
         if user:
             new_points = user.get("points", 0) + points_earned
+            # Update tier based on total points
+            new_tier = "Platinum" if new_points >= 5000 else "Gold" if new_points >= 2000 else "Silver"
+            
             await db.users.update_one(
                 {"id": order.user_id},
-                {"$set": {"points": new_points}}
+                {"$set": {"points": new_points, "tier": new_tier}}
             )
     
     return order_obj
@@ -365,6 +434,51 @@ async def create_order(order: OrderCreate):
 async def get_user_orders(user_id: str):
     orders = await db.orders.find({"user_id": user_id}).to_list(50)
     return [Order(**order) for order in orders]
+
+@api_router.get("/store-info")
+async def get_store_info():
+    return {
+        "name": "Memories - Photo Frames & Customized Gift Shop",
+        "tagline": "Creating Beautiful Memories Since 2020",
+        "address": {
+            "street": "19B Kani Illam, Keeranatham Road",
+            "area": "Near Ruby School, Saravanampatti",
+            "city": "Coimbatore",
+            "state": "Tamil Nadu",
+            "pincode": "641035",
+            "landmark": "Near Ruby School"
+        },
+        "contact": {
+            "phone": "+91 81480 40148",
+            "whatsapp": "+91 81480 40148",
+            "email": "memories@photogifthub.com"
+        },
+        "hours": {
+            "monday_saturday": "9:30 AM - 9:00 PM",
+            "sunday": "Closed",
+            "note": "Extended hours during festive seasons"
+        },
+        "services": [
+            "Premium Photo Frames",
+            "Sublimation Printing",
+            "Custom Photo Mugs",
+            "Personalized T-Shirts",
+            "Corporate Gifts",
+            "Bulk Orders",
+            "Free Home Delivery"
+        ],
+        "specialties": [
+            "Handcrafted wooden frames",
+            "Crystal clear acrylic frames", 
+            "High-quality sublimation printing",
+            "Same-day printing services",
+            "Corporate branding solutions"
+        ],
+        "google_rating": "4.9/5",
+        "total_reviews": 263,
+        "established": 2020,
+        "google_maps": "https://maps.google.com/?q=19B+Kani+Illam+Keeranatham+Road+Coimbatore"
+    }
 
 # Include the router in the main app
 app.include_router(api_router)
