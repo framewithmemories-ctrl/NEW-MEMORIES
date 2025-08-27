@@ -9,7 +9,7 @@ Allow: /reviews
 Allow: /about
 
 # Sitemap location
-Sitemap: https://photogifthub.preview.emergentagent.com/sitemap.xml
+Sitemap: https://frameify-store.preview.emergentagent.com/sitemap.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1
