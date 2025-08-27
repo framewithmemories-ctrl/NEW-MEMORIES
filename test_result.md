@@ -210,8 +210,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "FastAPI Backend Setup"
-    - "Image Upload and Processing"
     - "Photo Customizer Interface"
   stuck_tasks: []
   test_all: false
