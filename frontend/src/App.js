@@ -1497,6 +1497,8 @@ const Home = () => {
       <AboutUsSection />
       <ProductGrid products={products} />
       <PhotoCustomizer />
+      <AIGiftFinder />
+      <FeaturesSection />
       <WhatsAppFloat />
       <Toaster />
     </div>
