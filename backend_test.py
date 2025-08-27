@@ -206,7 +206,7 @@ class PhotoGiftHubAPITester:
                     success = False
                     details = f"Missing order fields: {missing_fields}"
                 else:
-                    expected_points = int(899.0 * 0.02)  # 2% of order value
+                    expected_points = int(899.0 * 0.03)  # 3% of order value
                     points_correct = order_data['points_earned'] == expected_points
                     details = f"Order created with ID: {order_data['id']}, Points earned: {order_data['points_earned']} (expected: {expected_points}), Points calculation correct: {points_correct}"
                     if not points_correct:
