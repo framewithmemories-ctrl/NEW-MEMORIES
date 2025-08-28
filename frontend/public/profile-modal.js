@@ -261,6 +261,285 @@ function openProfileModal() {
   
   // Prevent body scroll
   document.body.style.overflow = 'hidden';
+  
+  // Initialize profile content based on existing profile
+  showProfileContent();
+}
+
+function showProfileContent() {
+  const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+  const contentArea = document.getElementById('profile-content');
+  
+  if (!contentArea) return;
+  
+  if (profile.profileComplete) {
+    // Show existing profile
+    const userPhotos = JSON.parse(localStorage.getItem(`memories_photos_${profile.id}`) || '[]');
+    const userWallet = JSON.parse(localStorage.getItem(`memories_wallet_${profile.id}`) || '{}');
+    
+    // Update Photos tab count
+    const photosTab = document.getElementById('tab-photos');
+    if (photosTab) {
+      photosTab.textContent = `Photos (${userPhotos.length})`;
+    }
+    
+    contentArea.innerHTML = `
+      <div style="
+        background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);
+        padding: 32px;
+        border-radius: 16px;
+        margin-bottom: 32px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+          <div style="
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+          ">${profile.name.charAt(0).toUpperCase()}</div>
+          <div>
+            <h3 style="margin: 0; font-size: 24px; font-weight: bold;">Welcome back, ${profile.name}!</h3>
+            <p style="margin: 8px 0 0 0; opacity: 0.95; font-size: 16px;">Member since ${new Date(profile.createdAt).toLocaleDateString()}</p>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">📸</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">${userPhotos.length} Photos</div>
+            <div style="font-size: 12px; opacity: 0.9;">Saved & ready</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">💰</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">₹${(userWallet.balance || 0).toFixed(0)}</div>
+            <div style="font-size: 12px; opacity: 0.9;">Wallet balance</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">⭐</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">${userWallet.rewardPoints || 0}</div>
+            <div style="font-size: 12px; opacity: 0.9;">Reward points</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">🏆</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">${userWallet.tier || 'Silver'}</div>
+            <div style="font-size: 12px; opacity: 0.9;">Membership tier</div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px;">
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">Full Name</label>
+          <input type="text" value="${profile.name}" readonly style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #f7fafc;
+          ">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">Email Address</label>
+          <input type="email" value="${profile.email}" readonly style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #f7fafc;
+          ">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">Phone Number</label>
+          <input type="tel" value="${profile.phone}" readonly style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #f7fafc;
+          ">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">City</label>
+          <input type="text" value="${profile.city}" readonly style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #f7fafc;
+          ">
+        </div>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button onclick="switchTab('photos')" style="
+          background: linear-gradient(135deg, #9c27b0, #ba68c8);
+          color: white;
+          border: none;
+          padding: 14px 24px;
+          border-radius: 10px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 16px;
+          transition: all 0.2s;
+        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          📸 Manage Photos (${userPhotos.length})
+        </button>
+        <button onclick="switchTab('wallet')" style="
+          background: linear-gradient(135deg, #4caf50, #66bb6a);
+          color: white;
+          border: none;
+          padding: 14px 24px;
+          border-radius: 10px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 16px;
+          transition: all 0.2s;
+        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          💰 Digital Wallet (₹${(userWallet.balance || 0).toFixed(0)})
+        </button>
+      </div>
+    `;
+  } else {
+    // Show profile creation form
+    contentArea.innerHTML = `
+      <div style="
+        background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+        padding: 32px;
+        border-radius: 16px;
+        margin-bottom: 32px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+          <div style="
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+          ">U</div>
+          <div>
+            <h3 style="margin: 0; font-size: 24px; font-weight: bold;">Welcome to Memories!</h3>
+            <p style="margin: 8px 0 0 0; opacity: 0.95; font-size: 16px;">Create your profile to unlock all premium features</p>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">📸</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">Photo Storage</div>
+            <div style="font-size: 12px; opacity: 0.9;">Save & reuse photos</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">💰</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">Digital Wallet</div>
+            <div style="font-size: 12px; opacity: 0.9;">Secure payments</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">⭐</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">Rewards</div>
+            <div style="font-size: 12px; opacity: 0.9;">Earn points</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px);">
+            <div style="font-size: 24px; margin-bottom: 8px;">📦</div>
+            <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">Order History</div>
+            <div style="font-size: 12px; opacity: 0.9;">Track orders</div>
+          </div>
+        </div>
+      </div>
+      
+      <form style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">Full Name</label>
+          <input type="text" placeholder="Enter your full name" style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+          " onfocus="this.style.borderColor='#e91e63'; this.style.boxShadow='0 0 0 3px rgba(233,30,99,0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">Email Address</label>
+          <input type="email" placeholder="your@email.com" style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+          " onfocus="this.style.borderColor='#e91e63'; this.style.boxShadow='0 0 0 3px rgba(233,30,99,0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">Phone Number</label>
+          <input type="tel" placeholder="+91 xxxxx xxxxx" style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+          " onfocus="this.style.borderColor='#e91e63'; this.style.boxShadow='0 0 0 3px rgba(233,30,99,0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3748; font-size: 14px;">City</label>
+          <input type="text" placeholder="Coimbatore" style="
+            width: 100%;
+            padding: 14px 16px;
+            border: 2e solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+          " onfocus="this.style.borderColor='#e91e63'; this.style.boxShadow='0 0 0 3px rgba(233,30,99,0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+        </div>
+      </form>
+      
+      <button onclick="createProfile()" style="
+        margin-top: 28px;
+        background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+        color: white;
+        border: none;
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.2s;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(233,30,99,0.3);
+      " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(233,30,99,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(233,30,99,0.3)'">
+        🎉 Create Profile & Unlock All Features
+      </button>
+    `;
+  }
 }
 
 function closeProfileModal() {
