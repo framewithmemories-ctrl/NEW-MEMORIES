@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -19,8 +20,12 @@ import {
   CheckCircle,
   Award,
   Users,
-  TrendingUp
+  TrendingUp,
+  Loader2
 } from "lucide-react";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 export const ReviewSystemEnhanced = () => {
   const [reviews, setReviews] = useState([]);
