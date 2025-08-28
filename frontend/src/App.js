@@ -17,6 +17,8 @@ import { CartProvider, useCart } from "./context/CartContext";
 import { SearchComponent } from "./components/SearchComponent";
 import { UserProfile } from "./components/UserProfile";
 import { HeroSection, AboutUsSection, ProductGrid } from "./components/MainComponents";
+import { AboutUsPage } from "./components/AboutUsPage";
+import { CheckoutPage } from "./components/CheckoutPage";
 import { 
   Upload, 
   Sparkles, 
