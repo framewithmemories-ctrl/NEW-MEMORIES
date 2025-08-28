@@ -119,16 +119,27 @@ const WhatsAppFloat = () => (
   </div>
 );
 
-// Animated Logo Component
+// Animated Logo Component with New Branding
 const AnimatedLogo = ({ size = "w-12 h-12" }) => {
   return (
     <div className={`${size} relative group cursor-pointer`}>
       <img 
-        src="https://customer-assets.emergentagent.com/job_photogifthub/artifacts/kma6onzm_Memories%20Business%20Card-KEERTHANA.png"
-        alt="Memories Logo"
+        src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/6aq8xona_LOGO.png"
+        alt="Logo"
         className={`${size} object-contain rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105`}
       />
     </div>
+  );
+};
+
+// Business Name Component
+const BusinessName = ({ size = "text-2xl" }) => {
+  return (
+    <img 
+      src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/t3qf6xi2_NAME.png"
+      alt="Business Name"
+      className="h-8 object-contain"
+    />
   );
 };
 
