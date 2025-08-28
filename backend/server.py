@@ -590,6 +590,95 @@ async def get_user_orders(user_id: str):
     orders = await db.orders.find({"user_id": user_id}).to_list(50)
     return [Order(**order) for order in orders]
 
+# Review Management Endpoints
+@api_router.post("/reviews", response_model=Review)
+async def create_review(review: ReviewCreate):
+    """Create a new customer review"""
+    try:
+        review_obj = Review(**review.dict())
+        
+        # For now, auto-approve all reviews (can add moderation later)
+        review_obj.approved = True
+        
+        await db.reviews.insert_one(review_obj.dict())
+        return review_obj
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to create review")
+
+@api_router.get("/reviews")
+async def get_reviews(
+    limit: int = 10,
+    offset: int = 0,
+    rating_filter: Optional[int] = None,
+    approved_only: bool = True
+):
+    """Get reviews with pagination and filtering"""
+    try:
+        # Build filter query
+        filter_query = {}
+        if approved_only:
+            filter_query["approved"] = True
+        if rating_filter:
+            filter_query["rating"] = rating_filter
+        
+        # Get total count
+        total_count = await db.reviews.count_documents(filter_query)
+        
+        # Get reviews with pagination, sorted by newest first
+        reviews = await db.reviews.find(filter_query).sort("created_at", -1).skip(offset).limit(limit).to_list(limit)
+        
+        # Calculate rating statistics
+        all_reviews = await db.reviews.find({"approved": True}).to_list(1000)
+        rating_stats = {
+            "total_reviews": len(all_reviews),
+            "average_rating": sum(r["rating"] for r in all_reviews) / len(all_reviews) if all_reviews else 0,
+            "rating_distribution": {
+                "5": len([r for r in all_reviews if r["rating"] == 5]),
+                "4": len([r for r in all_reviews if r["rating"] == 4]),
+                "3": len([r for r in all_reviews if r["rating"] == 3]),
+                "2": len([r for r in all_reviews if r["rating"] == 2]),
+                "1": len([r for r in all_reviews if r["rating"] == 1]),
+            }
+        }
+        
+        return {
+            "reviews": [Review(**review) for review in reviews],
+            "total_count": total_count,
+            "has_more": (offset + limit) < total_count,
+            "rating_stats": rating_stats
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to fetch reviews")
+
+@api_router.get("/reviews/stats")
+async def get_review_stats():
+    """Get review statistics for display"""
+    try:
+        all_reviews = await db.reviews.find({"approved": True}).to_list(1000)
+        
+        if not all_reviews:
+            return {
+                "total_reviews": 0,
+                "average_rating": 0,
+                "rating_distribution": {"5": 0, "4": 0, "3": 0, "2": 0, "1": 0}
+            }
+        
+        average_rating = sum(r["rating"] for r in all_reviews) / len(all_reviews)
+        
+        return {
+            "total_reviews": len(all_reviews),
+            "average_rating": round(average_rating, 1),
+            "rating_distribution": {
+                "5": len([r for r in all_reviews if r["rating"] == 5]),
+                "4": len([r for r in all_reviews if r["rating"] == 4]),
+                "3": len([r for r in all_reviews if r["rating"] == 3]),
+                "2": len([r for r in all_reviews if r["rating"] == 2]),
+                "1": len([r for r in all_reviews if r["rating"] == 1]),
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to fetch review statistics")
+
 @api_router.get("/store-info")
 async def get_store_info():
     return {
