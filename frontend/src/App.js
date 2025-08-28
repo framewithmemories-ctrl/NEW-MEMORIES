@@ -132,14 +132,24 @@ const AnimatedLogo = ({ size = "w-12 h-12" }) => {
   );
 };
 
-// Business Name Component
-const BusinessName = ({ size = "text-2xl" }) => {
+// Smart Call Button Component
+const SmartCallButton = ({ className = "", children, phoneNumber = "+918148040148" }) => {
+  const handleCall = () => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      // Mobile: Open dialer
+      window.open(`tel:${phoneNumber}`, '_blank');
+    } else {
+      // Desktop: Open WhatsApp
+      window.open(`https://wa.me/918148040148?text=Hi! I want to call about your services`, '_blank');
+    }
+  };
+
   return (
-    <img 
-      src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/t3qf6xi2_NAME.png"
-      alt="Business Name"
-      className="h-8 object-contain"
-    />
+    <Button className={className} onClick={handleCall}>
+      {children}
+    </Button>
   );
 };
 
