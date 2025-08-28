@@ -725,6 +725,9 @@ class PhotoGiftHubAPITester:
         # Test AI functionality
         self.test_ai_gift_suggestions()
         
+        # Test Profile Enhancement APIs
+        self.test_profile_enhancement_workflow()
+        
         # Print summary
         print("\n" + "=" * 50)
         print(f"📊 Test Summary: {self.tests_passed}/{self.tests_run} tests passed")
