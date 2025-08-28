@@ -214,6 +214,54 @@ frontend:
         agent: "testing"
         comment: "✅ Product Catalog fully operational. Found 15 product cards displaying correctly with images, pricing (₹899 onwards), and proper structure. All 6 category filters working (All, Frames, Mugs, T-Shirts, Acrylic, Corporate). Category filtering functional - tested 'Frames' filter successfully. 'Add to Cart' and 'Customize' buttons present and clickable. Product section heading 'Our Product Collection' visible. Enhanced products for T-shirts and corporate gifts properly integrated."
 
+  - task: "Profile Enhancements - Photo Storage"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/ProfilePhotoStorage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Created ProfilePhotoStorage component with photo collection, favorites, tags, search/filter, reuse functionality. Integrates with user profiles for secure photo storage."
+
+  - task: "Profile Enhancements - Digital Wallet"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/DigitalWallet.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Created DigitalWallet component with balance management, reward points conversion, transaction history/ledger, add money functionality, and payment integration."
+
+  - task: "Enhanced User Profile Integration"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/UserProfile.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Updated UserProfile component with tabbed interface including Profile, Photos, Wallet, and Orders sections. Integrated ProfilePhotoStorage and DigitalWallet components."
+
+  - task: "Enhanced Drag & Drop Integration"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/DragDropPhotoUpload.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Enhanced DragDropPhotoUpload with profile integration, save to profile functionality, and ability to reuse saved photos from profile collection."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
