@@ -272,7 +272,7 @@ const Header = () => {
               Free Gift Wrap
             </Badge>
             
-            <UserProfileSimple />
+            <div style={{backgroundColor: 'red', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold'}}>U</div>
             <CartIcon />
             
             <SmartCallButton className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white hidden sm:flex">
