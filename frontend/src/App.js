@@ -1659,11 +1659,9 @@ const TestimonialsSection = () => {
         <div className="text-center mt-12">
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-green-200 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-4 mb-4">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
-                alt="Google"
-                className="w-8 h-8"
-              />
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">G</span>
+              </div>
               <div className="text-2xl font-bold text-gray-900">4.9★ on Google Reviews</div>
             </div>
             <p className="text-gray-600 mb-6">Join 263+ happy customers who rated us 5 stars!</p>
