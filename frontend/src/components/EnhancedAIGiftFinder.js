@@ -430,23 +430,43 @@ export const EnhancedAIGiftFinder = () => {
     return '🎁 AI Recommended';
   };
 
+  // FIXED: Add to cart from AI suggestions
+  const handleAddToCart = (suggestion) => {
+    try {
+      const success = addToCart(suggestion.product, {
+        aiRecommendation: true,
+        confidence: suggestion.confidence,
+        reasoning: suggestion.reasoning,
+        smartTag: suggestion.aiTag,
+        previewPhoto: previewPhoto?.url || null
+      });
+      if (success) {
+        toast.success(`${suggestion.product.name} added to cart! 🛒`, {
+          description: `AI Confidence: ${suggestion.confidence}% • ${suggestion.aiTag}`,
+          duration: 3000
+        });
+      }
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      toast.error('Failed to add item to cart. Please try again.');
+    }
+  };
+
+  // Handle photo upload for preview
+  const handlePhotoUploaded = (photoData) => {
+    setPreviewPhoto(photoData);
+    toast.success('Preview photo uploaded! This will enhance your gift recommendations. 📸');
+  };
+
+  // Reset quiz with photo
   const resetQuiz = () => {
     setCurrentStep(0);
     setAnswers({});
     setSuggestions([]);
     setIsLoading(false);
     setAiThinking('');
-  };
-
-  // FIXED: Add to cart from AI suggestions
-  const handleAddToCart = (suggestion) => {
-    const success = addToCart(suggestion.product);
-    if (success) {
-      toast.success(`${suggestion.product.name} added to cart! 🛒`, {
-        description: `AI Confidence: ${suggestion.confidence}%`,
-        duration: 3000
-      });
-    }
+    setPreviewPhoto(null);
+    setShowPhotoUpload(false);
   };
 
   return (
