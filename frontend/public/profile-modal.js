@@ -1,3 +1,131 @@
+// Helper function to generate photo upload button
+function getPhotoUploadButton() {
+  return `
+    <button onclick="
+      const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+      if (!profile.profileComplete) {
+        alert('❌ Please create your profile first to upload photos');
+        switchTab('profile');
+        return;
+      }
+      
+      // Create file input for photo upload
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.multiple = true;
+      input.onchange = function(e) {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        
+        // Process each file
+        files.forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const photoData = {
+              id: 'photo_' + Date.now() + '_' + index,
+              name: file.name,
+              url: event.target.result,
+              size: (file.size / 1024 / 1024).toFixed(2),
+              type: file.type,
+              dimensions: { width: 'Unknown', height: 'Unknown' },
+              tags: ['uploaded'],
+              notes: '',
+              favorite: false,
+              usageCount: 0,
+              savedAt: new Date().toISOString()
+            };
+            
+            // Save to profile photos
+            const existingPhotos = JSON.parse(localStorage.getItem('memories_photos_' + profile.id) || '[]');
+            existingPhotos.unshift(photoData);
+            localStorage.setItem('memories_photos_' + profile.id, JSON.stringify(existingPhotos));
+            
+            // Update UI and refresh photos tab
+            const photosTab = document.getElementById('tab-photos');
+            if (photosTab) {
+              photosTab.textContent = 'Photos (' + existingPhotos.length + ')';
+            }
+            
+            console.log('✅ Photo uploaded successfully:', photoData);
+          };
+          reader.readAsDataURL(file);
+        });
+        
+        alert('📸 Photos uploaded successfully to your profile!\\n\\nRefresh the Photos tab to see them.');
+        // Auto refresh photos tab
+        setTimeout(() => switchTab('photos'), 1000);
+      };
+      input.click();
+    " style="
+      background: linear-gradient(135deg, #9c27b0, #e1bee7);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(156,39,176,0.3);
+    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+      📸 Upload Your First Photo
+    </button>
+  `;
+}
+
+// Helper function to use photo for order
+function usePhotoForOrder(photoId) {
+  const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+  const userPhotos = JSON.parse(localStorage.getItem(`memories_photos_${profile.id}`) || '[]');
+  const photo = userPhotos.find(p => p.id === photoId);
+  
+  if (photo) {
+    // Update usage count
+    photo.usageCount = (photo.usageCount || 0) + 1;
+    photo.lastUsed = new Date().toISOString();
+    
+    // Save updated photos
+    localStorage.setItem(`memories_photos_${profile.id}`, JSON.stringify(userPhotos));
+    
+    // Close modal and scroll to customizer
+    closeProfileModal();
+    setTimeout(() => {
+      const customizer = document.getElementById('customizer');
+      if (customizer) {
+        customizer.scrollIntoView({behavior: 'smooth'});
+      }
+    }, 300);
+    
+    alert(`✅ Using "${photo.name}" for your order!\\n\\nThe photo customizer will load with your selected image.`);
+  }
+}
+
+// Helper function to delete photo
+function deletePhoto(photoId) {
+  if (!confirm('Are you sure you want to delete this photo from your collection?')) {
+    return;
+  }
+  
+  const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+  let userPhotos = JSON.parse(localStorage.getItem(`memories_photos_${profile.id}`) || '[]');
+  
+  // Remove the photo
+  userPhotos = userPhotos.filter(p => p.id !== photoId);
+  localStorage.setItem(`memories_photos_${profile.id}`, JSON.stringify(userPhotos));
+  
+  // Update tab count
+  const photosTab = document.getElementById('tab-photos');
+  if (photosTab) {
+    photosTab.textContent = 'Photos (' + userPhotos.length + ')';
+  }
+  
+  // Refresh photos tab
+  switchTab('photos');
+  
+  alert('📸 Photo deleted from your collection.');
+}
+
 function openProfileModal() {
   // Remove any existing modals
   const existing = document.querySelectorAll('.profile-modal-overlay');
