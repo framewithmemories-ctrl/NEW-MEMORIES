@@ -435,9 +435,23 @@ export const EnhancedAIGiftFinder = () => {
       }));
   };
 
-  const generateSmartTag = (product, answers) => {
+  const generateSmartTag = (product, answers, photoData = null) => {
     const occasion = answers.occasion;
     const budget = answers.budget;
+    
+    // Photo-based tags
+    if (photoData && photoData.dimensions) {
+      const ratio = photoData.dimensions.width / photoData.dimensions.height;
+      if (ratio > 1.3 && product.category === 'frames') {
+        return '📸 Perfect for Your Landscape Photo';
+      }
+      if (ratio < 0.8 && product.category === 'frames') {
+        return '📸 Perfect for Your Portrait Photo';
+      }
+      if (Math.abs(ratio - 1) < 0.2 && product.category === 'frames') {
+        return '📸 Perfect for Your Square Photo';
+      }
+    }
     
     if (occasion === 'anniversary' && product.tags.includes('romantic')) {
       return '💕 Perfect for Anniversary';
