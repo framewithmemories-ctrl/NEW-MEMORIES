@@ -6,8 +6,11 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { toast } from "sonner";
 import axios from 'axios';
+import { ProfilePhotoStorage } from './ProfilePhotoStorage';
+import { DigitalWallet } from './DigitalWallet';
 import { 
   User, 
   Mail, 
@@ -19,7 +22,11 @@ import {
   LogOut,
   Edit,
   Save,
-  X
+  X,
+  Camera,
+  Wallet,
+  Star,
+  Package
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
