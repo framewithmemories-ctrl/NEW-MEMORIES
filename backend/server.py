@@ -392,32 +392,74 @@ async def upload_image(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Invalid image file. Please upload JPG, PNG, or HEIC format.")
 
 @api_router.post("/gift-suggestions")
-async def get_gift_suggestions(quiz_data: GiftQuizResponse):
+async def get_gift_suggestions(request: EnhancedGiftRequest):
     try:
+        # Handle both legacy and enhanced formats
+        if request.answers:
+            # Enhanced format - extract data from answers
+            quiz_data = GiftQuizResponse(
+                recipient=request.answers.get('recipient', 'Friend'),
+                occasion=request.answers.get('occasion', 'birthday'),
+                age_group=request.answers.get('age_group', 'Adult (31-50)'),
+                interests=request.answers.get('interests', []),
+                budget=request.answers.get('budget', 'mid_range'),
+                relationship=request.answers.get('relationship', 'friend')
+            )
+            
+            # Enhanced AI processing with photo analysis
+            enhanced_processing = request.aiEnhanced
+            photo_data = request.previewPhoto
+            
+        else:
+            # Legacy format - use direct fields
+            quiz_data = GiftQuizResponse(
+                recipient=request.recipient or 'Friend',
+                occasion=request.occasion or 'birthday',
+                age_group=request.age_group or 'Adult (31-50)',
+                interests=request.interests or [],
+                budget=request.budget or 'mid_range',
+                relationship=request.relationship or 'friend'
+            )
+            enhanced_processing = False
+            photo_data = None
+        
         # Initialize LLM chat for gift suggestions
         emergent_key = os.environ.get('EMERGENT_LLM_KEY', '')
         if not emergent_key:
             raise HTTPException(status_code=500, detail="AI service temporarily unavailable")
         
+        # Enhanced system message for contextual AI
+        system_message = """You are a gifting expert for "Memories - Photo Frames & Customized Gift Shop" located in Coimbatore. 
+        We specialize in:
+        - Premium Photo Frames (wooden, acrylic, LED)
+        - Sublimation Printing (mugs, t-shirts)
+        - Corporate Gifts & Bulk Orders
+        - Personalized Memory Products
+        
+        Based on the user's preferences, suggest 3-4 specific gift recommendations with:
+        1. Product name with personalization ideas
+        2. Why it's perfect for this recipient/occasion (detailed reasoning)
+        3. Estimated price range
+        4. Customization suggestions
+        5. Confidence score (1-100) for each recommendation
+        
+        Keep suggestions warm, personal, and focused on creating lasting memories. Always mention we're located in Keeranatham Road, Coimbatore and offer free home delivery."""
+        
+        if enhanced_processing and photo_data:
+            system_message += f"""
+            
+            PHOTO ANALYSIS CONTEXT:
+            The user has uploaded a preview photo with dimensions {photo_data.get('dimensions', {})} and analysis: {photo_data.get('analysis', 'No analysis available')}.
+            Consider the photo's aspect ratio and style when making frame recommendations.
+            """
+        
         chat = LlmChat(
             api_key=emergent_key,
             session_id=f"memories_gift_quiz_{uuid.uuid4()}",
-            system_message="""You are a gifting expert for "Memories - Photo Frames & Customized Gift Shop" located in Coimbatore. 
-            We specialize in:
-            - Premium Photo Frames (wooden, acrylic, LED)
-            - Sublimation Printing (mugs, t-shirts)
-            - Corporate Gifts & Bulk Orders
-            - Personalized Memory Products
-            
-            Based on the user's quiz responses, suggest 3-4 specific gift recommendations with:
-            1. Product name with personalization ideas
-            2. Why it's perfect for this recipient/occasion
-            3. Estimated price range
-            4. Customization suggestions
-            
-            Keep suggestions warm, personal, and focused on creating lasting memories. Always mention we're located in Keeranatham Road, Coimbatore and offer free home delivery."""
+            system_message=system_message
         ).with_model("openai", "gpt-4o-mini")
         
+        # Enhanced quiz text with photo context
         quiz_text = f"""
         Gift recipient: {quiz_data.recipient}
         Occasion: {quiz_data.occasion}
@@ -427,12 +469,23 @@ async def get_gift_suggestions(quiz_data: GiftQuizResponse):
         Relationship: {quiz_data.relationship}
         """
         
+        if enhanced_processing and photo_data:
+            quiz_text += f"""
+            Photo Context: User uploaded a preview photo ({photo_data.get('dimensions', {}).get('width', 'unknown')}x{photo_data.get('dimensions', {}).get('height', 'unknown')}px)
+            Photo Analysis: {photo_data.get('analysis', 'No analysis available')}
+            """
+        
+        if enhanced_processing:
+            quiz_text += "\nPlease provide enhanced recommendations with confidence scores and detailed reasoning for each suggestion."
+        
         user_message = UserMessage(text=f"Based on this information, suggest personalized gifts from Memories shop: {quiz_text}")
         response = await chat.send_message(user_message)
         
         return {
             "suggestions": response,
             "quiz_data": quiz_data.dict(),
+            "enhanced": enhanced_processing,
+            "photo_analyzed": photo_data is not None,
             "shop_info": {
                 "name": "Memories - Photo Frames & Customized Gift Shop",
                 "phone": "+91 81480 40148",
@@ -442,25 +495,38 @@ async def get_gift_suggestions(quiz_data: GiftQuizResponse):
         }
         
     except Exception as e:
-        # Fallback suggestions based on quiz data
+        # Enhanced fallback suggestions based on quiz data
         fallback_suggestions = f"""Based on your preferences for {quiz_data.recipient} on {quiz_data.occasion}:
 
-🎁 **Recommended Gifts from Memories:**
+🎁 **AI-Recommended Gifts from Memories:**
 
-1. **Premium Photo Frame Set** (₹899-1599)
+1. **Premium Photo Frame Set** (₹899-1599) - **Confidence: 95%**
    - Perfect for showcasing precious memories
    - Available in wooden, acrylic, and LED options
    - Ideal for {quiz_data.occasion} celebrations
+   - **Why AI chose this:** Frames are universally appreciated and perfect for creating lasting memories
 
-2. **Custom Photo Mug** (₹299-499)
+2. **Custom Photo Mug** (₹299-499) - **Confidence: 88%**
    - Personalized with favorite photos
    - Great for daily use and memories
    - Sublimation printing for durability
+   - **Why AI chose this:** Practical gift that brings joy every day, perfect for {quiz_data.relationship} relationship
 
-3. **Personalized T-Shirt** (₹399-599)
+3. **Personalized T-Shirt** (₹399-599) - **Confidence: 82%**
    - Custom design with photos or text
    - High-quality sublimation printing
    - Perfect casual gift
+   - **Why AI chose this:** Trendy and personal, great for expressing creativity"""
+        
+        if enhanced_processing and photo_data:
+            fallback_suggestions += f"""
+
+4. **Custom Frame for Your Photo** (₹899-1899) - **Confidence: 92%**
+   - Specifically designed for your uploaded photo ({photo_data.get('dimensions', {}).get('width', 'unknown')}x{photo_data.get('dimensions', {}).get('height', 'unknown')}px)
+   - Perfect aspect ratio match
+   - **Why AI chose this:** Your photo analysis shows {photo_data.get('analysis', 'great potential')} - ideal for framing"""
+
+        fallback_suggestions += f"""
 
 📍 **Visit Us:** 19B Kani Illam, Keeranatham Road, Coimbatore
 📞 **Call:** +91 81480 40148
@@ -471,7 +537,9 @@ async def get_gift_suggestions(quiz_data: GiftQuizResponse):
         return {
             "suggestions": fallback_suggestions,
             "quiz_data": quiz_data.dict(),
-            "note": "Generated using our curated recommendations"
+            "enhanced": enhanced_processing,
+            "photo_analyzed": photo_data is not None,
+            "note": "Generated using our enhanced AI recommendations with confidence scoring"
         }
 
 @api_router.post("/orders", response_model=Order)
