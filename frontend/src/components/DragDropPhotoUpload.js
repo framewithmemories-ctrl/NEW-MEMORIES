@@ -492,6 +492,18 @@ export const DragDropPhotoUpload = ({
                   <Palette className="w-4 h-4 mr-2" />
                   Start Customizing
                 </Button>
+                
+                {enableProfileIntegration && getCurrentUser() && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSaveDialog(true)}
+                    className="flex-1 border-blue-300 text-blue-700 hover:bg-blue-50"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save to Profile
+                  </Button>
+                )}
+                
                 <Button
                   variant="outline"
                   onClick={clearPhoto}
@@ -505,6 +517,125 @@ export const DragDropPhotoUpload = ({
           </Card>
         </div>
       )}
+
+      {/* Profile Integration */}
+      {enableProfileIntegration && !uploadedPhoto && (
+        <div className="mt-6">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="h-px bg-gray-300 flex-1"></div>
+            <span className="text-gray-500 text-sm">or</span>
+            <div className="h-px bg-gray-300 flex-1"></div>
+          </div>
+          
+          <div className="mt-4 text-center">
+            <Button
+              variant="outline"
+              onClick={() => setShowProfilePhotos(true)}
+              className="border-purple-300 text-purple-700 hover:bg-purple-50"
+              disabled={!getCurrentUser()}
+            >
+              <ImageIcon className="w-4 h-4 mr-2" />
+              {getCurrentUser() ? 'Use Saved Photo' : 'Login to Use Saved Photos'}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Save Photo Dialog */}
+      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save Photo to Profile</DialogTitle>
+            <DialogDescription>
+              Save this photo to reuse for future orders
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Photo Name
+              </label>
+              <Input
+                placeholder="Enter a name for this photo"
+                value={savePhotoForm.name}
+                onChange={(e) => setSavePhotoForm(prev => ({ ...prev, name: e.target.value }))}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Tags (comma separated)
+              </label>
+              <Input
+                placeholder="e.g. family, vacation, wedding"
+                value={savePhotoForm.tags}
+                onChange={(e) => setSavePhotoForm(prev => ({ ...prev, tags: e.target.value }))}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Notes (optional)
+              </label>
+              <Textarea
+                placeholder="Add any notes about this photo"
+                rows={3}
+                value={savePhotoForm.notes}
+                onChange={(e) => setSavePhotoForm(prev => ({ ...prev, notes: e.target.value }))}
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="favorite"
+                checked={savePhotoForm.favorite}
+                onChange={(e) => setSavePhotoForm(prev => ({ ...prev, favorite: e.target.checked }))}
+                className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+              />
+              <label htmlFor="favorite" className="text-sm text-gray-700 flex items-center">
+                <Heart className="w-4 h-4 mr-1 text-red-500" />
+                Mark as favorite
+              </label>
+            </div>
+            
+            <div className="flex space-x-3">
+              <Button
+                onClick={saveToProfile}
+                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Save Photo
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowSaveDialog(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Profile Photos Dialog */}
+      <Dialog open={showProfilePhotos} onOpenChange={setShowProfilePhotos}>
+        <DialogContent className="sm:max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Choose from Saved Photos</DialogTitle>
+            <DialogDescription>
+              Select a photo from your profile collection
+            </DialogDescription>
+          </DialogHeader>
+          
+          <ProfilePhotoStorage
+            userId={getCurrentUser()?.id}
+            onPhotoSelected={useSavedPhoto}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
