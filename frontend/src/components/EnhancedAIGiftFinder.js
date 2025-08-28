@@ -41,6 +41,8 @@ export const EnhancedAIGiftFinder = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [aiThinking, setAiThinking] = useState('');
+  const [previewPhoto, setPreviewPhoto] = useState(null);
+  const [showPhotoUpload, setShowPhotoUpload] = useState(false);
   const { addToCart } = useCart();
 
   // Enhanced contextual questions with AI logic
