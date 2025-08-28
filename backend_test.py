@@ -223,7 +223,7 @@ class PhotoGiftHubAPITester:
             return False
 
     def test_ai_gift_suggestions(self):
-        """Test AI gift suggestions"""
+        """Test AI gift suggestions - Basic functionality"""
         try:
             quiz_data = {
                 "recipient": "Mom",
@@ -253,11 +253,160 @@ class PhotoGiftHubAPITester:
             else:
                 details = f"Status: {response.status_code}, Response: {response.text}"
             
-            self.log_test("AI Gift Suggestions", success, details)
+            self.log_test("AI Gift Suggestions - Basic", success, details)
             return success
             
         except Exception as e:
-            self.log_test("AI Gift Suggestions", False, str(e))
+            self.log_test("AI Gift Suggestions - Basic", False, str(e))
+            return False
+
+    def test_enhanced_ai_gift_suggestions(self):
+        """Test Enhanced AI Gift Finder with contextual answers and aiEnhanced flag"""
+        try:
+            # Enhanced payload as sent by frontend
+            enhanced_payload = {
+                "answers": {
+                    "occasion": "anniversary",
+                    "recipient": "romantic_partner", 
+                    "budget": "premium",
+                    "style_preference": "classic_traditional"
+                },
+                "contextual": True,
+                "aiEnhanced": True,
+                "previewPhoto": None
+            }
+            
+            response = requests.post(f"{self.api_url}/gift-suggestions", json=enhanced_payload, timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                has_suggestions = 'suggestions' in data and data['suggestions']
+                
+                if has_suggestions:
+                    details = f"Enhanced AI suggestions received, Length: {len(str(data['suggestions']))}"
+                    # Check for enhanced features
+                    if isinstance(data['suggestions'], list):
+                        details += f", Structured suggestions: {len(data['suggestions'])} items"
+                    else:
+                        details += ", Text-based suggestions"
+                else:
+                    success = False
+                    details = "Missing suggestions in enhanced response"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Enhanced AI Gift Suggestions", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Enhanced AI Gift Suggestions", False, str(e))
+            return False
+
+    def test_ai_gift_suggestions_with_photo(self):
+        """Test AI Gift Finder with preview photo data"""
+        try:
+            # Create test image data for preview photo
+            test_image = self.create_test_image()
+            image_base64 = base64.b64encode(test_image.getvalue()).decode('utf-8')
+            
+            # Enhanced payload with photo preview
+            photo_payload = {
+                "answers": {
+                    "occasion": "birthday",
+                    "recipient": "family_parent",
+                    "budget": "mid_range", 
+                    "style_preference": "modern_trendy"
+                },
+                "contextual": True,
+                "aiEnhanced": True,
+                "previewPhoto": {
+                    "url": f"data:image/jpeg;base64,{image_base64[:100]}...",  # Truncated for test
+                    "dimensions": {"width": 800, "height": 600},
+                    "analysis": "landscape photo with warm colors"
+                }
+            }
+            
+            response = requests.post(f"{self.api_url}/gift-suggestions", json=photo_payload, timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                has_suggestions = 'suggestions' in data and data['suggestions']
+                
+                if has_suggestions:
+                    details = f"Photo-enhanced AI suggestions received, Length: {len(str(data['suggestions']))}"
+                    # Check if photo context was considered
+                    suggestions_text = str(data['suggestions']).lower()
+                    if 'photo' in suggestions_text or 'landscape' in suggestions_text or 'frame' in suggestions_text:
+                        details += ", Photo context detected in suggestions"
+                    else:
+                        details += ", Photo context not clearly reflected"
+                else:
+                    success = False
+                    details = "Missing suggestions in photo-enhanced response"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("AI Gift Suggestions with Photo", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("AI Gift Suggestions with Photo", False, str(e))
+            return False
+
+    def test_ai_confidence_and_reasoning(self):
+        """Test if AI suggestions include confidence scores and reasoning"""
+        try:
+            # Test payload for structured response
+            test_payload = {
+                "answers": {
+                    "occasion": "corporate",
+                    "recipient": "colleague",
+                    "budget": "luxury",
+                    "style_preference": "luxury_premium"
+                },
+                "contextual": True,
+                "aiEnhanced": True,
+                "previewPhoto": None
+            }
+            
+            response = requests.post(f"{self.api_url}/gift-suggestions", json=test_payload, timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                has_suggestions = 'suggestions' in data and data['suggestions']
+                
+                if has_suggestions:
+                    suggestions_text = str(data['suggestions']).lower()
+                    
+                    # Check for confidence indicators
+                    has_confidence = any(indicator in suggestions_text for indicator in [
+                        'confidence', 'score', 'match', 'perfect', 'ideal', 'recommended'
+                    ])
+                    
+                    # Check for reasoning indicators  
+                    has_reasoning = any(indicator in suggestions_text for indicator in [
+                        'because', 'perfect for', 'ideal for', 'great for', 'suitable', 'matches'
+                    ])
+                    
+                    details = f"AI suggestions analyzed - Confidence indicators: {has_confidence}, Reasoning indicators: {has_reasoning}"
+                    
+                    if not (has_confidence or has_reasoning):
+                        success = False
+                        details += " - Missing confidence scores and reasoning"
+                else:
+                    success = False
+                    details = "Missing suggestions for confidence/reasoning analysis"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("AI Confidence & Reasoning", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("AI Confidence & Reasoning", False, str(e))
             return False
 
     def test_enhanced_user_profile_update(self, user_id):
