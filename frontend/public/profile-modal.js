@@ -284,6 +284,10 @@ function switchTab(tabName) {
   }
   
   const contentArea = document.getElementById('tab-content-area');
+  if (!contentArea) {
+    console.error('Tab content area not found');
+    return;
+  }
   
   if (tabName === 'photos') {
     contentArea.innerHTML = `
