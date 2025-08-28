@@ -132,10 +132,21 @@ const AnimatedLogo = ({ size = "w-12 h-12" }) => {
   );
 };
 
+// Business Name Component
+const BusinessName = ({ size = "text-2xl" }) => {
+  return (
+    <img 
+      src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/t3qf6xi2_NAME.png"
+      alt="Business Name"
+      className="h-8 object-contain"
+    />
+  );
+};
+
 // Smart Call Button Component
 const SmartCallButton = ({ className = "", children, phoneNumber = "+918148040148" }) => {
   const handleCall = () => {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userUser);
     
     if (isMobile) {
       // Mobile: Open dialer
