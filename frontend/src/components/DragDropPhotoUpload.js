@@ -29,13 +29,32 @@ export const DragDropPhotoUpload = ({
   onPhotoAnalyzed, 
   maxSize = 25, // MB
   acceptedFormats = ['jpg', 'jpeg', 'png', 'heic', 'webp'],
-  className = "" 
+  className = "",
+  enableProfileIntegration = true
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadedPhoto, setUploadedPhoto] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showProfilePhotos, setShowProfilePhotos] = useState(false);
+  const [savePhotoForm, setSavePhotoForm] = useState({
+    name: '',
+    tags: '',
+    notes: '',
+    favorite: false
+  });
   const fileInputRef = useRef(null);
+
+  // Get current user for profile integration
+  const getCurrentUser = () => {
+    try {
+      const userData = localStorage.getItem('memoriesUser');
+      return userData ? JSON.parse(userData) : null;
+    } catch (error) {
+      return null;
+    }
+  };
 
   // Drag and Drop Handlers
   const handleDragOver = useCallback((e) => {
