@@ -170,19 +170,33 @@ const SmartCallButton = ({ className = "", children, phoneNumber = "+91814804014
   );
 };
 
-// Cart Icon Component with Counter
+# Cart Icon Component with WORKING Counter and Checkout
 const CartIcon = () => {
   const { cartCount } = useCart();
+  const [showCheckout, setShowCheckout] = useState(false);
   
   return (
-    <Button variant="ghost" size="icon" className="relative group">
-      <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
-      {cartCount > 0 && (
-        <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-rose-500 animate-pulse">
-          {cartCount}
-        </Badge>
+    <>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="relative group"
+        onClick={() => setShowCheckout(true)}
+      >
+        <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        {cartCount > 0 && (
+          <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-rose-500 animate-pulse">
+            {cartCount}
+          </Badge>
+        )}
+      </Button>
+      
+      {showCheckout && (
+        <div className="fixed inset-0 bg-black/50 z-50">
+          <CheckoutPage onClose={() => setShowCheckout(false)} />
+        </div>
       )}
-    </Button>
+    </>
   );
 };
 
