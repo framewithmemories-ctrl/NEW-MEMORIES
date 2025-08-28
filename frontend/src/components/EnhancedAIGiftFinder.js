@@ -778,6 +778,33 @@ export const EnhancedAIGiftFinder = () => {
                                     <div>
                                       <div className="font-semibold text-gray-900 mb-1">Why AI Chose This:</div>
                                       <p className="text-sm text-gray-700">{suggestion.reasoning}</p>
+                                      
+                                      {/* Display LLM Response if available */}
+                                      {suggestion.llmResponse && (
+                                        <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                                          <div className="font-semibold text-purple-900 mb-2 flex items-center">
+                                            <Brain className="w-4 h-4 mr-2" />
+                                            AI Detailed Recommendations:
+                                          </div>
+                                          <div className="text-sm text-purple-800 whitespace-pre-wrap">
+                                            {suggestion.llmResponse.substring(0, 500)}
+                                            {suggestion.llmResponse.length > 500 && '...'}
+                                          </div>
+                                          {suggestion.llmResponse.length > 500 && (
+                                            <Button 
+                                              variant="ghost" 
+                                              size="sm"
+                                              className="text-purple-600 hover:text-purple-700 mt-2 p-0"
+                                              onClick={() => {
+                                                // Show full response in modal or expand
+                                                alert(suggestion.llmResponse);
+                                              }}
+                                            >
+                                              View Full AI Analysis →
+                                            </Button>
+                                          )}
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
