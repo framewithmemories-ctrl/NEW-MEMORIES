@@ -261,7 +261,31 @@ export const EnhancedAIGiftFinder = () => {
       });
       
       if (response.data.suggestions) {
-        setSuggestions(response.data.suggestions);
+        // Check if suggestions is a string (LLM response) or array (structured)
+        if (typeof response.data.suggestions === 'string') {
+          // Convert string response to structured format for display
+          const stringResponse = response.data.suggestions;
+          const mockStructuredSuggestions = [
+            {
+              product: {
+                id: 'ai-llm-suggestion-1',
+                name: 'AI Recommended Gift Set',
+                description: 'Personalized gifts curated by our AI based on your preferences',
+                base_price: 899,
+                image_url: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=400&h=300',
+                category: 'ai-curated'
+              },
+              reasoning: 'Our AI analyzed your preferences and suggests these personalized options',
+              confidence: 92,
+              aiTag: '🤖 AI Curated Selection',
+              llmResponse: stringResponse
+            }
+          ];
+          setSuggestions(mockStructuredSuggestions);
+        } else {
+          // Handle array of structured suggestions
+          setSuggestions(response.data.suggestions);
+        }
       } else {
         throw new Error('No backend suggestions');
       }
