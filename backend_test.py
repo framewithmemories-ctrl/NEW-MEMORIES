@@ -585,14 +585,10 @@ class PhotoGiftHubAPITester:
             return False
             
         try:
-            payment_data = {
-                "amount": 299.0,
-                "order_id": f"ORDER_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            }
+            amount = 299.0
+            order_id = f"ORDER_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             
-            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/pay", 
-                                   json=payment_data["amount"], 
-                                   params={"order_id": payment_data["order_id"]}, 
+            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/pay?amount={amount}&order_id={order_id}", 
                                    timeout=10)
             success = response.status_code == 200
             
