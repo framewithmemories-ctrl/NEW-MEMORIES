@@ -207,9 +207,86 @@ export const DragDropPhotoUpload = ({
   const clearPhoto = () => {
     setUploadedPhoto(null);
     setAnalysisResult(null);
+    setSavePhotoForm({ name: '', tags: '', notes: '', favorite: false });
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  // Save photo to profile
+  const saveToProfile = () => {
+    const user = getCurrentUser();
+    if (!user) {
+      toast.error('Please create a profile first to save photos');
+      return;
+    }
+
+    if (!uploadedPhoto) {
+      toast.error('No photo to save');
+      return;
+    }
+
+    try {
+      // Prepare photo data for saving
+      const photoData = {
+        ...uploadedPhoto,
+        name: savePhotoForm.name || `Photo ${Date.now()}`,
+        tags: savePhotoForm.tags ? savePhotoForm.tags.split(',').map(tag => tag.trim()) : ['general'],
+        notes: savePhotoForm.notes,
+        favorite: savePhotoForm.favorite
+      };
+
+      // Save to profile storage (this would integrate with ProfilePhotoStorage)
+      const savedPhotos = JSON.parse(localStorage.getItem(`memories_photos_${user.id}`) || '[]');
+      const newPhoto = {
+        id: `photo_${Date.now()}`,
+        ...photoData,
+        savedAt: new Date().toISOString(),
+        usageCount: 0
+      };
+      
+      savedPhotos.unshift(newPhoto);
+      localStorage.setItem(`memories_photos_${user.id}`, JSON.stringify(savedPhotos));
+      
+      toast.success('📸 Photo saved to your profile!', {
+        description: 'You can reuse this photo for future orders',
+        duration: 3000
+      });
+      
+      setShowSaveDialog(false);
+      setSavePhotoForm({ name: '', tags: '', notes: '', favorite: false });
+    } catch (error) {
+      console.error('Error saving photo:', error);
+      toast.error('Failed to save photo. Please try again.');
+    }
+  };
+
+  // Use saved photo from profile
+  const useSavedPhoto = (photo) => {
+    setUploadedPhoto({
+      file: null, // Saved photos don't have file objects
+      url: photo.url,
+      name: photo.name,
+      size: photo.size,
+      type: photo.type,
+      dimensions: photo.dimensions
+    });
+    
+    // Auto-analyze the saved photo
+    if (photo.dimensions) {
+      analyzePhoto({
+        dimensions: photo.dimensions,
+        name: photo.name
+      });
+    }
+    
+    setShowProfilePhotos(false);
+    onPhotoUploaded?.({
+      ...photo,
+      fromProfile: true
+    });
+    
+    toast.success(`Using saved photo: ${photo.name} 📸`);
   };
 
   const getQualityColor = (quality) => {
