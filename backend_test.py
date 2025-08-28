@@ -513,6 +513,14 @@ class PhotoGiftHubAPITester:
             return False
             
         try:
+            # First, ensure user has enough points by updating their profile
+            points_update = {"points": 500}  # Give user 500 points
+            update_response = requests.put(f"{self.api_url}/users/{user_id}", json=points_update, timeout=10)
+            
+            if update_response.status_code != 200:
+                self.log_test("Convert Points to Credits", False, "Failed to add points to user for testing")
+                return False
+            
             points_to_convert = 200  # Should give ₹20 store credit
             response = requests.post(f"{self.api_url}/users/{user_id}/wallet/convert-points?points={points_to_convert}", 
                                    timeout=10)
