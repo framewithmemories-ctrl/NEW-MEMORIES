@@ -482,8 +482,8 @@ class PhotoGiftHubAPITester:
             
         try:
             amount = 1000.0
-            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/add-money", 
-                                   json=amount, timeout=10)
+            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/add-money?amount={amount}", 
+                                   timeout=10)
             success = response.status_code == 200
             
             if success:
@@ -514,8 +514,8 @@ class PhotoGiftHubAPITester:
             
         try:
             points_to_convert = 200  # Should give ₹20 store credit
-            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/convert-points", 
-                                   json=points_to_convert, timeout=10)
+            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/convert-points?points={points_to_convert}", 
+                                   timeout=10)
             success = response.status_code == 200
             
             if success:
