@@ -186,7 +186,7 @@ export const UserProfile = () => {
       </Button>
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
               <User className="w-5 h-5 text-rose-600" />
@@ -194,76 +194,151 @@ export const UserProfile = () => {
             </DialogTitle>
             <DialogDescription>
               {user 
-                ? 'Manage your account and preferences for personalized shopping' 
+                ? 'Manage your account, photos, wallet, and preferences' 
                 : 'Join Memories community to track orders and get personalized recommendations'
               }
             </DialogDescription>
           </DialogHeader>
           
           {user && !isEditing ? (
-            /* Profile Display Mode */
-            <div className="space-y-6">
-              <Card className="border-rose-200">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">
-                          {user.name.charAt(0).toUpperCase()}
-                        </span>
+            /* Enhanced Profile with Tabs */
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="profile" className="flex items-center space-x-2">
+                  <User className="w-4 h-4" />
+                  <span>Profile</span>
+                </TabsTrigger>
+                <TabsTrigger value="photos" className="flex items-center space-x-2">
+                  <Camera className="w-4 h-4" />
+                  <span>Photos</span>
+                </TabsTrigger>
+                <TabsTrigger value="wallet" className="flex items-center space-x-2">
+                  <Wallet className="w-4 h-4" />
+                  <span>Wallet</span>
+                </TabsTrigger>
+                <TabsTrigger value="orders" className="flex items-center space-x-2">
+                  <Package className="w-4 h-4" />
+                  <span>Orders</span>
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="profile" className="space-y-6">
+                <Card className="border-rose-200">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-2xl">
+                            {user.name.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div>
+                          <CardTitle className="text-xl text-gray-900">{user.name}</CardTitle>
+                          <CardDescription>Member since {new Date(user.createdAt).toLocaleDateString()}</CardDescription>
+                          <Badge className="bg-green-100 text-green-800 mt-1">Active Member</Badge>
+                        </div>
                       </div>
-                      <div>
-                        <CardTitle className="text-xl text-gray-900">{user.name}</CardTitle>
-                        <CardDescription>Member since {new Date(user.createdAt).toLocaleDateString()}</CardDescription>
+                      <Button 
+                        onClick={() => setIsEditing(true)}
+                        className="bg-rose-500 hover:bg-rose-600"
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Profile
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-3">
+                        <Mail className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-700">{user.email}</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Phone className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-700">{user.phone || 'Not provided'}</span>
                       </div>
                     </div>
-                    <Badge className="bg-green-100 text-green-800">Active</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center space-x-3">
-                      <Mail className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-700">{user.email}</span>
+                    
+                    {user.address && (
+                      <div className="flex items-start space-x-3">
+                        <MapPin className="w-4 h-4 text-gray-500 mt-1" />
+                        <span className="text-gray-700">{user.address}</span>
+                      </div>
+                    )}
+                    
+                    <div className="pt-4 border-t border-gray-200">
+                      <h4 className="font-medium text-gray-900 mb-2">Shopping Preferences</h4>
+                      <p className="text-gray-600 text-sm">{user.preferences}</p>
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <Phone className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-700">{user.phone || 'Not provided'}</span>
+                    
+                    <div className="flex space-x-3 pt-4">
+                      <Button 
+                        variant="outline" 
+                        onClick={handleLogout}
+                        className="border-gray-300"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Sign Out
+                      </Button>
                     </div>
-                  </div>
-                  
-                  {user.address && (
-                    <div className="flex items-start space-x-3">
-                      <MapPin className="w-4 h-4 text-gray-500 mt-1" />
-                      <span className="text-gray-700">{user.address}</span>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="photos">
+                <ProfilePhotoStorage 
+                  userId={user.id}
+                  onPhotoSelected={(photo) => {
+                    toast.success('Photo selected for customization!');
+                    setIsOpen(false);
+                    // Integrate with photo customizer
+                  }}
+                />
+              </TabsContent>
+
+              <TabsContent value="wallet">
+                <DigitalWallet 
+                  userId={user.id}
+                  onBalanceUpdate={(walletData) => {
+                    // Handle wallet balance updates
+                    console.log('Wallet updated:', walletData);
+                  }}
+                />
+              </TabsContent>
+
+              <TabsContent value="orders">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Package className="w-5 h-5 text-blue-600 mr-2" />
+                      Order History
+                    </CardTitle>
+                    <CardDescription>
+                      Track your past orders and reorder favorites
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center py-8">
+                      <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders yet</h3>
+                      <p className="text-gray-600 mb-4">
+                        Start creating beautiful memories with custom photo frames
+                      </p>
+                      <Button 
+                        onClick={() => {
+                          setIsOpen(false);
+                          document.getElementById('customizer')?.scrollIntoView({behavior: 'smooth'});
+                        }}
+                        className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Start Shopping
+                      </Button>
                     </div>
-                  )}
-                  
-                  <div className="pt-4 border-t border-gray-200">
-                    <h4 className="font-medium text-gray-900 mb-2">Preferences</h4>
-                    <p className="text-gray-600 text-sm">{user.preferences}</p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={() => setIsEditing(true)}
-                  className="flex-1 bg-rose-500 hover:bg-rose-600"
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Profile
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={handleLogout}
-                  className="flex-1 border-gray-300"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
-                </Button>
-              </div>
-            </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           ) : (
             /* Profile Creation/Edit Mode */
             <div className="space-y-6">
