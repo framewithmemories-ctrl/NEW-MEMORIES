@@ -1226,7 +1226,7 @@ const AIGiftFinder = () => {
   const generateSuggestions = async (userAnswers) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${API}/ai-gift-suggestions`, {
+      const response = await axios.post(`${API}/gift-suggestions`, {
         answers: userAnswers
       });
       setSuggestions(response.data.suggestions || []);
