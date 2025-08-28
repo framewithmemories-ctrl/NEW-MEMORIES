@@ -321,9 +321,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Backend Profile APIs"
-    - "Profile Enhancements - Photo Storage"
-    - "Profile Enhancements - Digital Wallet"
+    - "Reviews API System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
