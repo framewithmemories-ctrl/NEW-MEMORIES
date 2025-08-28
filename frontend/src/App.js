@@ -256,13 +256,12 @@ const Header = () => {
               </Badge>
             </Button>
             
-            <Button 
+            <SmartCallButton 
               className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white hidden sm:flex"
-              onClick={() => window.open('tel:+918148040148', '_blank')}
             >
               <Phone className="w-4 h-4 mr-2" />
               Call Now
-            </Button>
+            </SmartCallButton>
             
             <Button 
               variant="ghost" 
