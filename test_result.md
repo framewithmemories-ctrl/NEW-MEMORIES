@@ -306,10 +306,10 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Enhanced AI Gift Finder (Item D Fixes)"
+    - "Backend Profile APIs"
     - "Profile Enhancements - Photo Storage"
     - "Profile Enhancements - Digital Wallet"
-    - "Enhanced User Profile Integration"
-    - "Backend Profile APIs"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
