@@ -290,100 +290,67 @@ function switchTab(tabName) {
   }
   
   if (tabName === 'photos') {
-    contentArea.innerHTML = `
-      <div style="text-align: center; padding: 60px 20px;">
-        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #9c27b0, #e1bee7); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 32px; font-size: 48px; box-shadow: 0 8px 32px rgba(156,39,176,0.3);">📸</div>
-        <h3 style="margin-bottom: 16px; color: #1a202c; font-size: 28px; font-weight: bold;">Photo Storage System</h3>
-        <p style="color: #4a5568; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.7; font-size: 16px;">Save photos to your profile with smart organization. Add tags, mark favorites, and reuse them for future orders with one click.</p>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 32px;">
-          <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 24px; border-radius: 16px; border: 2px solid #e2e8f0; text-align: center;">
-            <div style="font-size: 32px; margin-bottom: 12px;">⚡</div>
-            <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; font-size: 16px;">Smart Upload</div>
-            <div style="color: #718096; font-size: 14px; line-height: 1.5;">Drag & drop with instant preview and quality analysis</div>
+    // Check if user has profile and get their photos
+    const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+    const userPhotos = profile.id ? JSON.parse(localStorage.getItem(`memories_photos_${profile.id}`) || '[]') : [];
+    
+    if (userPhotos.length === 0) {
+      contentArea.innerHTML = `
+        <div style="text-align: center; padding: 60px 20px;">
+          <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #9c27b0, #e1bee7); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 32px; font-size: 48px; box-shadow: 0 8px 32px rgba(156,39,176,0.3);">📸</div>
+          <h3 style="margin-bottom: 16px; color: #1a202c; font-size: 28px; font-weight: bold;">Photo Storage System</h3>
+          <p style="color: #4a5568; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.7; font-size: 16px;">Save photos to your profile with smart organization. Add tags, mark favorites, and reuse them for future orders with one click.</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 32px;">
+            <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 24px; border-radius: 16px; border: 2px solid #e2e8f0; text-align: center;">
+              <div style="font-size: 32px; margin-bottom: 12px;">⚡</div>
+              <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; font-size: 16px;">Smart Upload</div>
+              <div style="color: #718096; font-size: 14px; line-height: 1.5;">Drag & drop with instant preview and quality analysis</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 24px; border-radius: 16px; border: 2px solid #e2e8f0; text-align: center;">
+              <div style="font-size: 32px; margin-bottom: 12px;">🏷️</div>
+              <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; font-size: 16px;">Tags & Search</div>
+              <div style="color: #718096; font-size: 14px; line-height: 1.5;">Organize with custom tags and powerful search</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 24px; border-radius: 16px; border: 2px solid #e2e8f0; text-align: center;">
+              <div style="font-size: 32px; margin-bottom: 12px;">❤️</div>
+              <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; font-size: 16px;">Favorites</div>
+              <div style="color: #718096; font-size: 14px; line-height: 1.5;">Mark favorites for quick access and reuse</div>
+            </div>
           </div>
-          <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 24px; border-radius: 16px; border: 2px solid #e2e8f0; text-align: center;">
-            <div style="font-size: 32px; margin-bottom: 12px;">🏷️</div>
-            <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; font-size: 16px;">Tags & Search</div>
-            <div style="color: #718096; font-size: 14px; line-height: 1.5;">Organize with custom tags and powerful search</div>
-          </div>
-          <div style="background: linear-gradient(135deg, #f7fafc, #edf2f7); padding: 24px; border-radius: 16px; border: 2px solid #e2e8f0; text-align: center;">
-            <div style="font-size: 32px; margin-bottom: 12px;">❤️</div>
-            <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; font-size: 16px;">Favorites</div>
-            <div style="color: #718096; font-size: 14px; line-height: 1.5;">Mark favorites for quick access and reuse</div>
+          
+          ${getPhotoUploadButton()}
+        </div>
+      `;
+    } else {
+      // Show photo gallery
+      const photoGrid = userPhotos.map(photo => `
+        <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+          <img src="${photo.url}" alt="${photo.name}" style="width: 100%; height: 200px; object-fit: cover;">
+          <div style="padding: 16px;">
+            <div style="font-weight: bold; margin-bottom: 8px; color: #1a202c; font-size: 14px;">${photo.name}</div>
+            <div style="color: #718096; font-size: 12px; margin-bottom: 8px;">Size: ${photo.size}MB • ${new Date(photo.savedAt).toLocaleDateString()}</div>
+            <div style="display: flex; gap: 8px;">
+              <button onclick="usePhotoForOrder('${photo.id}')" style="flex: 1; background: linear-gradient(135deg, #4caf50, #66bb6a); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;">Use</button>
+              <button onclick="deletePhoto('${photo.id}')" style="background: #f44336; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;">Delete</button>
+            </div>
           </div>
         </div>
-        
-        <button onclick="
-          const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
-          if (!profile.profileComplete) {
-            alert('❌ Please create your profile first to upload photos');
-            switchTab('profile');
-            return;
-          }
+      `).join('');
+      
+      contentArea.innerHTML = `
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h3 style="color: #1a202c; font-size: 24px; font-weight: bold; margin: 0;">Your Photo Collection (${userPhotos.length})</h3>
+            ${getPhotoUploadButton().replace('Upload Your First Photo', 'Add More Photos')}
+          </div>
           
-          // Create file input for photo upload
-          const input = document.createElement('input');
-          input.type = 'file';
-          input.accept = 'image/*';
-          input.multiple = true;
-          input.onchange = function(e) {
-            const files = Array.from(e.target.files);
-            if (files.length === 0) return;
-            
-            // Process each file
-            files.forEach((file, index) => {
-              const reader = new FileReader();
-              reader.onload = function(event) {
-                const photoData = {
-                  id: 'photo_' + Date.now() + '_' + index,
-                  name: file.name,
-                  url: event.target.result,
-                  size: (file.size / 1024 / 1024).toFixed(2),
-                  type: file.type,
-                  dimensions: { width: 'Unknown', height: 'Unknown' },
-                  tags: ['uploaded'],
-                  notes: '',
-                  favorite: false,
-                  usageCount: 0,
-                  savedAt: new Date().toISOString()
-                };
-                
-                // Save to profile photos
-                const existingPhotos = JSON.parse(localStorage.getItem('memories_photos_' + profile.id) || '[]');
-                existingPhotos.unshift(photoData);
-                localStorage.setItem('memories_photos_' + profile.id, JSON.stringify(existingPhotos));
-                
-                // Update UI
-                const photosTab = document.getElementById('tab-photos');
-                if (photosTab) {
-                  photosTab.textContent = 'Photos (' + existingPhotos.length + ')';
-                }
-                
-                console.log('✅ Photo uploaded successfully:', photoData);
-              };
-              reader.readAsDataURL(file);
-            });
-            
-            alert('📸 Photos uploaded successfully to your profile!\\n\\nYou can now reuse them for future orders.');
-          };
-          input.click();
-        " style="
-          background: linear-gradient(135deg, #9c27b0, #e1bee7);
-          color: white;
-          border: none;
-          padding: 14px 28px;
-          border-radius: 12px;
-          font-weight: bold;
-          cursor: pointer;
-          font-size: 16px;
-          transition: all 0.2s;
-          box-shadow: 0 4px 15px rgba(156,39,176,0.3);
-        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-          📸 Upload Your First Photo
-        </button>
-      </div>
-    `;
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+            ${photoGrid}
+          </div>
+        </div>
+      `;
+    }
   } else if (tabName === 'wallet') {
     contentArea.innerHTML = `
       <div>
