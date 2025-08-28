@@ -252,7 +252,12 @@ export const EnhancedAIGiftFinder = () => {
       const response = await axios.post(`${API}/gift-suggestions`, {
         answers: userAnswers,
         contextual: true,
-        aiEnhanced: true
+        aiEnhanced: true,
+        previewPhoto: previewPhoto ? {
+          url: previewPhoto.url,
+          dimensions: previewPhoto.dimensions,
+          analysis: previewPhoto.analysis
+        } : null
       });
       
       if (response.data.suggestions) {
@@ -263,7 +268,7 @@ export const EnhancedAIGiftFinder = () => {
     } catch (error) {
       console.error('AI suggestions error:', error);
       
-      // ENHANCED FALLBACK: Contextual AI Logic
+      // ENHANCED FALLBACK: Contextual AI Logic with Photo Analysis
       const aiSuggestions = generateContextualSuggestions(userAnswers);
       setSuggestions(aiSuggestions);
     } finally {
