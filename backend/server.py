@@ -167,6 +167,19 @@ class GiftQuizResponse(BaseModel):
     budget: str
     relationship: str
 
+class EnhancedGiftRequest(BaseModel):
+    answers: Optional[dict] = None
+    contextual: Optional[bool] = False
+    aiEnhanced: Optional[bool] = False
+    previewPhoto: Optional[dict] = None
+    # Support legacy format
+    recipient: Optional[str] = None
+    occasion: Optional[str] = None
+    age_group: Optional[str] = None
+    interests: Optional[List[str]] = []
+    budget: Optional[str] = None
+    relationship: Optional[str] = None
+
 # Initialize sample products for Memories
 sample_products = [
     {
