@@ -314,8 +314,62 @@ function switchTab(tabName) {
           </div>
         </div>
         
-        <button onclick="alert('Photo upload feature ready! Complete profile creation to enable.')" style="
-          background: linear-gradient(135deg, #9c27b0, #ba68c8);
+        <button onclick="
+          const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+          if (!profile.profileComplete) {
+            alert('❌ Please create your profile first to upload photos');
+            switchTab('profile');
+            return;
+          }
+          
+          // Create file input for photo upload
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*';
+          input.multiple = true;
+          input.onchange = function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            
+            // Process each file
+            files.forEach((file, index) => {
+              const reader = new FileReader();
+              reader.onload = function(event) {
+                const photoData = {
+                  id: 'photo_' + Date.now() + '_' + index,
+                  name: file.name,
+                  url: event.target.result,
+                  size: (file.size / 1024 / 1024).toFixed(2),
+                  type: file.type,
+                  dimensions: { width: 'Unknown', height: 'Unknown' },
+                  tags: ['uploaded'],
+                  notes: '',
+                  favorite: false,
+                  usageCount: 0,
+                  savedAt: new Date().toISOString()
+                };
+                
+                // Save to profile photos
+                const existingPhotos = JSON.parse(localStorage.getItem('memories_photos_' + profile.id) || '[]');
+                existingPhotos.unshift(photoData);
+                localStorage.setItem('memories_photos_' + profile.id, JSON.stringify(existingPhotos));
+                
+                // Update UI
+                const photosTab = document.getElementById('tab-photos');
+                if (photosTab) {
+                  photosTab.textContent = 'Photos (' + existingPhotos.length + ')';
+                }
+                
+                console.log('✅ Photo uploaded successfully:', photoData);
+              };
+              reader.readAsDataURL(file);
+            });
+            
+            alert('📸 Photos uploaded successfully to your profile!\\n\\nYou can now reuse them for future orders.');
+          };
+          input.click();
+        " style="
+          background: linear-gradient(135deg, #9c27b0, #e1bee7);
           color: white;
           border: none;
           padding: 14px 28px;
