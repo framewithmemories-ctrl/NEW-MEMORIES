@@ -1416,7 +1416,7 @@ const Home = () => {
       <HeroSection />
       <ProductGrid products={products} />
       <PhotoCustomizer />
-      <AIGiftFinder />
+      <EnhancedAIGiftFinder />
       <TestimonialsSection />
       <Footer />
       <WhatsAppFloat />
