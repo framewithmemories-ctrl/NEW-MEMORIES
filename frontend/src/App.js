@@ -1109,11 +1109,11 @@ const Footer = () => {
                 </div>
               </div>
               
-              <SmartCallButton className="flex items-center space-x-3 bg-transparent p-0 h-auto hover:bg-transparent">
+              <SmartCallButton className="flex items-center space-x-3 bg-transparent p-0 h-auto hover:bg-transparent text-gray-300 hover:text-white">
                 <Phone className="w-5 h-5 text-rose-400" />
                 <div>
                   <div className="font-medium text-white">Call Us</div>
-                  <span className="text-gray-300 hover:text-white transition-colors">
+                  <span className="text-gray-200 hover:text-white transition-colors font-semibold">
                     +91 81480 40148
                   </span>
                 </div>
