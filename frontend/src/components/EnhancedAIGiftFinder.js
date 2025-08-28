@@ -231,7 +231,10 @@ export const EnhancedAIGiftFinder = () => {
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      generateAIRecommendations(newAnswers);
+      // Add a small delay to ensure state is updated
+      setTimeout(() => {
+        generateAIRecommendations(newAnswers);
+      }, 100);
     }
   };
 
