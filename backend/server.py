@@ -537,6 +537,207 @@ async def get_store_info():
         "google_maps": "https://maps.google.com/?q=19B+Kani+Illam+Keeranatham+Road+Coimbatore"
     }
 
+# Enhanced User Profile Endpoints
+@api_router.put("/users/{user_id}")
+async def update_user(user_id: str, user_data: dict):
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": user_data}
+    )
+    updated_user = await db.users.find_one({"id": user_id})
+    if not updated_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return User(**updated_user)
+
+# Photo Storage Endpoints
+@api_router.post("/users/{user_id}/photos", response_model=SavedPhoto)
+async def save_user_photo(user_id: str, photo: SavedPhotoCreate):
+    photo_obj = SavedPhoto(**photo.dict())
+    await db.user_photos.insert_one(photo_obj.dict())
+    return photo_obj
+
+@api_router.get("/users/{user_id}/photos")
+async def get_user_photos(user_id: str):
+    photos = await db.user_photos.find({"user_id": user_id}).to_list(100)
+    return [SavedPhoto(**photo) for photo in photos]
+
+@api_router.delete("/users/{user_id}/photos/{photo_id}")
+async def delete_user_photo(user_id: str, photo_id: str):
+    result = await db.user_photos.delete_one({"id": photo_id, "user_id": user_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    return {"message": "Photo deleted successfully"}
+
+@api_router.put("/users/{user_id}/photos/{photo_id}/favorite")
+async def toggle_photo_favorite(user_id: str, photo_id: str):
+    photo = await db.user_photos.find_one({"id": photo_id, "user_id": user_id})
+    if not photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    
+    new_favorite_status = not photo.get("favorite", False)
+    await db.user_photos.update_one(
+        {"id": photo_id, "user_id": user_id},
+        {"$set": {"favorite": new_favorite_status}}
+    )
+    return {"favorite": new_favorite_status}
+
+@api_router.put("/users/{user_id}/photos/{photo_id}/use")
+async def use_photo_for_order(user_id: str, photo_id: str):
+    await db.user_photos.update_one(
+        {"id": photo_id, "user_id": user_id},
+        {
+            "$inc": {"usage_count": 1},
+            "$set": {"last_used": datetime.now(timezone.utc)}
+        }
+    )
+    return {"message": "Photo usage recorded"}
+
+# Wallet Endpoints
+@api_router.get("/users/{user_id}/wallet")
+async def get_user_wallet(user_id: str):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "balance": user.get("wallet_balance", 0.0),
+        "reward_points": user.get("points", 0),
+        "store_credits": user.get("store_credits", 0.0),
+        "tier": user.get("tier", "Silver"),
+        "total_spent": user.get("total_spent", 0.0)
+    }
+
+@api_router.post("/users/{user_id}/wallet/add-money")
+async def add_money_to_wallet(user_id: str, amount: float):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    new_balance = user.get("wallet_balance", 0.0) + amount
+    
+    # Update user wallet
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"wallet_balance": new_balance}}
+    )
+    
+    # Record transaction
+    transaction = WalletTransaction(
+        user_id=user_id,
+        type="credit",
+        amount=amount,
+        description="Money added to wallet",
+        category="topup",
+        balance_after=new_balance
+    )
+    await db.wallet_transactions.insert_one(transaction.dict())
+    
+    return {"new_balance": new_balance, "transaction_id": transaction.id}
+
+@api_router.post("/users/{user_id}/wallet/convert-points")
+async def convert_points_to_credits(user_id: str, points: int):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    current_points = user.get("points", 0)
+    if points > current_points:
+        raise HTTPException(status_code=400, detail="Insufficient points")
+    
+    # 100 points = ₹10 store credit
+    credit_value = (points / 100) * 10
+    new_points = current_points - points
+    new_store_credits = user.get("store_credits", 0.0) + credit_value
+    
+    # Update user
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {
+                "points": new_points,
+                "store_credits": new_store_credits
+            }
+        }
+    )
+    
+    # Record transaction
+    transaction = WalletTransaction(
+        user_id=user_id,
+        type="conversion",
+        amount=points,
+        description=f"Converted {points} points to ₹{credit_value} store credit",
+        category="conversion",
+        balance_after=user.get("wallet_balance", 0.0),
+        is_points=True,
+        credit_earned=credit_value
+    )
+    await db.wallet_transactions.insert_one(transaction.dict())
+    
+    return {
+        "points_remaining": new_points,
+        "store_credits": new_store_credits,
+        "credit_earned": credit_value
+    }
+
+@api_router.get("/users/{user_id}/wallet/transactions")
+async def get_wallet_transactions(user_id: str, limit: int = 50):
+    transactions = await db.wallet_transactions.find(
+        {"user_id": user_id}
+    ).sort("created_at", -1).to_list(limit)
+    
+    return [WalletTransaction(**txn) for txn in transactions]
+
+@api_router.post("/users/{user_id}/wallet/pay")
+async def pay_with_wallet(user_id: str, amount: float, order_id: str):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    current_balance = user.get("wallet_balance", 0.0)
+    if amount > current_balance:
+        raise HTTPException(status_code=400, detail="Insufficient wallet balance")
+    
+    new_balance = current_balance - amount
+    new_total_spent = user.get("total_spent", 0.0) + amount
+    
+    # Update tier based on total spent
+    new_tier = "Silver"
+    if new_total_spent >= 10000:
+        new_tier = "Platinum"
+    elif new_total_spent >= 5000:
+        new_tier = "Gold"
+    
+    # Update user
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {
+                "wallet_balance": new_balance,
+                "total_spent": new_total_spent,
+                "tier": new_tier
+            }
+        }
+    )
+    
+    # Record transaction
+    transaction = WalletTransaction(
+        user_id=user_id,
+        type="debit",
+        amount=amount,
+        description=f"Payment for order #{order_id}",
+        category="purchase",
+        order_id=order_id,
+        balance_after=new_balance
+    )
+    await db.wallet_transactions.insert_one(transaction.dict())
+    
+    return {
+        "payment_successful": True,
+        "new_balance": new_balance,
+        "tier": new_tier,
+        "transaction_id": transaction.id
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
