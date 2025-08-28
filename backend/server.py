@@ -73,14 +73,71 @@ class User(BaseModel):
     name: str
     email: str
     phone: Optional[str] = None
+    address: Optional[str] = None
+    preferences: Optional[str] = None
     points: int = 0
     tier: str = "Silver"
+    wallet_balance: float = 0.0
+    store_credits: float = 0.0
+    total_spent: float = 0.0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserCreate(BaseModel):
     name: str
     email: str
     phone: Optional[str] = None
+    address: Optional[str] = None
+    preferences: Optional[str] = None
+
+class SavedPhoto(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    name: str
+    image_data: str
+    image_url: Optional[str] = None
+    dimensions: dict
+    size: float  # in MB
+    tags: List[str] = []
+    notes: Optional[str] = None
+    favorite: bool = False
+    usage_count: int = 0
+    last_used: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class SavedPhotoCreate(BaseModel):
+    user_id: str
+    name: str
+    image_data: str
+    image_url: Optional[str] = None
+    dimensions: dict
+    size: float
+    tags: List[str] = []
+    notes: Optional[str] = None
+
+class WalletTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    type: str  # 'credit', 'debit', 'conversion'
+    amount: float
+    description: str
+    category: str  # 'topup', 'purchase', 'rewards', 'conversion'
+    order_id: Optional[str] = None
+    status: str = "completed"
+    balance_after: float
+    is_points: bool = False
+    credit_earned: Optional[float] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class WalletTransactionCreate(BaseModel):
+    user_id: str
+    type: str
+    amount: float
+    description: str
+    category: str
+    order_id: Optional[str] = None
+    balance_after: float
+    is_points: bool = False
+    credit_earned: Optional[float] = None
 
 class Order(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
