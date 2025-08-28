@@ -266,6 +266,7 @@ export const AboutUsPage = () => {
                 <CardContent className="p-8">
                   <div className="text-center space-y-6">
                     <BusinessLogo size="w-20 h-20" />
+                    <BusinessName />
                     <div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-3">Our Promise</h3>
                       <p className="text-gray-700 leading-relaxed">
