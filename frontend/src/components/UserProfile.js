@@ -457,6 +457,5 @@ export const UserProfile = () => {
           )}
         </DialogContent>
       </Dialog>
-    </Dialog>
   );
 };
