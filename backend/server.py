@@ -31,6 +31,23 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 # Models
+class Review(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    rating: int = Field(ge=1, le=5)
+    comment: str
+    photos: Optional[List[str]] = []
+    product_id: Optional[str] = None
+    approved: bool = False
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ReviewCreate(BaseModel):
+    name: str
+    rating: int = Field(ge=1, le=5)
+    comment: str
+    photos: Optional[List[str]] = []
+    product_id: Optional[str] = None
+
 class Product(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
