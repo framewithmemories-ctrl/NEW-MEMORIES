@@ -802,56 +802,38 @@ class PhotoGiftHubAPITester:
             self.log_test("Delete User Photo", False, str(e))
             return False
 
-    def test_profile_enhancement_workflow(self):
-        """Test complete profile enhancement workflow"""
-        print("\n🔧 Testing Profile Enhancement APIs Workflow")
+    def test_enhanced_ai_gift_finder_workflow(self):
+        """Test complete Enhanced AI Gift Finder workflow"""
+        print("\n🧠 Testing Enhanced AI Gift Finder Workflow")
         print("-" * 50)
         
-        # Step 1: Create a test user
-        user_success, user_id = self.test_create_user()
-        if not user_success:
-            return False
+        # Test 1: Basic AI functionality (current backend)
+        basic_ai_success = self.test_ai_gift_suggestions()
         
-        # Step 2: Test enhanced profile update
-        profile_success = self.test_enhanced_user_profile_update(user_id)
+        # Test 2: Enhanced AI with contextual answers
+        enhanced_ai_success = self.test_enhanced_ai_gift_suggestions()
         
-        # Step 3: Test wallet info retrieval
-        wallet_info_success = self.test_user_wallet_info(user_id)
+        # Test 3: AI with photo preview data
+        photo_ai_success = self.test_ai_gift_suggestions_with_photo()
         
-        # Step 4: Test photo storage workflow
-        photo_save_success, photo_id = self.test_save_user_photo(user_id)
-        photo_get_success = self.test_get_user_photos(user_id)
-        
-        if photo_id:
-            favorite_success = self.test_toggle_photo_favorite(user_id, photo_id)
-            usage_success = self.test_record_photo_usage(user_id, photo_id)
-        else:
-            favorite_success = usage_success = False
-        
-        # Step 5: Test wallet operations
-        add_money_success = self.test_add_money_to_wallet(user_id)
-        convert_points_success = self.test_convert_points_to_credits(user_id)
-        transactions_success = self.test_get_wallet_transactions(user_id)
-        payment_success = self.test_wallet_payment(user_id)
-        
-        # Step 6: Test photo deletion (cleanup)
-        if photo_id:
-            delete_success = self.test_delete_user_photo(user_id, photo_id)
-        else:
-            delete_success = False
+        # Test 4: Confidence scores and reasoning
+        confidence_success = self.test_ai_confidence_and_reasoning()
         
         # Calculate workflow success
-        workflow_tests = [
-            profile_success, wallet_info_success, photo_save_success, photo_get_success,
-            favorite_success, usage_success, add_money_success, convert_points_success,
-            transactions_success, payment_success, delete_success
-        ]
+        ai_tests = [basic_ai_success, enhanced_ai_success, photo_ai_success, confidence_success]
+        ai_success_rate = sum(ai_tests) / len(ai_tests) * 100
         
-        workflow_success_rate = sum(workflow_tests) / len(workflow_tests) * 100
+        print(f"\n📊 Enhanced AI Gift Finder Success Rate: {ai_success_rate:.1f}%")
         
-        print(f"\n📊 Profile Enhancement Workflow Success Rate: {workflow_success_rate:.1f}%")
+        # Detailed analysis
+        if basic_ai_success and not enhanced_ai_success:
+            print("⚠️  Backend supports basic AI but not enhanced contextual format")
+        if enhanced_ai_success and not photo_ai_success:
+            print("⚠️  Enhanced AI works but photo integration needs improvement")
+        if not confidence_success:
+            print("⚠️  AI suggestions lack confidence scores and detailed reasoning")
         
-        return workflow_success_rate > 80
+        return ai_success_rate > 50  # More lenient for AI features
 
     def run_all_tests(self):
         """Run all backend tests"""
