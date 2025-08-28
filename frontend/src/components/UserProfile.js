@@ -172,21 +172,21 @@ export const UserProfile = () => {
   };
 
   return (
-    <>
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="relative group"
-        onClick={() => setIsOpen(true)}
-      >
-        <User className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        {user && (
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
-        )}
-      </Button>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="relative group"
+        >
+          <User className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          {user && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+          )}
+        </Button>
+      </DialogTrigger>
       
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
               <User className="w-5 h-5 text-rose-600" />
