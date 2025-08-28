@@ -6,6 +6,7 @@ import { Badge } from "./ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { toast } from "sonner";
 import { useCart } from "../context/CartContext";
+import { DragDropPhotoUpload } from "./DragDropPhotoUpload";
 import { 
   Sparkles, 
   Heart, 
@@ -24,7 +25,9 @@ import {
   Brain,
   Lightbulb,
   CheckCircle,
-  Wand2
+  Wand2,
+  Upload,
+  Image as ImageIcon
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
