@@ -427,7 +427,10 @@ export const ProfilePhotoStorage = ({ userId, onPhotoSelected }) => {
       </Dialog>
     </Card>
   );
+};
 
-  // Expose save function to parent components
-  ProfilePhotoStorage.savePhoto = savePhotoToProfile;
+// Expose save function to parent components
+ProfilePhotoStorage.savePhoto = (photoData, tags = [], notes = '') => {
+  // This would be called from parent components to save photos
+  console.log('Save photo function called', photoData);
 };
