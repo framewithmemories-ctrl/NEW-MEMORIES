@@ -184,10 +184,8 @@ const Header = () => {
             <div className="flex items-center space-x-3 group cursor-pointer">
               <AnimatedLogo size="w-12 h-12" />
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-rose-600 group-hover:text-rose-700 transition-colors">
-                  Memories
-                </span>
-                <span className="text-xs text-gray-500 -mt-1">Photo Frames & Gifts</span>
+                <BusinessName />
+                <span className="text-xs text-gray-500 -mt-1">Frame with Love and Crafted with Care</span>
               </div>
             </div>
             
