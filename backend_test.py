@@ -1160,6 +1160,9 @@ class PhotoGiftHubAPITester:
         # Test Profile Enhancement APIs
         self.test_profile_enhancement_workflow()
         
+        # Test Reviews API System
+        self.test_reviews_workflow()
+        
         # Print summary
         print("\n" + "=" * 50)
         print(f"📊 Test Summary: {self.tests_passed}/{self.tests_run} tests passed")
