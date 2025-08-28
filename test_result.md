@@ -281,7 +281,11 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Profile Enhancements - Photo Storage"
+    - "Profile Enhancements - Digital Wallet"
+    - "Enhanced User Profile Integration"
+    - "Backend Profile APIs"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
