@@ -452,13 +452,143 @@ function switchTab(tabName) {
       </div>
     `;
   } else {
-    // Default to profile content
-    contentArea.innerHTML = document.getElementById('profile-content').innerHTML;
+    // Default to profile content - safely get the profile content
+    const profileContent = document.getElementById('profile-content');
+    if (profileContent && contentArea) {
+      contentArea.innerHTML = profileContent.innerHTML;
+    } else {
+      // Fallback profile content
+      contentArea.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <h3 style="color: #1a202c; margin-bottom: 16px;">👤 Profile Tab</h3>
+          <p style="color: #4a5568;">Create your profile to access all features</p>
+        </div>
+      `;
+    }
   }
 }
 
 function createProfile() {
-  alert('🎉 Profile Created Successfully!\\n\\n✅ All Premium Features Unlocked:\\n📸 Photo Storage System\\n💰 Digital Wallet\\n⭐ Reward Points\\n📦 Order Tracking\\n\\nYou can now enjoy the full Memories experience!');
+  // Get form values
+  const inputs = document.querySelectorAll('#profile-content input');
+  const name = inputs[0]?.value || '';
+  const email = inputs[1]?.value || '';
+  const phone = inputs[2]?.value || '';
+  const city = inputs[3]?.value || '';
+  
+  // Validate required fields
+  if (!name.trim()) {
+    alert('❌ Please enter your name');
+    return;
+  }
+  
+  if (!email.trim() || !email.includes('@')) {
+    alert('❌ Please enter a valid email address');
+    return;
+  }
+  
+  // Create user profile object
+  const userProfile = {
+    id: 'user_' + Date.now(),
+    name: name.trim(),
+    email: email.trim(),
+    phone: phone.trim(),
+    city: city.trim(),
+    createdAt: new Date().toISOString(),
+    profileComplete: true
+  };
+  
+  // Save to localStorage
+  try {
+    localStorage.setItem('memoriesUserProfile', JSON.stringify(userProfile));
+    localStorage.setItem('memoriesUser', JSON.stringify(userProfile));
+    
+    // Also initialize empty photo storage and wallet
+    localStorage.setItem(`memories_photos_${userProfile.id}`, JSON.stringify([]));
+    localStorage.setItem(`memories_wallet_${userProfile.id}`, JSON.stringify({
+      balance: 0,
+      rewardPoints: 0,
+      storeCredits: 0,
+      tier: 'Silver',
+      totalSpent: 0,
+      createdAt: new Date().toISOString()
+    }));
+    localStorage.setItem(`memories_transactions_${userProfile.id}`, JSON.stringify([]));
+    
+    // Update the modal to show success
+    const contentArea = document.getElementById('tab-content-area');
+    if (contentArea) {
+      contentArea.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #4caf50, #81c784); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 48px; animation: pulse 2s infinite;">🎉</div>
+          <h3 style="color: #1a202c; font-size: 28px; font-weight: bold; margin-bottom: 16px;">Profile Created Successfully!</h3>
+          <p style="color: #4a5568; margin-bottom: 24px; line-height: 1.6;">Welcome to Memories, <strong>${name}</strong>!<br/>All premium features are now unlocked.</p>
+          
+          <div style="background: linear-gradient(135deg, #e8f5e8, #f1f8e9); padding: 24px; border-radius: 16px; margin-bottom: 24px; border: 2px solid #4caf50;">
+            <h4 style="color: #2e7d32; margin: 0 0 12px 0; font-weight: bold;">✅ Features Now Available:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; text-align: left;">
+              <div>📸 Photo Storage & Organization</div>
+              <div>💰 Digital Wallet & Payments</div>
+              <div>⭐ Reward Points System</div>
+              <div>📦 Order History & Tracking</div>
+            </div>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button onclick="switchTab('photos')" style="
+              background: linear-gradient(135deg, #9c27b0, #ba68c8);
+              color: white;
+              border: none;
+              padding: 14px 24px;
+              border-radius: 10px;
+              font-weight: bold;
+              cursor: pointer;
+              font-size: 16px;
+              transition: all 0.2s;
+            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+              📸 Go to Photo Storage
+            </button>
+            <button onclick="closeProfileModal(); setTimeout(() => { const customizer = document.getElementById('customizer'); if (customizer) customizer.scrollIntoView({behavior: 'smooth'}); }, 300);" style="
+              background: linear-gradient(135deg, #e91e63, #f48fb1);
+              color: white;
+              border: none;
+              padding: 14px 24px;
+              border-radius: 10px;
+              font-weight: bold;
+              cursor: pointer;
+              font-size: 16px;
+              transition: all 0.2s;
+            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+              🎨 Start Creating Frames
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Add pulse animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Update tabs to show photo count (now that profile exists)
+    const photosTab = document.getElementById('tab-photos');
+    if (photosTab) {
+      photosTab.textContent = 'Photos (0)';
+    }
+    
+    console.log('✅ Profile created successfully:', userProfile);
+    
+  } catch (error) {
+    console.error('Error creating profile:', error);
+    alert('❌ Error creating profile. Please try again.');
+  }
 }
 
 // Close modal with Escape key
