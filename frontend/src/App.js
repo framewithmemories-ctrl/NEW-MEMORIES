@@ -255,7 +255,7 @@ const Header = () => {
                 Gift Finder
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
               </a>
-              <a href="#about" className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group">
+              <a href="/about" className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group">
                 About Us
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
               </a>
