@@ -383,6 +383,26 @@ export const EnhancedAIGiftFinder = () => {
         reasoning.push(`Matches ${style?.label?.toLowerCase()} aesthetic`);
       }
 
+      // Photo Analysis Bonus (if preview photo uploaded)
+      if (previewPhoto && previewPhoto.dimensions) {
+        const { width, height } = previewPhoto.dimensions;
+        const ratio = width / height;
+        
+        if (ratio > 1.3 && product.tags.includes('landscape')) {
+          score += 15;
+          reasoning.push('Perfect match for your landscape photo');
+        } else if (ratio < 0.8 && product.tags.includes('portrait')) {
+          score += 15;
+          reasoning.push('Perfect match for your portrait photo');
+        } else if (Math.abs(ratio - 1) < 0.2 && product.tags.includes('square')) {
+          score += 15;
+          reasoning.push('Perfect match for your square photo');
+        } else if (product.category === 'frames') {
+          score += 10;
+          reasoning.push('Great frame option for your uploaded photo');
+        }
+      }
+
       // Contextual bonuses
       if (occasion?.romantic && product.tags.includes('romantic')) {
         score += 15;
@@ -399,7 +419,7 @@ export const EnhancedAIGiftFinder = () => {
         score: Math.min(100, score), // Cap at 100
         reasoning: reasoning.join(', '),
         confidence: Math.min(95, score + 5),
-        aiTag: generateSmartTag(product, answers)
+        aiTag: generateSmartTag(product, answers, previewPhoto)
       };
     });
 
