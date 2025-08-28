@@ -1393,7 +1393,6 @@ const Home = () => {
       <Header />
       <AboutUsPopup />
       <HeroSection />
-      <AboutUsSection />
       <ProductGrid products={products} />
       <PhotoCustomizer />
       <AIGiftFinder />
