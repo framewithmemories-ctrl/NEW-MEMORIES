@@ -150,6 +150,18 @@ backend:
         agent: "testing"
         comment: "✅ Image upload system working perfectly. POST /api/upload-image accepts JPG/PNG files, converts to base64, analyzes dimensions and quality. High-res images (2500x2000px) get ✅ excellent quality message. Low-res images (800x600px) get ⚠️ quality warning with specific recommendations. Returns proper response structure with success, image_data, dimensions, quality_warning, message, and recommended_sizes fields."
 
+  - task: "Backend Profile APIs"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Extended backend with photo storage APIs, wallet transaction endpoints, enhanced user model with wallet fields, and profile management functionality."
+
 frontend:
   - task: "Frontend Branding Integration"
     implemented: true
