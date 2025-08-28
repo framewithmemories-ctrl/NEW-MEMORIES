@@ -833,7 +833,56 @@ class PhotoGiftHubAPITester:
         if not confidence_success:
             print("⚠️  AI suggestions lack confidence scores and detailed reasoning")
         
-        return ai_success_rate > 50  # More lenient for AI features
+    def test_profile_enhancement_workflow(self):
+        """Test complete profile enhancement workflow"""
+        print("\n🔧 Testing Profile Enhancement APIs Workflow")
+        print("-" * 50)
+        
+        # Step 1: Create a test user
+        user_success, user_id = self.test_create_user()
+        if not user_success:
+            return False
+        
+        # Step 2: Test enhanced profile update
+        profile_success = self.test_enhanced_user_profile_update(user_id)
+        
+        # Step 3: Test wallet info retrieval
+        wallet_info_success = self.test_user_wallet_info(user_id)
+        
+        # Step 4: Test photo storage workflow
+        photo_save_success, photo_id = self.test_save_user_photo(user_id)
+        photo_get_success = self.test_get_user_photos(user_id)
+        
+        if photo_id:
+            favorite_success = self.test_toggle_photo_favorite(user_id, photo_id)
+            usage_success = self.test_record_photo_usage(user_id, photo_id)
+        else:
+            favorite_success = usage_success = False
+        
+        # Step 5: Test wallet operations
+        add_money_success = self.test_add_money_to_wallet(user_id)
+        convert_points_success = self.test_convert_points_to_credits(user_id)
+        transactions_success = self.test_get_wallet_transactions(user_id)
+        payment_success = self.test_wallet_payment(user_id)
+        
+        # Step 6: Test photo deletion (cleanup)
+        if photo_id:
+            delete_success = self.test_delete_user_photo(user_id, photo_id)
+        else:
+            delete_success = False
+        
+        # Calculate workflow success
+        workflow_tests = [
+            profile_success, wallet_info_success, photo_save_success, photo_get_success,
+            favorite_success, usage_success, add_money_success, convert_points_success,
+            transactions_success, payment_success, delete_success
+        ]
+        
+        workflow_success_rate = sum(workflow_tests) / len(workflow_tests) * 100
+        
+        print(f"\n📊 Profile Enhancement Workflow Success Rate: {workflow_success_rate:.1f}%")
+        
+        return workflow_success_rate > 80
 
     def run_all_tests(self):
         """Run all backend tests"""
