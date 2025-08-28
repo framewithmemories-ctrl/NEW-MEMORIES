@@ -19,7 +19,8 @@ import { UserProfileSimple } from "./components/UserProfileSimple";
 import { EnhancedAIGiftFinder } from "./components/EnhancedAIGiftFinder";
 import { HeroSection, AboutUsSection, ProductGrid } from "./components/MainComponents";
 import { AboutUsPage } from "./components/AboutUsPage";
-import { CheckoutPage } from "./components/CheckoutPage";
+import { EnhancedCheckoutPage } from "./components/EnhancedCheckoutPage";
+import { ReviewSystemEnhanced } from "./components/ReviewSystemEnhanced";
 import { 
   Upload, 
   Sparkles, 
