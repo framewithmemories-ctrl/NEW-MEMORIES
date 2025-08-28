@@ -195,7 +195,7 @@ const CartIcon = () => {
       
       {showCheckout && (
         <div className="fixed inset-0 bg-black/50 z-50">
-          <CheckoutPage onClose={() => setShowCheckout(false)} />
+          <EnhancedCheckoutPage onClose={() => setShowCheckout(false)} />
         </div>
       )}
     </>
