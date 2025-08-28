@@ -779,6 +779,14 @@ function switchTab(tabName) {
 }
 
 function createProfile() {
+  // Check if profile already exists
+  const existingProfile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+  if (existingProfile.profileComplete) {
+    alert('❌ Profile already exists! You can view and manage it from the Profile tab.');
+    showProfileContent(); // Refresh to show existing profile
+    return;
+  }
+
   // Get form values
   const inputs = document.querySelectorAll('#profile-content input');
   const name = inputs[0]?.value || '';
@@ -845,6 +853,19 @@ function createProfile() {
           </div>
           
           <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button onclick="showProfileContent(); switchTab('profile');" style="
+              background: linear-gradient(135deg, #4caf50, #66bb6a);
+              color: white;
+              border: none;
+              padding: 14px 24px;
+              border-radius: 10px;
+              font-weight: bold;
+              cursor: pointer;
+              font-size: 16px;
+              transition: all 0.2s;
+            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+              👤 View My Profile
+            </button>
             <button onclick="switchTab('photos')" style="
               background: linear-gradient(135deg, #9c27b0, #ba68c8);
               color: white;
