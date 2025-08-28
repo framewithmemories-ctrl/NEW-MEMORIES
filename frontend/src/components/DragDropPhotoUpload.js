@@ -21,7 +21,8 @@ import {
   ZoomIn,
   Save,
   Heart,
-  Tag
+  Tag,
+  Palette
 } from "lucide-react";
 
 export const DragDropPhotoUpload = ({ 
