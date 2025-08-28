@@ -2,7 +2,11 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
+import { ProfilePhotoStorage } from './ProfilePhotoStorage';
 import { 
   Upload, 
   Camera, 
@@ -14,7 +18,10 @@ import {
   Zap,
   RotateCcw,
   Move,
-  ZoomIn
+  ZoomIn,
+  Save,
+  Heart,
+  Tag
 } from "lucide-react";
 
 export const DragDropPhotoUpload = ({ 
