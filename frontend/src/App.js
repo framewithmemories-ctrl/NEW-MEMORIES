@@ -193,10 +193,10 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Bar */}
         <div className="hidden md:flex justify-between items-center py-2 text-sm border-b border-rose-50">
-          <div className="flex items-center space-x-6 text-gray-600">
-            <SmartCallButton className="flex items-center space-x-2 hover:text-rose-600 transition-colors cursor-pointer bg-transparent p-0 h-auto">
-              <Phone className="w-3 h-3" />
-              <span className="font-medium">+91 81480 40148</span>
+          <div className="flex items-center space-x-6 text-gray-700">
+            <SmartCallButton className="flex items-center space-x-2 text-gray-800 hover:text-rose-600 transition-colors cursor-pointer bg-transparent p-0 h-auto">
+              <Phone className="w-3 h-3 text-rose-600" />
+              <span className="font-semibold text-gray-900">+91 81480 40148</span>
             </SmartCallButton>
             <div className="flex items-center space-x-2">
               <Clock className="w-3 h-3" />
