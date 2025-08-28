@@ -309,7 +309,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Enhanced AI Gift Finder (Item D Fixes)"
     - "Backend Profile APIs"
     - "Profile Enhancements - Photo Storage"
     - "Profile Enhancements - Digital Wallet"
