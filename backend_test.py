@@ -802,6 +802,254 @@ class PhotoGiftHubAPITester:
             self.log_test("Delete User Photo", False, str(e))
             return False
 
+    def test_create_review(self):
+        """Test creating a new review"""
+        try:
+            review_data = {
+                "name": f"Sarah Johnson {datetime.now().strftime('%H%M%S')}",
+                "rating": 5,
+                "comment": "Absolutely love my custom photo frame! The quality is exceptional and the wooden finish is beautiful. The team at Memories did an amazing job bringing my family photo to life. Highly recommend for anyone looking for premium photo frames in Coimbatore!",
+                "photos": ["https://images.unsplash.com/photo-1465161191540-aac346fcbaff"],
+                "product_id": "premium-wooden-frame"
+            }
+            
+            response = requests.post(f"{self.api_url}/reviews", json=review_data, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                review = response.json()
+                required_fields = ['id', 'name', 'rating', 'comment', 'approved', 'created_at']
+                missing_fields = [field for field in required_fields if field not in review]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing review fields: {missing_fields}"
+                else:
+                    # Check if review is auto-approved
+                    auto_approved = review.get('approved', False)
+                    details = f"Review created - ID: {review['id']}, Rating: {review['rating']}/5, Auto-approved: {auto_approved}, Name: {review['name']}"
+                    if not auto_approved:
+                        details += " (Warning: Review not auto-approved)"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Create Review", success, details)
+            return success, review.get('id') if success else None
+            
+        except Exception as e:
+            self.log_test("Create Review", False, str(e))
+            return False, None
+
+    def test_get_reviews_basic(self):
+        """Test getting reviews with basic parameters"""
+        try:
+            response = requests.get(f"{self.api_url}/reviews", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['reviews', 'total_count', 'has_more', 'rating_stats']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing response fields: {missing_fields}"
+                else:
+                    reviews = data['reviews']
+                    total_count = data['total_count']
+                    has_more = data['has_more']
+                    rating_stats = data['rating_stats']
+                    
+                    details = f"Retrieved {len(reviews)} reviews, Total: {total_count}, Has more: {has_more}"
+                    
+                    # Check rating stats structure
+                    if 'total_reviews' in rating_stats and 'average_rating' in rating_stats and 'rating_distribution' in rating_stats:
+                        details += f", Avg rating: {rating_stats['average_rating']}, Total reviews in stats: {rating_stats['total_reviews']}"
+                    else:
+                        success = False
+                        details += " - Invalid rating stats structure"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Get Reviews - Basic", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Get Reviews - Basic", False, str(e))
+            return False
+
+    def test_get_reviews_with_pagination(self):
+        """Test getting reviews with pagination parameters"""
+        try:
+            # Test with limit and offset
+            params = {"limit": 5, "offset": 0}
+            response = requests.get(f"{self.api_url}/reviews", params=params, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                reviews = data.get('reviews', [])
+                total_count = data.get('total_count', 0)
+                has_more = data.get('has_more', False)
+                
+                # Check pagination logic
+                expected_has_more = total_count > 5
+                pagination_correct = (len(reviews) <= 5) and (has_more == expected_has_more or total_count <= 5)
+                
+                details = f"Pagination test - Limit: 5, Retrieved: {len(reviews)}, Total: {total_count}, Has more: {has_more}, Logic correct: {pagination_correct}"
+                
+                if not pagination_correct:
+                    success = False
+                    details += " - Pagination logic error"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Get Reviews - Pagination", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Get Reviews - Pagination", False, str(e))
+            return False
+
+    def test_get_reviews_with_filters(self):
+        """Test getting reviews with rating filter"""
+        try:
+            # Test with rating filter
+            params = {"rating_filter": 5, "approved_only": True}
+            response = requests.get(f"{self.api_url}/reviews", params=params, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                reviews = data.get('reviews', [])
+                
+                # Check if all reviews have rating 5
+                rating_filter_correct = all(review.get('rating') == 5 for review in reviews) if reviews else True
+                approved_filter_correct = all(review.get('approved', False) for review in reviews) if reviews else True
+                
+                details = f"Filter test - Rating filter: 5, Retrieved: {len(reviews)} reviews, Rating filter correct: {rating_filter_correct}, Approved filter correct: {approved_filter_correct}"
+                
+                if not (rating_filter_correct and approved_filter_correct):
+                    success = False
+                    details += " - Filter logic error"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Get Reviews - Filters", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Get Reviews - Filters", False, str(e))
+            return False
+
+    def test_get_review_stats(self):
+        """Test getting review statistics"""
+        try:
+            response = requests.get(f"{self.api_url}/reviews/stats", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                stats = response.json()
+                required_fields = ['total_reviews', 'average_rating', 'rating_distribution']
+                missing_fields = [field for field in required_fields if field not in stats]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing stats fields: {missing_fields}"
+                else:
+                    total_reviews = stats['total_reviews']
+                    average_rating = stats['average_rating']
+                    rating_dist = stats['rating_distribution']
+                    
+                    # Check rating distribution structure
+                    expected_ratings = ['1', '2', '3', '4', '5']
+                    dist_complete = all(rating in rating_dist for rating in expected_ratings)
+                    
+                    details = f"Stats retrieved - Total: {total_reviews}, Avg: {average_rating}, Distribution complete: {dist_complete}"
+                    
+                    if not dist_complete:
+                        success = False
+                        details += " - Incomplete rating distribution"
+                    
+                    # Validate average rating range
+                    if total_reviews > 0 and not (0 <= average_rating <= 5):
+                        success = False
+                        details += f" - Invalid average rating: {average_rating}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Get Review Stats", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Get Review Stats", False, str(e))
+            return False
+
+    def test_reviews_workflow(self):
+        """Test complete reviews API workflow"""
+        print("\n⭐ Testing Reviews API Workflow")
+        print("-" * 50)
+        
+        # Step 1: Create multiple test reviews
+        review_creation_success = []
+        review_ids = []
+        
+        # Create 3 test reviews with different ratings
+        test_reviews = [
+            {
+                "name": f"Emily Chen {datetime.now().strftime('%H%M%S')}",
+                "rating": 5,
+                "comment": "Outstanding service! My custom photo mug turned out perfect. The sublimation printing quality is top-notch and the colors are vibrant. Will definitely order again from Memories!",
+                "photos": ["https://images.unsplash.com/photo-1628313388777-9b9a751dfc6a"],
+                "product_id": "photo-mug"
+            },
+            {
+                "name": f"Rajesh Kumar {datetime.now().strftime('%H%M%S')}",
+                "rating": 4,
+                "comment": "Great quality frames and fast delivery. The wooden frame looks elegant and the photo quality is excellent. Minor delay in delivery but overall satisfied with the service.",
+                "photos": [],
+                "product_id": "wooden-frame"
+            },
+            {
+                "name": f"Priya Sharma {datetime.now().strftime('%H%M%S')}",
+                "rating": 5,
+                "comment": "Absolutely love the acrylic frame! Crystal clear and modern design. Perfect for our office space. The team was very helpful with customization options.",
+                "photos": ["https://images.unsplash.com/photo-1505841468529-d99f8d82ef8f"],
+                "product_id": "acrylic-frame"
+            }
+        ]
+        
+        for i, review_data in enumerate(test_reviews):
+            try:
+                response = requests.post(f"{self.api_url}/reviews", json=review_data, timeout=10)
+                success = response.status_code == 200
+                review_creation_success.append(success)
+                
+                if success:
+                    review = response.json()
+                    review_ids.append(review.get('id'))
+                    print(f"✅ Created review {i+1}: {review_data['name']} - {review_data['rating']} stars")
+                else:
+                    print(f"❌ Failed to create review {i+1}: {response.status_code}")
+                    
+            except Exception as e:
+                review_creation_success.append(False)
+                print(f"❌ Error creating review {i+1}: {str(e)}")
+        
+        # Step 2: Test all review endpoints
+        basic_get_success = self.test_get_reviews_basic()
+        pagination_success = self.test_get_reviews_with_pagination()
+        filter_success = self.test_get_reviews_with_filters()
+        stats_success = self.test_get_review_stats()
+        
+        # Calculate workflow success
+        workflow_tests = review_creation_success + [basic_get_success, pagination_success, filter_success, stats_success]
+        workflow_success_rate = sum(workflow_tests) / len(workflow_tests) * 100
+        
+        print(f"\n📊 Reviews API Workflow Success Rate: {workflow_success_rate:.1f}%")
+        
+        return workflow_success_rate > 80
+
     def test_enhanced_ai_gift_finder_workflow(self):
         """Test complete Enhanced AI Gift Finder workflow"""
         print("\n🧠 Testing Enhanced AI Gift Finder Workflow")
