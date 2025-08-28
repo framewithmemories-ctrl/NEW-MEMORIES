@@ -29,6 +29,11 @@ const API = `${BACKEND_URL}/api`;
 
 export const ReviewSystemEnhanced = () => {
   const [reviews, setReviews] = useState([]);
+  const [reviewStats, setReviewStats] = useState({
+    total_reviews: 0,
+    average_rating: 0,
+    rating_distribution: { "5": 0, "4": 0, "3": 0, "2": 0, "1": 0 }
+  });
   const [newReview, setNewReview] = useState({
     name: '',
     rating: 5,
@@ -39,20 +44,88 @@ export const ReviewSystemEnhanced = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    offset: 0,
+    limit: 10,
+    hasMore: true
+  });
 
-  // Load reviews from localStorage on mount
+  // Load reviews from API on mount
   useEffect(() => {
     loadReviews();
+    loadReviewStats();
   }, []);
 
-  const loadReviews = () => {
+  // Reload when filter changes
+  useEffect(() => {
+    setPagination({ offset: 0, limit: 10, hasMore: true });
+    loadReviews(true);
+  }, [filterRating]);
+
+  const loadReviews = async (reset = false) => {
     try {
-      const savedReviews = localStorage.getItem('memoriesReviews');
-      if (savedReviews) {
-        setReviews(JSON.parse(savedReviews));
+      setIsLoading(true);
+      const offset = reset ? 0 : pagination.offset;
+      
+      const params = new URLSearchParams({
+        limit: pagination.limit.toString(),
+        offset: offset.toString(),
+        approved_only: 'true'
+      });
+      
+      if (filterRating !== 'all') {
+        params.append('rating_filter', filterRating);
+      }
+      
+      const response = await axios.get(`${API}/reviews?${params}`);
+      
+      if (reset) {
+        setReviews(response.data.reviews);
       } else {
-        // Initialize with some sample reviews
-        const sampleReviews = [
+        setReviews(prev => [...prev, ...response.data.reviews]);
+      }
+      
+      setPagination(prev => ({
+        ...prev,
+        offset: offset + pagination.limit,
+        hasMore: response.data.has_more
+      }));
+      
+      // Update stats if available
+      if (response.data.rating_stats) {
+        setReviewStats(response.data.rating_stats);
+      }
+      
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+      toast.error("Failed to load reviews. Please try again.");
+      
+      // Fallback to sample data if API fails
+      setReviews([
+        {
+          id: '1',
+          name: 'Priya Sharma',
+          rating: 5,
+          comment: 'Amazing quality frames! The sublimation printing is crystal clear and the wooden frame is beautifully crafted.',
+          photos: [],
+          created_at: new Date().toISOString()
+        }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadReviewStats = async () => {
+    try {
+      const response = await axios.get(`${API}/reviews/stats`);
+      setReviewStats(response.data);
+    } catch (error) {
+      console.error('Error loading review stats:', error);
+      // Keep default stats
+    }
+  };
           {
             id: 1,
             name: "Priya Sharma",
