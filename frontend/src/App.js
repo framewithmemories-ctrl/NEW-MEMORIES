@@ -273,12 +273,148 @@ const Header = () => {
             </Badge>
             
             <button 
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={() => alert('Profile clicked - This will be enhanced with full functionality')}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative group"
+              onClick={() => {
+                // Create and show enhanced profile modal
+                const modal = document.createElement('div');
+                modal.innerHTML = `
+                  <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; border-radius: 12px; padding: 24px; max-width: 800px; width: 90%; max-height: 80%; overflow-y: auto;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="font-size: 24px; font-weight: bold; color: #333;">Your Enhanced Profile</h2>
+                        <button onclick="this.closest('div').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+                      </div>
+                      
+                      <!-- Tab Navigation -->
+                      <div style="border-bottom: 1px solid #e5e7eb; margin-bottom: 20px;">
+                        <div style="display: flex; gap: 20px;">
+                          <button onclick="showTab('profile')" id="profile-tab" style="padding: 10px 16px; border: none; background: none; cursor: pointer; border-bottom: 2px solid #e91e63; color: #e91e63; font-weight: bold;">Profile</button>
+                          <button onclick="showTab('photos')" id="photos-tab" style="padding: 10px 16px; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; color: #666;">Photos (${localStorage.getItem('memoriesPhotos') ? JSON.parse(localStorage.getItem('memoriesPhotos')).length : 0})</button>
+                          <button onclick="showTab('wallet')" id="wallet-tab" style="padding: 10px 16px; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; color: #666;">Wallet</button>
+                          <button onclick="showTab('orders')" id="orders-tab" style="padding: 10px 16px; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; color: #666;">Orders</button>
+                        </div>
+                      </div>
+                      
+                      <!-- Tab Content -->
+                      <div id="tab-content">
+                        <!-- Profile Tab -->
+                        <div id="profile-content">
+                          <div style="background: linear-gradient(135deg, #e91e63, #f8bbd9); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                              <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: #e91e63;">U</div>
+                              <div>
+                                <h3 style="color: white; margin: 0; font-size: 20px;">Guest User</h3>
+                                <p style="color: rgba(255,255,255,0.9); margin: 0;">Member since today</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                              <label style="display: block; margin-bottom: 5px; font-weight: bold;">Name</label>
+                              <input type="text" placeholder="Enter your name" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            </div>
+                            <div>
+                              <label style="display: block; margin-bottom: 5px; font-weight: bold;">Email</label>
+                              <input type="email" placeholder="Enter your email" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            </div>
+                            <div>
+                              <label style="display: block; margin-bottom: 5px; font-weight: bold;">Phone</label>
+                              <input type="tel" placeholder="Enter your phone" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            </div>
+                            <div>
+                              <label style="display: block; margin-bottom: 5px; font-weight: bold;">Location</label>
+                              <input type="text" placeholder="Your city" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            </div>
+                          </div>
+                          <button style="margin-top: 20px; background: linear-gradient(135deg, #e91e63, #f06292); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">Save Profile</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+                
+                // Add tab switching functionality
+                window.showTab = function(tabName) {
+                  // Reset all tabs
+                  ['profile', 'photos', 'wallet', 'orders'].forEach(tab => {
+                    const tabButton = document.getElementById(tab + '-tab');
+                    if (tabButton) {
+                      tabButton.style.borderBottomColor = 'transparent';
+                      tabButton.style.color = '#666';
+                      tabButton.style.fontWeight = 'normal';
+                    }
+                  });
+                  
+                  // Activate selected tab
+                  const activeTab = document.getElementById(tabName + '-tab');
+                  if (activeTab) {
+                    activeTab.style.borderBottomColor = '#e91e63';
+                    activeTab.style.color = '#e91e63';
+                    activeTab.style.fontWeight = 'bold';
+                  }
+                  
+                  // Show content based on tab
+                  const content = document.getElementById('tab-content');
+                  if (tabName === 'profile') {
+                    content.innerHTML = document.getElementById('profile-content').outerHTML;
+                  } else if (tabName === 'photos') {
+                    content.innerHTML = \`
+                      <div style="text-align: center; padding: 40px;">
+                        <div style="width: 80px; height: 80px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                          <span style="font-size: 32px;">📸</span>
+                        </div>
+                        <h3 style="margin-bottom: 10px; color: #333;">Photo Storage</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Save photos to your profile and reuse them for future orders</p>
+                        <button style="background: linear-gradient(135deg, #9c27b0, #e1bee7); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Upload Photos</button>
+                      </div>
+                    \`;
+                  } else if (tabName === 'wallet') {
+                    content.innerHTML = \`
+                      <div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+                          <div style="background: linear-gradient(135deg, #4caf50, #a5d6a7); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                            <div style="font-size: 24px; font-weight: bold;">₹0.00</div>
+                            <div style="opacity: 0.9;">Wallet Balance</div>
+                          </div>
+                          <div style="background: linear-gradient(135deg, #ff9800, #ffcc02); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                            <div style="font-size: 24px; font-weight: bold;">0</div>
+                            <div style="opacity: 0.9;">Reward Points</div>
+                          </div>
+                          <div style="background: linear-gradient(135deg, #9c27b0, #ce93d8); padding: 20px; border-radius: 10px; text-align: center; color: white;">
+                            <div style="font-size: 24px; font-weight: bold;">₹0.00</div>
+                            <div style="opacity: 0.9;">Store Credits</div>
+                          </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                          <button style="flex: 1; background: linear-gradient(135deg, #4caf50, #66bb6a); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Add Money</button>
+                          <button style="flex: 1; background: linear-gradient(135deg, #ff9800, #ffb74d); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Convert Points</button>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                          <p style="color: #666; margin: 0;">💰 Digital wallet system ready for secure transactions</p>
+                        </div>
+                      </div>
+                    \`;
+                  } else if (tabName === 'orders') {
+                    content.innerHTML = \`
+                      <div style="text-align: center; padding: 40px;">
+                        <div style="width: 80px; height: 80px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                          <span style="font-size: 32px;">📦</span>
+                        </div>
+                        <h3 style="margin-bottom: 10px; color: #333;">Order History</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Track your past orders and reorder favorites</p>
+                        <button style="background: linear-gradient(135deg, #e91e63, #f48fb1); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Start Shopping</button>
+                      </div>
+                    \`;
+                  }
+                };
+                
+                document.body.appendChild(modal);
+              }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-white opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
             <CartIcon />
             
