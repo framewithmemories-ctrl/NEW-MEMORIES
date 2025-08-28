@@ -510,6 +510,53 @@ export const EnhancedAIGiftFinder = () => {
                         that truly resonate. Get personalized suggestions in just 4 smart questions.
                       </p>
                       
+                      {/* Photo Upload Option */}
+                      <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-2">
+                            <Camera className="w-5 h-5 text-purple-600" />
+                            <span className="font-semibold text-purple-900">Optional: Upload Preview Photo</span>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowPhotoUpload(!showPhotoUpload)}
+                            className="text-purple-600 hover:text-purple-700"
+                          >
+                            {showPhotoUpload ? 'Hide Upload' : 'Add Photo'}
+                          </Button>
+                        </div>
+                        <p className="text-sm text-purple-700 mb-3">
+                          Upload a photo to get more personalized recommendations based on the image style and context.
+                        </p>
+                        
+                        {showPhotoUpload && (
+                          <div className="mt-4">
+                            <DragDropPhotoUpload
+                              onPhotoUploaded={handlePhotoUploaded}
+                              maxSize={10}
+                              className="border-purple-300"
+                              enableProfileIntegration={false}
+                            />
+                          </div>
+                        )}
+                        
+                        {previewPhoto && (
+                          <div className="mt-3 flex items-center space-x-3 p-3 bg-white rounded-lg border border-purple-300">
+                            <img
+                              src={previewPhoto.url}
+                              alt="Preview"
+                              className="w-12 h-12 object-cover rounded-lg"
+                            />
+                            <div className="flex-1">
+                              <div className="font-medium text-purple-900">Photo added to AI analysis</div>
+                              <div className="text-sm text-purple-700">{previewPhoto.name}</div>
+                            </div>
+                            <CheckCircle className="w-5 h-5 text-green-600" />
+                          </div>
+                        )}
+                      </div>
+                      
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                         <div className="text-center p-4 bg-purple-50 rounded-lg">
                           <Wand2 className="w-8 h-8 text-purple-600 mx-auto mb-2" />
