@@ -198,13 +198,13 @@ const Header = () => {
               <Phone className="w-3 h-3 text-rose-600" />
               <span className="font-semibold text-gray-900">+91 81480 40148</span>
             </SmartCallButton>
-            <div className="flex items-center space-x-2">
-              <Clock className="w-3 h-3" />
-              <span>Mon-Sat 9:30AM-9PM</span>
+            <div className="flex items-center space-x-2 text-gray-700">
+              <Clock className="w-3 h-3 text-blue-600" />
+              <span className="text-gray-800 font-medium">Mon-Sat 9:30AM-9PM</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <MapPin className="w-3 h-3" />
-              <span>Keeranatham Road, Coimbatore</span>
+            <div className="flex items-center space-x-2 text-gray-700">
+              <MapPin className="w-3 h-3 text-green-600" />
+              <span className="text-gray-800 font-medium">Keeranatham Road, Coimbatore</span>
             </div>
           </div>
           <div className="flex items-center space-x-4">
