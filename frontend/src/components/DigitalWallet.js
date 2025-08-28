@@ -572,8 +572,15 @@ export const DigitalWallet = ({ userId, onBalanceUpdate }) => {
       </Card>
     </div>
   );
+};
 
-  // Expose wallet functions to parent components
-  DigitalWallet.useWalletForPayment = useWalletForPayment;
-  DigitalWallet.addRewardPoints = addRewardPoints;
+// Expose wallet functions to parent components
+DigitalWallet.useWalletForPayment = (userId, amount, orderId) => {
+  // This would be called from parent components for payments
+  console.log('Wallet payment function called', { userId, amount, orderId });
+};
+
+DigitalWallet.addRewardPoints = (userId, points, reason) => {
+  // This would be called to add reward points
+  console.log('Add reward points function called', { userId, points, reason });
 };
