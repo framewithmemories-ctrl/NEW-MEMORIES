@@ -170,7 +170,7 @@ const SmartCallButton = ({ className = "", children, phoneNumber = "+91814804014
   );
 };
 
-# Cart Icon Component with WORKING Counter and Checkout
+// Cart Icon Component with WORKING Counter and Checkout
 const CartIcon = () => {
   const { cartCount } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
