@@ -578,7 +578,7 @@ const AboutUsSection = () => {
   );
 };
 
-// Enhanced Product Grid with More Categories
+// Enhanced Product Grid with Fixed Filtering and Add to Cart
 const ProductGrid = ({ products }) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [cartItems, setCartItems] = useState([]);
@@ -592,13 +592,48 @@ const ProductGrid = ({ products }) => {
     { name: 'Corporate', icon: <Package className="w-4 h-4" /> }
   ];
   
+  // Fixed filtering logic
   const filteredProducts = selectedCategory === 'All' 
     ? products 
-    : products.filter(product => product.category === selectedCategory.toLowerCase());
+    : products.filter(product => {
+        const categoryLower = selectedCategory.toLowerCase();
+        const productCategory = product.category?.toLowerCase() || '';
+        
+        // Handle special cases for filtering
+        if (categoryLower === 'frames') {
+          return productCategory.includes('frame');
+        }
+        if (categoryLower === 'mugs') {
+          return productCategory.includes('mug');
+        }
+        if (categoryLower === 't-shirts') {
+          return productCategory.includes('t-shirt') || productCategory.includes('tshirt');
+        }
+        if (categoryLower === 'acrylic') {
+          return productCategory.includes('acrylic') || productCategory.includes('led');
+        }
+        if (categoryLower === 'corporate') {
+          return productCategory.includes('corporate');
+        }
+        
+        return productCategory === categoryLower;
+      });
 
-  const addToCart = (product) => {
-    setCartItems(prev => [...prev, product]);
-    toast.success(`${product.name} added to cart!`);
+  const addToCart = async (product) => {
+    try {
+      // Add visual feedback
+      toast.success(`${product.name} added to cart! 🛒`);
+      
+      // Update cart state
+      setCartItems(prev => [...prev, { ...product, id: Date.now() }]);
+      
+      // Here you can add API call to backend for persistent cart
+      console.log('Added to cart:', product);
+      
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      toast.error("Failed to add to cart. Please try again!");
+    }
   };
 
   const enhancedProducts = [
@@ -607,7 +642,7 @@ const ProductGrid = ({ products }) => {
       id: 'tshirt-1',
       name: 'Custom Printed T-Shirt',
       description: 'Premium quality cotton t-shirts with sublimation printing',
-      category: 't-shirts',
+      category: 't-shirt',
       base_price: 299,
       sizes: [
         { name: 'S', price_add: 0 },
@@ -666,6 +701,7 @@ const ProductGrid = ({ products }) => {
           </p>
         </div>
         
+        {/* Fixed Category Filtering Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
           {categories.map((category) => (
             <Button 
@@ -675,7 +711,10 @@ const ProductGrid = ({ products }) => {
                 ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-lg' 
                 : 'border-rose-200 text-rose-700 hover:bg-rose-50'
               }
-              onClick={() => setSelectedCategory(category.name)}
+              onClick={() => {
+                console.log('Selected category:', category.name);
+                setSelectedCategory(category.name);
+              }}
             >
               {category.icon}
               <span className="ml-2">{category.name}</span>
@@ -683,8 +722,39 @@ const ProductGrid = ({ products }) => {
           ))}
         </div>
         
+        {/* Products Count Indicator */}
+        <div className="text-center mb-8">
+          <p className="text-gray-600">
+            Showing {filteredProducts.length} products 
+            {selectedCategory !== 'All' && ` in ${selectedCategory}`}
+          </p>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {enhancedProducts.map((product) => (
+          {enhancedProducts.filter(product => {
+            if (selectedCategory === 'All') return true;
+            
+            const categoryLower = selectedCategory.toLowerCase();
+            const productCategory = product.category?.toLowerCase() || '';
+            
+            if (categoryLower === 'frames') {
+              return productCategory.includes('frame');
+            }
+            if (categoryLower === 'mugs') {
+              return productCategory.includes('mug');
+            }
+            if (categoryLower === 't-shirts') {
+              return productCategory.includes('t-shirt') || productCategory.includes('tshirt');
+            }
+            if (categoryLower === 'acrylic') {
+              return productCategory.includes('acrylic') || productCategory.includes('led');
+            }
+            if (categoryLower === 'corporate') {
+              return productCategory.includes('corporate');
+            }
+            
+            return productCategory === categoryLower;
+          }).map((product) => (
             <Card key={product.id} className="group hover:shadow-2xl transition-all duration-300 border-rose-100 hover:border-rose-200 overflow-hidden transform hover:scale-105">
               <div className="relative overflow-hidden">
                 <img 
@@ -740,20 +810,35 @@ const ProductGrid = ({ products }) => {
                       <Palette className="w-3 h-3 mr-1" />
                       Customize
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <SmartCallButton 
                       className="border-green-200 text-green-700 hover:bg-green-50 text-xs"
-                      onClick={() => window.open('tel:+918148040148', '_blank')}
                     >
                       <PhoneCall className="w-3 h-3 mr-1" />
                       Call Now
-                    </Button>
+                    </SmartCallButton>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
+        
+        {/* Cart Summary */}
+        {cartItems.length > 0 && (
+          <div className="mt-12 bg-green-50 border border-green-200 rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <ShoppingCart className="w-6 h-6 text-green-600" />
+                <span className="text-lg font-semibold text-gray-900">
+                  Cart: {cartItems.length} items
+                </span>
+              </div>
+              <Button className="bg-green-600 hover:bg-green-700 text-white">
+                View Cart & Checkout
+              </Button>
+            </div>
+          </div>
+        )}
         
         {/* Bulk Order CTA */}
         <div className="mt-16 text-center bg-gradient-to-r from-purple-50 via-blue-50 to-rose-50 rounded-3xl p-8 border border-purple-200">
@@ -767,14 +852,12 @@ const ProductGrid = ({ products }) => {
               <Package className="w-5 h-5 mr-2" />
               Get Bulk Quote
             </Button>
-            <Button 
-              variant="outline" 
+            <SmartCallButton 
               className="border-2 border-purple-300 text-purple-700 hover:bg-purple-50 px-8 py-4 text-lg"
-              onClick={() => window.open('tel:+918148040148', '_blank')}
             >
               <PhoneCall className="w-5 h-5 mr-2" />
               Call for Details
-            </Button>
+            </SmartCallButton>
           </div>
         </div>
       </div>
