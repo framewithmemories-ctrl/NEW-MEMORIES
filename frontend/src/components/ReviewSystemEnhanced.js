@@ -126,13 +126,49 @@ export const ReviewSystemEnhanced = () => {
       // Keep default stats
     }
   };
-          {
-            id: 1,
-            name: "Priya Sharma",
-            rating: 5,
-            comment: "Absolutely love my custom photo frame! The quality is outstanding and the delivery was super quick. The team at Memories really knows their craft. Will definitely order again! 💕",
-            date: "2024-01-15",
-            verified: true,
+
+  const submitReview = async (e) => {
+    e.preventDefault();
+    
+    if (!newReview.name.trim() || !newReview.comment.trim()) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const reviewData = {
+        name: newReview.name.trim(),
+        rating: newReview.rating,
+        comment: newReview.comment.trim(),
+        photos: newReview.photos
+      };
+
+      await axios.post(`${API}/reviews`, reviewData);
+      
+      toast.success("Thank you for your review! It will appear shortly after approval.");
+      
+      // Reset form
+      setNewReview({
+        name: '',
+        rating: 5,
+        comment: '',
+        photos: []
+      });
+      setShowReviewForm(false);
+      
+      // Reload reviews to show the new one
+      loadReviews(true);
+      loadReviewStats();
+      
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast.error("Failed to submit review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
             helpful: 12,
             photos: [],
             response: "Thank you Priya! We're thrilled you love your frame. Your satisfaction means everything to us! 😊"
