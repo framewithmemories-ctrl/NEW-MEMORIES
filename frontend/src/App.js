@@ -146,7 +146,7 @@ const BusinessName = ({ size = "text-2xl" }) => {
 // Smart Call Button Component
 const SmartCallButton = ({ className = "", children, phoneNumber = "+918148040148" }) => {
   const handleCall = () => {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userUser);
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile) {
       // Mobile: Open dialer
