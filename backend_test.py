@@ -260,6 +260,446 @@ class PhotoGiftHubAPITester:
             self.log_test("AI Gift Suggestions", False, str(e))
             return False
 
+    def test_enhanced_user_profile_update(self, user_id):
+        """Test enhanced user profile update with new fields"""
+        if not user_id:
+            self.log_test("Enhanced User Profile Update", False, "No user ID available")
+            return False
+            
+        try:
+            profile_data = {
+                "address": "123 Memory Lane, Coimbatore, Tamil Nadu",
+                "preferences": "Wooden frames, vintage style, warm colors",
+                "wallet_balance": 500.0,
+                "store_credits": 100.0,
+                "total_spent": 2500.0
+            }
+            
+            response = requests.put(f"{self.api_url}/users/{user_id}", json=profile_data, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                user_data = response.json()
+                # Check if all new fields are present and updated
+                expected_fields = ['address', 'preferences', 'wallet_balance', 'store_credits', 'total_spent']
+                missing_fields = [field for field in expected_fields if field not in user_data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing enhanced profile fields: {missing_fields}"
+                else:
+                    # Verify values were updated correctly
+                    values_correct = all(user_data.get(field) == profile_data[field] for field in expected_fields)
+                    details = f"Profile updated successfully. Values correct: {values_correct}"
+                    if not values_correct:
+                        success = False
+                        details += " - Some values not updated correctly"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Enhanced User Profile Update", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Enhanced User Profile Update", False, str(e))
+            return False
+
+    def test_user_wallet_info(self, user_id):
+        """Test getting user wallet information"""
+        if not user_id:
+            self.log_test("User Wallet Info", False, "No user ID available")
+            return False
+            
+        try:
+            response = requests.get(f"{self.api_url}/users/{user_id}/wallet", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                wallet_data = response.json()
+                required_fields = ['balance', 'reward_points', 'store_credits', 'tier', 'total_spent']
+                missing_fields = [field for field in required_fields if field not in wallet_data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing wallet fields: {missing_fields}"
+                else:
+                    details = f"Wallet info retrieved - Balance: ₹{wallet_data['balance']}, Points: {wallet_data['reward_points']}, Credits: ₹{wallet_data['store_credits']}, Tier: {wallet_data['tier']}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("User Wallet Info", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("User Wallet Info", False, str(e))
+            return False
+
+    def test_save_user_photo(self, user_id):
+        """Test saving photo to user profile"""
+        if not user_id:
+            self.log_test("Save User Photo", False, "No user ID available")
+            return False, None
+            
+        try:
+            # Create test image data
+            test_image = self.create_test_image()
+            image_base64 = base64.b64encode(test_image.getvalue()).decode('utf-8')
+            
+            photo_data = {
+                "user_id": user_id,
+                "name": f"Family Vacation Photo {datetime.now().strftime('%H%M%S')}",
+                "image_data": image_base64,
+                "dimensions": {"width": 800, "height": 600},
+                "size": 0.5,
+                "tags": ["family", "vacation", "memories"],
+                "notes": "Beautiful family moment from our trip"
+            }
+            
+            response = requests.post(f"{self.api_url}/users/{user_id}/photos", json=photo_data, timeout=15)
+            success = response.status_code == 200
+            
+            if success:
+                saved_photo = response.json()
+                required_fields = ['id', 'user_id', 'name', 'image_data', 'dimensions', 'tags', 'favorite', 'usage_count']
+                missing_fields = [field for field in required_fields if field not in saved_photo]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing photo fields: {missing_fields}"
+                    photo_id = None
+                else:
+                    photo_id = saved_photo['id']
+                    details = f"Photo saved successfully - ID: {photo_id}, Name: {saved_photo['name']}, Tags: {saved_photo['tags']}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+                photo_id = None
+            
+            self.log_test("Save User Photo", success, details)
+            return success, photo_id
+            
+        except Exception as e:
+            self.log_test("Save User Photo", False, str(e))
+            return False, None
+
+    def test_get_user_photos(self, user_id):
+        """Test retrieving user's saved photos"""
+        if not user_id:
+            self.log_test("Get User Photos", False, "No user ID available")
+            return False
+            
+        try:
+            response = requests.get(f"{self.api_url}/users/{user_id}/photos", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                photos = response.json()
+                details = f"Retrieved {len(photos)} photos for user"
+                
+                # If photos exist, check structure
+                if photos:
+                    first_photo = photos[0]
+                    required_fields = ['id', 'user_id', 'name', 'image_data', 'dimensions', 'tags', 'favorite', 'usage_count']
+                    missing_fields = [field for field in required_fields if field not in first_photo]
+                    
+                    if missing_fields:
+                        success = False
+                        details += f", Missing fields in photo: {missing_fields}"
+                    else:
+                        details += f", First photo: {first_photo['name']}, Favorite: {first_photo['favorite']}, Usage: {first_photo['usage_count']}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Get User Photos", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Get User Photos", False, str(e))
+            return False
+
+    def test_toggle_photo_favorite(self, user_id, photo_id):
+        """Test toggling photo favorite status"""
+        if not user_id or not photo_id:
+            self.log_test("Toggle Photo Favorite", False, "Missing user ID or photo ID")
+            return False
+            
+        try:
+            response = requests.put(f"{self.api_url}/users/{user_id}/photos/{photo_id}/favorite", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                has_favorite_field = 'favorite' in result
+                
+                if has_favorite_field:
+                    details = f"Photo favorite status toggled to: {result['favorite']}"
+                else:
+                    success = False
+                    details = "Missing favorite field in response"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Toggle Photo Favorite", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Toggle Photo Favorite", False, str(e))
+            return False
+
+    def test_record_photo_usage(self, user_id, photo_id):
+        """Test recording photo usage"""
+        if not user_id or not photo_id:
+            self.log_test("Record Photo Usage", False, "Missing user ID or photo ID")
+            return False
+            
+        try:
+            response = requests.put(f"{self.api_url}/users/{user_id}/photos/{photo_id}/use", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                has_message = 'message' in result
+                
+                if has_message:
+                    details = f"Photo usage recorded: {result['message']}"
+                else:
+                    success = False
+                    details = "Missing message field in response"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Record Photo Usage", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Record Photo Usage", False, str(e))
+            return False
+
+    def test_add_money_to_wallet(self, user_id):
+        """Test adding money to user wallet"""
+        if not user_id:
+            self.log_test("Add Money to Wallet", False, "No user ID available")
+            return False
+            
+        try:
+            amount = 1000.0
+            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/add-money", 
+                                   json=amount, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                required_fields = ['new_balance', 'transaction_id']
+                missing_fields = [field for field in required_fields if field not in result]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing wallet response fields: {missing_fields}"
+                else:
+                    details = f"Money added successfully - New balance: ₹{result['new_balance']}, Transaction ID: {result['transaction_id']}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Add Money to Wallet", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Add Money to Wallet", False, str(e))
+            return False
+
+    def test_convert_points_to_credits(self, user_id):
+        """Test converting reward points to store credits"""
+        if not user_id:
+            self.log_test("Convert Points to Credits", False, "No user ID available")
+            return False
+            
+        try:
+            points_to_convert = 200  # Should give ₹20 store credit
+            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/convert-points", 
+                                   json=points_to_convert, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                required_fields = ['points_remaining', 'store_credits', 'credit_earned']
+                missing_fields = [field for field in required_fields if field not in result]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing conversion response fields: {missing_fields}"
+                else:
+                    expected_credit = (points_to_convert / 100) * 10  # 200 points = ₹20
+                    credit_correct = result['credit_earned'] == expected_credit
+                    details = f"Points converted - Remaining: {result['points_remaining']}, Credits earned: ₹{result['credit_earned']}, Store credits: ₹{result['store_credits']}, Calculation correct: {credit_correct}"
+                    if not credit_correct:
+                        success = False
+                        details += f" - Expected ₹{expected_credit} but got ₹{result['credit_earned']}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Convert Points to Credits", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Convert Points to Credits", False, str(e))
+            return False
+
+    def test_get_wallet_transactions(self, user_id):
+        """Test getting wallet transaction history"""
+        if not user_id:
+            self.log_test("Get Wallet Transactions", False, "No user ID available")
+            return False
+            
+        try:
+            response = requests.get(f"{self.api_url}/users/{user_id}/wallet/transactions", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                transactions = response.json()
+                details = f"Retrieved {len(transactions)} transactions"
+                
+                # If transactions exist, check structure
+                if transactions:
+                    first_txn = transactions[0]
+                    required_fields = ['id', 'user_id', 'type', 'amount', 'description', 'category', 'balance_after', 'created_at']
+                    missing_fields = [field for field in required_fields if field not in first_txn]
+                    
+                    if missing_fields:
+                        success = False
+                        details += f", Missing transaction fields: {missing_fields}"
+                    else:
+                        details += f", Latest transaction: {first_txn['type']} ₹{first_txn['amount']} - {first_txn['description']}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Get Wallet Transactions", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Get Wallet Transactions", False, str(e))
+            return False
+
+    def test_wallet_payment(self, user_id):
+        """Test making payment using wallet balance"""
+        if not user_id:
+            self.log_test("Wallet Payment", False, "No user ID available")
+            return False
+            
+        try:
+            payment_data = {
+                "amount": 299.0,
+                "order_id": f"ORDER_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            }
+            
+            response = requests.post(f"{self.api_url}/users/{user_id}/wallet/pay", 
+                                   json=payment_data["amount"], 
+                                   params={"order_id": payment_data["order_id"]}, 
+                                   timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                required_fields = ['payment_successful', 'new_balance', 'tier', 'transaction_id']
+                missing_fields = [field for field in required_fields if field not in result]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing payment response fields: {missing_fields}"
+                else:
+                    payment_success = result['payment_successful']
+                    details = f"Payment processed - Success: {payment_success}, New balance: ₹{result['new_balance']}, Tier: {result['tier']}, Transaction ID: {result['transaction_id']}"
+                    if not payment_success:
+                        success = False
+                        details += " - Payment marked as unsuccessful"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Wallet Payment", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Wallet Payment", False, str(e))
+            return False
+
+    def test_delete_user_photo(self, user_id, photo_id):
+        """Test deleting user photo"""
+        if not user_id or not photo_id:
+            self.log_test("Delete User Photo", False, "Missing user ID or photo ID")
+            return False
+            
+        try:
+            response = requests.delete(f"{self.api_url}/users/{user_id}/photos/{photo_id}", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                has_message = 'message' in result
+                
+                if has_message:
+                    details = f"Photo deleted: {result['message']}"
+                else:
+                    success = False
+                    details = "Missing message field in response"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Delete User Photo", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Delete User Photo", False, str(e))
+            return False
+
+    def test_profile_enhancement_workflow(self):
+        """Test complete profile enhancement workflow"""
+        print("\n🔧 Testing Profile Enhancement APIs Workflow")
+        print("-" * 50)
+        
+        # Step 1: Create a test user
+        user_success, user_id = self.test_create_user()
+        if not user_success:
+            return False
+        
+        # Step 2: Test enhanced profile update
+        profile_success = self.test_enhanced_user_profile_update(user_id)
+        
+        # Step 3: Test wallet info retrieval
+        wallet_info_success = self.test_user_wallet_info(user_id)
+        
+        # Step 4: Test photo storage workflow
+        photo_save_success, photo_id = self.test_save_user_photo(user_id)
+        photo_get_success = self.test_get_user_photos(user_id)
+        
+        if photo_id:
+            favorite_success = self.test_toggle_photo_favorite(user_id, photo_id)
+            usage_success = self.test_record_photo_usage(user_id, photo_id)
+        else:
+            favorite_success = usage_success = False
+        
+        # Step 5: Test wallet operations
+        add_money_success = self.test_add_money_to_wallet(user_id)
+        convert_points_success = self.test_convert_points_to_credits(user_id)
+        transactions_success = self.test_get_wallet_transactions(user_id)
+        payment_success = self.test_wallet_payment(user_id)
+        
+        # Step 6: Test photo deletion (cleanup)
+        if photo_id:
+            delete_success = self.test_delete_user_photo(user_id, photo_id)
+        else:
+            delete_success = False
+        
+        # Calculate workflow success
+        workflow_tests = [
+            profile_success, wallet_info_success, photo_save_success, photo_get_success,
+            favorite_success, usage_success, add_money_success, convert_points_success,
+            transactions_success, payment_success, delete_success
+        ]
+        
+        workflow_success_rate = sum(workflow_tests) / len(workflow_tests) * 100
+        
+        print(f"\n📊 Profile Enhancement Workflow Success Rate: {workflow_success_rate:.1f}%")
+        
+        return workflow_success_rate > 80
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting PhotoGiftHub Backend API Tests")
