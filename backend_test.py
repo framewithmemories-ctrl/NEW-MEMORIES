@@ -857,8 +857,8 @@ class PhotoGiftHubAPITester:
         if user_success:
             self.test_create_order(user_id)
         
-        # Test AI functionality
-        self.test_ai_gift_suggestions()
+        # Test AI functionality - Enhanced AI Gift Finder
+        self.test_enhanced_ai_gift_finder_workflow()
         
         # Test Profile Enhancement APIs
         self.test_profile_enhancement_workflow()
