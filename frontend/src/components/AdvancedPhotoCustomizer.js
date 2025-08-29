@@ -798,7 +798,7 @@ export const AdvancedPhotoCustomizer = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(sizes).map(([key, size]) => (
+                      {Object.entries(sizes[selectedOrientation] || sizes.portrait).map(([key, size]) => (
                         <SelectItem key={key} value={key}>
                           {size.name} - ₹{size.price}
                         </SelectItem>
