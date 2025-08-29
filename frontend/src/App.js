@@ -1036,7 +1036,7 @@ const TestimonialsSection = () => {
             <div className="space-x-4">
               <Button 
                 className="bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => window.open('https://www.google.com/maps/place/Memories+-+Photo+Frames+%26+Customized+Gift+Shop/@11.0755,76.9983,17z/data=!4m8!3m7!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!8m2!3d11.0755!4d76.9983!9m1!1b1!16s%2Fg%2F11s2y8k8qw', '_blank')}
+                onClick={() => window.open('https://www.google.com/maps/place/19+B+KANNI+NILLAM,+Keeranatham+Rd,+near+RUBY+SCHOOL,+Saravanampatti,+Coimbatore,+Tamil+Nadu+641035/@11.0818634,77.0015281,21z', '_blank')}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Read All Reviews
@@ -1044,7 +1044,7 @@ const TestimonialsSection = () => {
               <Button 
                 variant="outline"
                 className="border-green-200 text-green-700 hover:bg-green-50"
-                onClick={() => window.open('https://www.google.com/maps/place/Memories+-+Photo+Frames+%26+Customized+Gift+Shop/@11.0755,76.9983,17z/data=!3m1!5s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!4m16!1m7!3m6!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!2sMemories+-+Photo+Frames+%26+Customized+Gift+Shop!8m2!3d11.0755!4d76.9983!16s%2Fg%2F11s2y8k8qw!3m7!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!2sMemories+-+Photo+Frames+%26+Customized+Gift+Shop!8m2!3d11.0755!4d76.9983!10e5!16s%2Fg%2F11s2y8k8qw?hl=en#lrd=0x3ba859410e43c55f:0xd0f1eaeacbc9bf40,3', '_blank')}
+                onClick={() => window.open('https://www.google.com/maps/place/19+B+KANNI+NILLAM,+Keeranatham+Rd,+near+RUBY+SCHOOL,+Saravanampatti,+Coimbatore,+Tamil+Nadu+641035/@11.0818634,77.0015281,21z', '_blank')}
               >
                 <Star className="w-4 h-4 mr-2" />
                 Write a Review
