@@ -227,27 +227,27 @@ export const EnhancedCheckoutPage = ({ onClose }) => {
           setUserWallet(updatedWallet);
         }
       }
-        // Add transaction record
-        const transactions = JSON.parse(localStorage.getItem(`memories_transactions_${userProfile.id}`) || '[]');
-        transactions.unshift({
-          id: `txn_${Date.now()}`,
-          type: 'debit',
-          amount: getWalletDiscount(),
-          description: `Payment for order ${orderData.id}`,
-          category: 'purchase',
-          orderId: orderData.id,
-          timestamp: new Date().toISOString(),
-          status: 'completed'
-        });
-        localStorage.setItem(`memories_transactions_${userProfile.id}`, JSON.stringify(transactions));
       }
 
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Success notification with dynamic content based on order type
+      const isDynamicContent = cartItems.some(item => item.category === 'acrylic' || item.category === 'frames');
+      const isStorePickup = formData.deliveryType === 'pickup';
       
-      toast.success('🎉 Order placed successfully!', {
-        description: `Order ID: ${orderData.id}`,
+      let successMessage = '🎉 Order placed successfully!';
+      let description = `Order ID: ${orderData.id || orderData.order_id}`;
+      
+      if (isDynamicContent && isStorePickup) {
+        successMessage = '🏪 Store Pickup Order Confirmed!';
+        description = `Ready for pickup at Keeranatham Road • Order ID: ${orderData.id || orderData.order_id}`;
+      } else if (isDynamicContent) {
+        successMessage = '🚛 Custom Order Processing!';
+        description = `Custom frames processing • Delivery 3-5 days • Order ID: ${orderData.id || orderData.order_id}`;
+      }
+
+      toast.success(successMessage, {
+        description: description,
         duration: 5000
+      });
       });
       
       // Clear cart and close
