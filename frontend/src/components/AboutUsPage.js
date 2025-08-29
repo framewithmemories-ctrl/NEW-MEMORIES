@@ -265,8 +265,11 @@ export const AboutUsPage = () => {
               <Card className="border-purple-200 shadow-xl">
                 <CardContent className="p-8">
                   <div className="text-center space-y-6">
-                    <BusinessLogo size="w-20 h-20" />
-                    <BusinessName />
+                    {/* Logo and Business Name - Same Row */}
+                    <div className="flex items-center justify-center space-x-4">
+                      <BusinessLogo size="w-16 h-16" />
+                      <BusinessName />
+                    </div>
                     <div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-3">Our Promise</h3>
                       <p className="text-gray-700 leading-relaxed">
