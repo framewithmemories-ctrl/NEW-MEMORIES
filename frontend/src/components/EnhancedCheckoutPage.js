@@ -490,6 +490,12 @@ export const EnhancedCheckoutPage = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Payment Method</CardTitle>
+                  <CardDescription>
+                    {formData.paymentMethod === 'cod' ? 
+                      'Pay when you receive your order - No payment details needed!' : 
+                      'Choose your preferred payment method'
+                    }
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <RadioGroup 
@@ -501,6 +507,7 @@ export const EnhancedCheckoutPage = () => {
                       <div className="flex-1">
                         <Label htmlFor="cod" className="font-medium">Cash on Delivery</Label>
                         <p className="text-sm text-gray-600">Pay when you receive your order</p>
+                        <p className="text-xs text-green-600 font-medium">✓ Skip payment details - Just provide contact info!</p>
                       </div>
                     </div>
                     
