@@ -67,8 +67,8 @@ export const AboutUsPage = () => {
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            {/* Logo and Business Name */}
-            <div className="flex flex-col items-center space-y-4 mb-8">
+            {/* Logo and Business Name - Same Row */}
+            <div className="flex items-center justify-center space-x-4 mb-8">
               <BusinessLogo size="w-20 h-20" />
               <BusinessName />
             </div>
