@@ -649,7 +649,6 @@ export const EnhancedCheckoutPage = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };
