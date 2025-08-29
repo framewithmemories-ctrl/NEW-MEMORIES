@@ -829,7 +829,7 @@ export const AdvancedPhotoCustomizer = () => {
                 {/* Orientation Selection */}
                 <div>
                   <Label className="text-sm font-semibold text-gray-700 mb-3 block">Photo Orientation</Label>
-                  <Select value={selectedOrientation} onValueChange={setSelectedOrientation}>
+                  <Select value={selectedOrientation} onValueChange={handleOrientationChange}>
                     <SelectTrigger className="border-rose-200 focus:border-rose-500">
                       <SelectValue />
                     </SelectTrigger>
