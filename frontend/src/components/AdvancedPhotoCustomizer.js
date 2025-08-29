@@ -335,7 +335,8 @@ export const AdvancedPhotoCustomizer = () => {
   const autoFitPhoto = () => {
     if (!selectedImage) return;
     
-    const frameRatio = sizes[selectedSize].width / sizes[selectedSize].height;
+    const currentSizeGroup = sizes[selectedOrientation] || sizes.portrait;
+    const frameRatio = currentSizeGroup[selectedSize]?.width / currentSizeGroup[selectedSize]?.height;
     const imageRatio = selectedImage.dimensions.ratio;
     
     let newScale = 1;
