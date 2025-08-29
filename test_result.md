@@ -280,23 +280,53 @@ frontend:
         agent: "main"
         comment: "FIXED: Component syntax errors resolved, wallet interface fully functional within enhanced profile tabs."
 
-  - task: "Enhanced User Profile Integration"
+  - task: "Checkout & COD Flow (Critical Phase 1)"
     implemented: true
-    working: true
-    file: "/app/frontend/src/components/UserProfile.js"
+    working: false
+    file: "/app/frontend/src/components/EnhancedCheckoutPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "CRITICAL FIXES IMPLEMENTED: (1) Converted checkout from floating overlay to dedicated page with /checkout route. (2) Implemented COD logic to skip payment details with clear messaging. (3) Added phone validation - Primary ≠ Alternate phone, mandatory alternate for COD. (4) Enhanced order flow with proper success messages, order history logging, cart clearing after success. Ready for testing."
+
+  - task: "Google Reviews & Maps Integration (Critical Phase 1)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: false
         agent: "main"
-        comment: "Updated UserProfile component with tabbed interface including Profile, Photos, Wallet, and Orders sections. Integrated ProfilePhotoStorage and DigitalWallet components."
+        comment: "PENDING - Fix 'Read all reviews' server error, correct 'Write Review' Google Business profile link, replace dummy with real reviews, update Google Maps location link sitewide."
+
+  - task: "Footer Fixes (Critical Phase 1)" 
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
       - working: false
-        agent: "testing"
-        comment: "❌ CRITICAL ISSUE: Enhanced UserProfile component implemented correctly with 4-tab interface (Profile, Photos, Wallet, Orders) and proper integration of ProfilePhotoStorage and DigitalWallet components. However, profile dialog inconsistently opens when clicking the user profile button in header. Issue appears to be related to dialog state management or event handling conflicts. Profile creation form works when dialog opens, but dialog opening is unreliable. Code structure is correct - issue is in dialog trigger mechanism."
-      - working: true
         agent: "main"
-        comment: "FIXED: Component conflict resolved (removed duplicate from FixedComponents.js), DialogTrigger pattern implemented for reliable dialog opening, enhanced profile with 4 tabs (Profile, Photos, Wallet, Orders) now working correctly."
+        comment: "PENDING - About Us button not working, fix link. Bulk Order hover highlight in white, fix CSS to use dark hover."
+
+  - task: "Home Button & Navigation Fixes (Critical Phase 1)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "PENDING - Add Home button in About Us page OR hyperlink logo to home. Fix line break in 'Gift Finder' and 'About Us' menu text."
 
   - task: "Enhanced AI Gift Finder (Item D Fixes)"
     implemented: true
