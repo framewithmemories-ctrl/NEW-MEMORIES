@@ -422,7 +422,7 @@ export const AdvancedPhotoCustomizer = () => {
       return;
     }
     
-    const shareText = `Check out my custom photo frame design! ${frameStyles[selectedFrame].name} - ${sizes[selectedSize].name} with ${borderThickness}" border. Only ₹${calculatePrice()}`;
+    const shareText = `Check out my custom photo frame design! ${frameStyles[selectedFrame].name} - ${(sizes[selectedOrientation] || sizes.portrait)[selectedSize]?.name} with ${borderThickness}" border. Only ₹${calculatePrice()}`;
     
     if (navigator.share) {
       try {
