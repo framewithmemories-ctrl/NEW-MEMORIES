@@ -36,12 +36,19 @@ export const AdvancedPhotoCustomizer = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFrame, setSelectedFrame] = useState('wooden');
   const [selectedSize, setSelectedSize] = useState('8x10');
+  const [selectedOrientation, setSelectedOrientation] = useState('portrait');
   const [borderThickness, setBorderThickness] = useState('1');
   const [photoTransform, setPhotoTransform] = useState({
     scale: 1,
     rotation: 0,
     x: 0,
     y: 0
+  });
+  const [imageMetadata, setImageMetadata] = useState({
+    width: 0,
+    height: 0,
+    aspectRatio: 1,
+    naturalOrientation: 'portrait'
   });
   const [filters, setFilters] = useState({
     brightness: 100,
