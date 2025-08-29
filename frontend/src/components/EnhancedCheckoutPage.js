@@ -375,16 +375,36 @@ export const EnhancedCheckoutPage = () => {
                       />
                     </div>
                   </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData(prev => ({...prev, phone: e.target.value}))}
-                      placeholder="+91 xxxxx xxxxx"
-                      required
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                    <div>
+                      <Label htmlFor="phone">Primary Phone *</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData(prev => ({...prev, phone: e.target.value}))}
+                        placeholder="+91 xxxxx xxxxx"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="alternatePhone">
+                        Alternate Phone {formData.paymentMethod === 'cod' && '*'}
+                      </Label>
+                      <Input
+                        id="alternatePhone"
+                        type="tel"
+                        value={formData.alternatePhone}
+                        onChange={(e) => setFormData(prev => ({...prev, alternatePhone: e.target.value}))}
+                        placeholder="+91 xxxxx xxxxx"
+                        required={formData.paymentMethod === 'cod'}
+                      />
+                      {formData.paymentMethod === 'cod' && (
+                        <p className="text-xs text-orange-600 mt-1">
+                          Mandatory for Cash on Delivery orders
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
