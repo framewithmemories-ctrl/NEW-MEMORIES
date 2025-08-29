@@ -337,11 +337,14 @@ frontend:
     file: "/app/frontend/src/components/AboutUsPage.js"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "FIXED - Added navigation header to About Us page with Home button (← Home) that navigates back to '/'. Also added Call Now button. Navigation text in main app appears clean without line breaks in Gift Finder and About Us menu items."
+      - working: true
+        agent: "testing"
+        comment: "✅ Home button and navigation fixes working perfectly. About Us page has proper Home button (← Home) that navigates correctly back to root '/'. Navigation text formatting clean without line breaks in 'Gift Finder' and 'About Us' menu items. All navigation functionality operational."
 
   - task: "Enhanced AI Gift Finder (Item D Fixes)"
     implemented: true
