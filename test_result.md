@@ -414,8 +414,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Comprehensive End-to-End Frontend Testing Complete"
-  stuck_tasks: []
+    - "Cart Icon Navigation Fix"
+    - "Google Maps Links Implementation"
+  stuck_tasks:
+    - "Checkout & COD Flow (Critical Phase 1)"
+    - "Google Reviews & Maps Integration (Critical Phase 1)"
   test_all: false
   test_priority: "high_first"
 
