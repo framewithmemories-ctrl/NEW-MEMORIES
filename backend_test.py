@@ -1132,6 +1132,406 @@ class PhotoGiftHubAPITester:
         
         return workflow_success_rate > 80
 
+    def test_checkout_order_processing(self):
+        """Test comprehensive checkout and order processing functionality"""
+        print("\n🛒 Testing Checkout & Order Processing System")
+        print("-" * 50)
+        
+        # Step 1: Create test user for checkout
+        user_success, user_id = self.test_create_user()
+        if not user_success:
+            self.log_test("Checkout System - User Creation", False, "Cannot test checkout without user")
+            return False
+        
+        # Step 2: Test order creation with different scenarios
+        checkout_tests = []
+        
+        # Test Case 1: Standard delivery order
+        delivery_order = {
+            "user_id": user_id,
+            "items": [
+                {
+                    "product_id": "premium-wooden-frame",
+                    "name": "Premium Wooden Photo Frame",
+                    "quantity": 2,
+                    "price": 899.0,
+                    "size": "12x16",
+                    "material": "Teak Wood",
+                    "customizations": {"size": "12x16", "material": "Teak Wood", "finish": "Natural"}
+                },
+                {
+                    "product_id": "photo-mug",
+                    "name": "Personalized Photo Mug",
+                    "quantity": 1,
+                    "price": 299.0,
+                    "size": "11oz",
+                    "customizations": {"size": "11oz", "color": "White", "text": "Best Mom Ever"}
+                }
+            ],
+            "total_amount": 2097.0,  # 899*2 + 299
+            "delivery_type": "delivery",
+            "delivery_address": {
+                "name": "Arjun Patel",
+                "phone": "+91 9876543210",
+                "alternate_phone": "+91 8765432109",
+                "address": "45 Gandhi Nagar, RS Puram",
+                "city": "Coimbatore",
+                "state": "Tamil Nadu",
+                "pincode": "641002"
+            }
+        }
+        
+        try:
+            response = requests.post(f"{self.api_url}/orders", json=delivery_order, timeout=15)
+            success = response.status_code == 200
+            
+            if success:
+                order_data = response.json()
+                expected_points = int(2097.0 * 0.03)  # 3% points
+                points_correct = order_data.get('points_earned') == expected_points
+                
+                details = f"Delivery order created - ID: {order_data.get('id')}, Total: ₹{order_data.get('total_amount')}, Points: {order_data.get('points_earned')}, Status: {order_data.get('status')}"
+                if not points_correct:
+                    success = False
+                    details += f" - Points calculation error (expected {expected_points})"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Checkout - Delivery Order", success, details)
+            checkout_tests.append(success)
+            
+        except Exception as e:
+            self.log_test("Checkout - Delivery Order", False, str(e))
+            checkout_tests.append(False)
+        
+        # Test Case 2: COD (Cash on Delivery) pickup order
+        cod_order = {
+            "user_id": user_id,
+            "items": [
+                {
+                    "product_id": "acrylic-frame",
+                    "name": "Crystal Clear Acrylic Frame",
+                    "quantity": 1,
+                    "price": 1299.0,
+                    "size": "16x20",
+                    "customizations": {"size": "16x20", "material": "Premium Acrylic", "finish": "Crystal Clear"}
+                }
+            ],
+            "total_amount": 1299.0,
+            "delivery_type": "pickup",
+            "pickup_slot": "2025-01-16 14:00"
+        }
+        
+        try:
+            response = requests.post(f"{self.api_url}/orders", json=cod_order, timeout=15)
+            success = response.status_code == 200
+            
+            if success:
+                order_data = response.json()
+                expected_points = int(1299.0 * 0.03)
+                points_correct = order_data.get('points_earned') == expected_points
+                
+                details = f"COD pickup order created - ID: {order_data.get('id')}, Total: ₹{order_data.get('total_amount')}, Pickup slot: {cod_order['pickup_slot']}"
+                if not points_correct:
+                    success = False
+                    details += f" - Points calculation error"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Checkout - COD Pickup Order", success, details)
+            checkout_tests.append(success)
+            
+        except Exception as e:
+            self.log_test("Checkout - COD Pickup Order", False, str(e))
+            checkout_tests.append(False)
+        
+        # Test Case 3: Wallet payment integration
+        # First add money to wallet
+        wallet_add_success = self.test_add_money_to_wallet(user_id)
+        
+        if wallet_add_success:
+            wallet_order = {
+                "user_id": user_id,
+                "items": [
+                    {
+                        "product_id": "custom-tshirt",
+                        "name": "Custom T-Shirt Printing",
+                        "quantity": 1,
+                        "price": 399.0,
+                        "size": "L",
+                        "customizations": {"size": "L", "material": "Cotton Blend", "color": "Black", "design": "Custom Photo Print"}
+                    }
+                ],
+                "total_amount": 399.0,
+                "delivery_type": "delivery",
+                "delivery_address": {
+                    "name": "Priya Sharma",
+                    "phone": "+91 9988776655",
+                    "alternate_phone": "+91 8877665544",
+                    "address": "12 Saravanampatti Main Road",
+                    "city": "Coimbatore",
+                    "state": "Tamil Nadu",
+                    "pincode": "641035"
+                }
+            }
+            
+            try:
+                # Create order first
+                response = requests.post(f"{self.api_url}/orders", json=wallet_order, timeout=15)
+                order_success = response.status_code == 200
+                
+                if order_success:
+                    order_data = response.json()
+                    order_id = order_data.get('id')
+                    
+                    # Then test wallet payment
+                    payment_response = requests.post(
+                        f"{self.api_url}/users/{user_id}/wallet/pay?amount=399.0&order_id={order_id}",
+                        timeout=10
+                    )
+                    payment_success = payment_response.status_code == 200
+                    
+                    if payment_success:
+                        payment_data = payment_response.json()
+                        details = f"Wallet payment order - Order ID: {order_id}, Payment successful: {payment_data.get('payment_successful')}, New balance: ₹{payment_data.get('new_balance')}"
+                    else:
+                        payment_success = False
+                        details = f"Wallet payment failed - Status: {payment_response.status_code}"
+                else:
+                    payment_success = False
+                    details = f"Order creation failed for wallet payment test - Status: {response.status_code}"
+                
+                self.log_test("Checkout - Wallet Payment Integration", payment_success, details)
+                checkout_tests.append(payment_success)
+                
+            except Exception as e:
+                self.log_test("Checkout - Wallet Payment Integration", False, str(e))
+                checkout_tests.append(False)
+        else:
+            self.log_test("Checkout - Wallet Payment Integration", False, "Wallet add money failed")
+            checkout_tests.append(False)
+        
+        # Test Case 4: Order history retrieval
+        try:
+            response = requests.get(f"{self.api_url}/orders/{user_id}", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                orders = response.json()
+                details = f"Order history retrieved - Found {len(orders)} orders for user"
+                
+                # Verify order structure
+                if orders:
+                    first_order = orders[0]
+                    required_fields = ['id', 'user_id', 'items', 'total_amount', 'status', 'delivery_type', 'created_at']
+                    missing_fields = [field for field in required_fields if field not in first_order]
+                    
+                    if missing_fields:
+                        success = False
+                        details += f", Missing order fields: {missing_fields}"
+                    else:
+                        details += f", Latest order: ₹{first_order['total_amount']} ({first_order['delivery_type']})"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Checkout - Order History", success, details)
+            checkout_tests.append(success)
+            
+        except Exception as e:
+            self.log_test("Checkout - Order History", False, str(e))
+            checkout_tests.append(False)
+        
+        # Calculate checkout system success rate
+        checkout_success_rate = sum(checkout_tests) / len(checkout_tests) * 100 if checkout_tests else 0
+        print(f"\n📊 Checkout System Success Rate: {checkout_success_rate:.1f}%")
+        
+        return checkout_success_rate > 75  # 75% threshold for checkout system
+
+    def test_backend_server_health(self):
+        """Test comprehensive backend server health and connectivity"""
+        print("\n🏥 Testing Backend Server Health & Connectivity")
+        print("-" * 50)
+        
+        health_tests = []
+        
+        # Test 1: API Root endpoint
+        root_success = self.test_api_health()
+        health_tests.append(root_success)
+        
+        # Test 2: Database connectivity via products endpoint
+        try:
+            response = requests.get(f"{self.api_url}/products", timeout=10)
+            db_success = response.status_code == 200
+            
+            if db_success:
+                products = response.json()
+                db_success = len(products) > 0  # Ensure sample data is loaded
+                details = f"Database connectivity verified - {len(products)} products loaded"
+            else:
+                details = f"Database connection issue - Status: {response.status_code}"
+            
+            self.log_test("Database Connectivity", db_success, details)
+            health_tests.append(db_success)
+            
+        except Exception as e:
+            self.log_test("Database Connectivity", False, str(e))
+            health_tests.append(False)
+        
+        # Test 3: Store info endpoint
+        try:
+            response = requests.get(f"{self.api_url}/store-info", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                store_info = response.json()
+                required_fields = ['name', 'address', 'contact', 'services']
+                missing_fields = [field for field in required_fields if field not in store_info]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing store info fields: {missing_fields}"
+                else:
+                    details = f"Store info loaded - {store_info['name']}, Phone: {store_info['contact']['phone']}"
+            else:
+                details = f"Status: {response.status_code}"
+            
+            self.log_test("Store Info Endpoint", success, details)
+            health_tests.append(success)
+            
+        except Exception as e:
+            self.log_test("Store Info Endpoint", False, str(e))
+            health_tests.append(False)
+        
+        # Test 4: API routing - test multiple endpoints
+        api_endpoints = [
+            ("/", "Root API"),
+            ("/products", "Products API"),
+            ("/store-info", "Store Info API"),
+            ("/reviews/stats", "Reviews Stats API")
+        ]
+        
+        routing_success = 0
+        for endpoint, name in api_endpoints:
+            try:
+                response = requests.get(f"{self.api_url}{endpoint}", timeout=10)
+                success = response.status_code == 200
+                if success:
+                    routing_success += 1
+                self.log_test(f"API Routing - {name}", success, f"Status: {response.status_code}")
+            except Exception as e:
+                self.log_test(f"API Routing - {name}", False, str(e))
+        
+        routing_rate = (routing_success / len(api_endpoints)) * 100
+        health_tests.append(routing_rate > 75)
+        
+        # Calculate overall health
+        health_success_rate = sum(health_tests) / len(health_tests) * 100 if health_tests else 0
+        print(f"\n📊 Backend Health Success Rate: {health_success_rate:.1f}%")
+        
+        return health_success_rate > 80
+
+    def test_error_handling(self):
+        """Test API error handling for invalid requests"""
+        print("\n⚠️ Testing Error Handling")
+        print("-" * 50)
+        
+        error_tests = []
+        
+        # Test 1: Invalid product ID
+        try:
+            response = requests.get(f"{self.api_url}/products/invalid-product-id", timeout=10)
+            success = response.status_code == 404
+            details = f"Invalid product ID handling - Status: {response.status_code}"
+            self.log_test("Error Handling - Invalid Product ID", success, details)
+            error_tests.append(success)
+        except Exception as e:
+            self.log_test("Error Handling - Invalid Product ID", False, str(e))
+            error_tests.append(False)
+        
+        # Test 2: Invalid user ID for wallet
+        try:
+            response = requests.get(f"{self.api_url}/users/invalid-user-id/wallet", timeout=10)
+            success = response.status_code == 404
+            details = f"Invalid user ID handling - Status: {response.status_code}"
+            self.log_test("Error Handling - Invalid User ID", success, details)
+            error_tests.append(success)
+        except Exception as e:
+            self.log_test("Error Handling - Invalid User ID", False, str(e))
+            error_tests.append(False)
+        
+        # Test 3: Invalid order data
+        try:
+            invalid_order = {
+                "user_id": "invalid-user",
+                "items": [],  # Empty items
+                "total_amount": -100,  # Negative amount
+                "delivery_type": "invalid_type"
+            }
+            response = requests.post(f"{self.api_url}/orders", json=invalid_order, timeout=10)
+            success = response.status_code in [400, 422]  # Bad request or validation error
+            details = f"Invalid order data handling - Status: {response.status_code}"
+            self.log_test("Error Handling - Invalid Order Data", success, details)
+            error_tests.append(success)
+        except Exception as e:
+            self.log_test("Error Handling - Invalid Order Data", False, str(e))
+            error_tests.append(False)
+        
+        # Test 4: Insufficient wallet balance
+        # First create a user and try payment with insufficient balance
+        user_success, user_id = self.test_create_user()
+        if user_success:
+            try:
+                response = requests.post(f"{self.api_url}/users/{user_id}/wallet/pay?amount=10000&order_id=test-order", timeout=10)
+                success = response.status_code == 400
+                details = f"Insufficient balance handling - Status: {response.status_code}"
+                self.log_test("Error Handling - Insufficient Wallet Balance", success, details)
+                error_tests.append(success)
+            except Exception as e:
+                self.log_test("Error Handling - Insufficient Wallet Balance", False, str(e))
+                error_tests.append(False)
+        else:
+            self.log_test("Error Handling - Insufficient Wallet Balance", False, "Could not create test user")
+            error_tests.append(False)
+        
+        error_success_rate = sum(error_tests) / len(error_tests) * 100 if error_tests else 0
+        print(f"\n📊 Error Handling Success Rate: {error_success_rate:.1f}%")
+        
+        return error_success_rate > 75
+
+    def run_checkout_focused_tests(self):
+        """Run focused tests for checkout and order processing"""
+        print("🛒 Starting Checkout & Order Processing Backend Tests")
+        print("=" * 60)
+        
+        # Test 1: Backend Server Health
+        health_success = self.test_backend_server_health()
+        
+        # Test 2: Checkout & Order Processing System
+        checkout_success = self.test_checkout_order_processing()
+        
+        # Test 3: Error Handling
+        error_success = self.test_error_handling()
+        
+        # Print focused summary
+        print("\n" + "=" * 60)
+        print(f"📊 Checkout Tests Summary: {self.tests_passed}/{self.tests_run} tests passed")
+        
+        # Print failed tests details
+        failed_tests = [test for test in self.test_results if not test['success']]
+        if failed_tests:
+            print("\n❌ Failed Tests:")
+            for test in failed_tests:
+                print(f"  - {test['name']}: {test['details']}")
+        
+        success_rate = (self.tests_passed / self.tests_run) * 100 if self.tests_run > 0 else 0
+        print(f"\n🎯 Overall Success Rate: {success_rate:.1f}%")
+        
+        # Specific checkout system assessment
+        checkout_ready = health_success and checkout_success and error_success
+        print(f"\n🛒 Checkout System Status: {'✅ READY' if checkout_ready else '❌ NEEDS ATTENTION'}")
+        
+        return success_rate > 75
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting PhotoGiftHub Backend API Tests")
