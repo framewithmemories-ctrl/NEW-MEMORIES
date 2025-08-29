@@ -240,6 +240,11 @@ export const EnhancedCheckoutPage = () => {
       // Simulate backend processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
+      // Save order to history
+      const savedOrders = JSON.parse(localStorage.getItem('memoriesOrderHistory') || '[]');
+      savedOrders.unshift(orderData);
+      localStorage.setItem('memoriesOrderHistory', JSON.stringify(savedOrders));
+      
       // ENHANCED: Dynamic success message based on order type
       const hasAcrylicFrames = cartItems.some(item => 
         item.category === 'acrylic' || 
@@ -267,9 +272,13 @@ export const EnhancedCheckoutPage = () => {
         duration: 5000
       });
       
-      // Clear cart and close
-      cartItems.forEach(item => removeFromCart(item.id));
-      onClose();
+      // Clear cart only after successful order
+      clearCart();
+      
+      // Navigate back to home after success
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
       
     } catch (error) {
       console.error('Order submission error:', error);
