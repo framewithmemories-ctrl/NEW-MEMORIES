@@ -715,8 +715,7 @@ export const AdvancedPhotoCustomizer = () => {
                       <div 
                         className="w-80 h-80 rounded-lg shadow-2xl relative overflow-hidden"
                         style={{ 
-                          backgroundColor: frameStyles[selectedFrame].color,
-                          border: selectedFrame === 'led' ? '4px solid #FFD700' : 'none',
+                          ...getFrameOverlayStyle(),
                           padding: `${parseFloat(borderThickness) * 8}px`
                         }}
                       >
