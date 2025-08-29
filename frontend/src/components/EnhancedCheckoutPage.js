@@ -248,7 +248,6 @@ export const EnhancedCheckoutPage = ({ onClose }) => {
         description: description,
         duration: 5000
       });
-      });
       
       // Clear cart and close
       cartItems.forEach(item => removeFromCart(item.id));
