@@ -69,6 +69,14 @@ export const EnhancedCheckoutPage = () => {
     } catch (error) {
       console.error('Error loading user data:', error);
     }
+    
+    // Load order history
+    try {
+      const savedOrders = JSON.parse(localStorage.getItem('memoriesOrderHistory') || '[]');
+      setOrderHistory(savedOrders);
+    } catch (error) {
+      console.error('Error loading order history:', error);
+    }
   }, []);
 
   // Calculate pricing with live updates
