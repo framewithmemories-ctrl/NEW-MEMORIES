@@ -63,6 +63,37 @@ const SmartCallButton = ({ className = "", children, phoneNumber = "+91814804014
 export const AboutUsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-orange-50">
+      {/* Navigation Header */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-rose-100 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <BusinessLogo size="w-10 h-10" />
+              <div className="hidden sm:block">
+                <BusinessName />
+              </div>
+            </div>
+            
+            <nav className="flex items-center space-x-6">
+              <Button 
+                variant="ghost" 
+                className="text-gray-700 hover:text-rose-600 font-medium"
+                onClick={() => window.location.href = '/'}
+              >
+                ← Home
+              </Button>
+              <Button
+                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white"
+                onClick={() => window.open('https://wa.me/918148040148?text=Hi! I want to know more about Memories', '_blank')}
+              >
+                <Phone className="w-4 h-4 mr-2" />
+                Call Now
+              </Button>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
