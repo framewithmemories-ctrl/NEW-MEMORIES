@@ -173,7 +173,8 @@ export const AdvancedPhotoCustomizer = () => {
     });
     
     // Auto-adjust to fit frame
-    const frameRatio = sizes[selectedSize].width / sizes[selectedSize].height;
+    const currentSizeGroup = sizes[selectedOrientation] || sizes.portrait;
+    const frameRatio = currentSizeGroup[selectedSize]?.width / currentSizeGroup[selectedSize]?.height;
     const imageRatio = photoData.dimensions.ratio;
     
     // Calculate optimal scale to fit
