@@ -1057,6 +1057,22 @@ const TestimonialsSection = () => {
   );
 };
 
+// Dedicated Checkout Page Component  
+const CheckoutPage = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-rose-50">
+      <SEOHead />
+      <Header />
+      <div className="py-8">
+        <EnhancedCheckoutPage />
+      </div>
+      <Footer />
+      <WhatsAppFloat />
+      <Toaster />
+    </div>
+  );
+};
+
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
