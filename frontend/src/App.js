@@ -894,7 +894,7 @@ const Footer = () => {
               <Button 
                 variant="outline"
                 className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
-                onClick={() => window.open('https://maps.google.com/?q=32J2%2BPJ+Coimbatore,+Tamil+Nadu', '_blank')}
+                onClick={() => window.open('https://www.google.com/maps/place/19+B+KANNI+NILLAM,+Keeranatham+Rd,+near+RUBY+SCHOOL,+Saravanampatti,+Coimbatore,+Tamil+Nadu+641035/@11.0818634,77.0015281,21z', '_blank')}
               >
                 <MapPin className="w-4 h-4 mr-2" />
                 Visit Our Store
