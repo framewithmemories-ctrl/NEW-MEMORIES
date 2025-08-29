@@ -172,32 +172,61 @@ export const EnhancedCheckoutPage = ({ onClose }) => {
     setIsSubmitting(true);
 
     try {
-      // Simulate order processing
-      const orderData = {
-        id: `ORD${Date.now()}`,
-        items: cartItems,
+      // Call backend API for order validation and total calculation
+      const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      
+      const orderPayload = {
+        items: cartItems.map(item => ({
+          product_id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          category: item.category || 'frames'
+        })),
         customer: formData,
-        totals: {
-          subtotal: getSubtotal(),
-          delivery: getDeliveryCharge(),
-          tax: getTaxAmount(),
-          walletDiscount: getWalletDiscount(),
-          final: getFinalTotal()
-        },
-        paymentMethod: formData.paymentMethod,
-        deliveryType: formData.deliveryType,
-        createdAt: new Date().toISOString()
+        delivery_type: formData.deliveryType,
+        payment_method: formData.paymentMethod,
+        use_wallet: useWalletBalance,
+        wallet_amount: useWalletBalance ? getWalletDiscount() : 0
       };
 
-      // If using wallet, update wallet balance
-      if (useWalletBalance && userWallet && userProfile) {
-        const newBalance = (userWallet.balance || 0) - getWalletDiscount();
-        const updatedWallet = {
-          ...userWallet,
-          balance: newBalance
-        };
-        localStorage.setItem(`memories_wallet_${userProfile.id}`, JSON.stringify(updatedWallet));
-        
+      // Get validated totals from backend
+      const response = await fetch(`${API_BASE}/api/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderPayload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to process order');
+      }
+
+      const orderData = await response.json();
+      console.log('✅ Backend order validation:', orderData);
+
+      // If using wallet, update wallet balance via backend
+      if (useWalletBalance && userWallet && userProfile && getWalletDiscount() > 0) {
+        const walletResponse = await fetch(`${API_BASE}/api/wallet/payment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: userProfile.id,
+            amount: getWalletDiscount(),
+            description: `Order Payment: ${orderData.id}`,
+            order_id: orderData.id
+          })
+        });
+
+        if (walletResponse.ok) {
+          const updatedWallet = await walletResponse.json();
+          localStorage.setItem(`memories_wallet_${userProfile.id}`, JSON.stringify(updatedWallet));
+          setUserWallet(updatedWallet);
+        }
+      }
         // Add transaction record
         const transactions = JSON.parse(localStorage.getItem(`memories_transactions_${userProfile.id}`) || '[]');
         transactions.unshift({
