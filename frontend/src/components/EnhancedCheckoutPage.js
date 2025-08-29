@@ -167,15 +167,29 @@ export const EnhancedCheckoutPage = () => {
     return messages;
   };
 
-  // Enhanced order submission with backend validation and dynamic content
+  // Enhanced order submission with COD logic and proper validation
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Validation: Required fields
     if (!formData.name || !formData.email || !formData.phone) {
       toast.error('Please fill in all required fields');
       return;
     }
     
+    // Validation: Phone numbers cannot be the same
+    if (formData.phone === formData.alternatePhone && formData.alternatePhone.trim() !== '') {
+      toast.error('Primary and alternate phone numbers cannot be the same');
+      return;
+    }
+    
+    // Validation: Alternate phone is mandatory for COD
+    if (formData.paymentMethod === 'cod' && !formData.alternatePhone) {
+      toast.error('Alternate phone number is mandatory for Cash on Delivery orders');
+      return;
+    }
+    
+    // Validation: Address for delivery
     if (formData.deliveryType === 'delivery' && !formData.address) {
       toast.error('Please provide delivery address');
       return;
