@@ -1581,7 +1581,12 @@ class PhotoGiftHubAPITester:
 
 def main():
     tester = PhotoGiftHubAPITester()
-    success = tester.run_all_tests()
+    
+    # Run checkout-focused tests as requested
+    print("🎯 Running Checkout & Order Processing Focused Tests")
+    print("=" * 60)
+    success = tester.run_checkout_focused_tests()
+    
     return 0 if success else 1
 
 if __name__ == "__main__":
