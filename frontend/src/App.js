@@ -238,10 +238,12 @@ const Header = () => {
         </div>
         
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <div className="flex items-center space-x-3 group cursor-pointer">
-              <BusinessLogo size="w-12 h-12" />
-              <BusinessName />
+          <div className="flex items-center justify-between space-x-4 lg:space-x-8">
+            <div className="flex items-center space-x-2 md:space-x-3 group cursor-pointer flex-shrink-0">
+              <BusinessLogo size="w-10 h-10 md:w-12 md:h-12" />
+              <div className="hidden sm:block">
+                <BusinessName />
+              </div>
             </div>
             
             <nav className="hidden md:flex space-x-6">
