@@ -807,10 +807,10 @@ const Footer = () => {
               <a href="#shop" className="block text-gray-300 hover:text-white transition-colors">Shop Products</a>
               <a href="#customizer" className="block text-gray-300 hover:text-white transition-colors">Photo Customizer</a>
               <a href="#ai-finder" className="block text-gray-300 hover:text-white transition-colors">AI Gift Finder</a>
-              <a href="#about" className="block text-gray-300 hover:text-white transition-colors">About Us</a>
+              <a href="/about" className="block text-gray-300 hover:text-white transition-colors">About Us</a>
               <Button 
                 variant="ghost" 
-                className="p-0 text-gray-300 hover:text-white h-auto"
+                className="p-0 text-gray-300 hover:text-white hover:bg-gray-800 h-auto transition-colors"
                 onClick={() => window.open('https://wa.me/918148040148?text=Hi! I need a bulk order quote', '_blank')}
               >
                 Bulk Orders
