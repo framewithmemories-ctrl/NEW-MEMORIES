@@ -303,15 +303,18 @@ frontend:
 
   - task: "Google Reviews & Maps Integration (Critical Phase 1)"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "FIXED - Updated all Google Reviews links to use permanent Google Maps link: https://www.google.com/maps/place/19+B+KANNI+NILLAM,+Keeranatham+Rd,+near+RUBY+SCHOOL,+Saravanampatti,+Coimbatore,+Tamil+Nadu+641035/@11.0818634,77.0015281,21z. Applied to 'Read All Reviews', 'Write Review', and footer 'Visit Our Store' buttons."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: Google Maps links NOT WORKING. All review buttons ('Read All Reviews', 'Write Review', 'Write a Review') and footer 'Visit Our Store' button have incorrect onclick handlers showing 'function noop$1() {}' instead of the expected Google Maps URL. The buttons exist but do not have the proper window.open() calls with the correct Google Maps link. This is a critical business requirement failure."
 
   - task: "Footer Fixes (Critical Phase 1)" 
     implemented: true
