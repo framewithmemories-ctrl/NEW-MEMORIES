@@ -790,6 +790,21 @@ export const AdvancedPhotoCustomizer = () => {
                   </div>
                 </div>
                 
+                {/* Orientation Selection */}
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 mb-3 block">Photo Orientation</Label>
+                  <Select value={selectedOrientation} onValueChange={setSelectedOrientation}>
+                    <SelectTrigger className="border-rose-200 focus:border-rose-500">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="portrait">📱 Portrait (Vertical)</SelectItem>
+                      <SelectItem value="landscape">🖼️ Landscape (Horizontal)</SelectItem>
+                      <SelectItem value="square">⬜ Square</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
                 {/* Size Selection */}
                 <div>
                   <Label className="text-sm font-semibold text-gray-700 mb-3 block">Frame Size</Label>
