@@ -172,27 +172,37 @@ export const AdvancedPhotoCustomizer = () => {
       base64: photoData.url
     });
     
-    // Auto-adjust to fit frame
-    const currentSizeGroup = sizes[selectedOrientation] || sizes.portrait;
-    const frameRatio = currentSizeGroup[selectedSize]?.width / currentSizeGroup[selectedSize]?.height;
-    const imageRatio = photoData.dimensions.ratio;
-    
-    // Calculate optimal scale to fit
-    let optimalScale = 1;
-    if (imageRatio > frameRatio) {
-      // Image is wider than frame
-      optimalScale = frameRatio / imageRatio;
-    } else {
-      // Image is taller than frame
-      optimalScale = imageRatio / frameRatio;
-    }
-    
-    setPhotoTransform({
-      scale: Math.max(0.5, Math.min(2, optimalScale)),
-      rotation: 0,
-      x: 0,
-      y: 0
-    });
+    // Create image object for orientation detection
+    const img = new Image();
+    img.onload = () => {
+      // Detect orientation and auto-configure
+      detectImageOrientation(img);
+      
+      // Auto-adjust to fit frame after orientation is set
+      setTimeout(() => {
+        const currentSizeGroup = sizes[selectedOrientation] || sizes.portrait;
+        const frameRatio = currentSizeGroup[selectedSize]?.width / currentSizeGroup[selectedSize]?.height;
+        const imageRatio = photoData.dimensions.ratio;
+        
+        // Calculate optimal scale to fit
+        let optimalScale = 1;
+        if (imageRatio > frameRatio) {
+          // Image is wider than frame
+          optimalScale = frameRatio / imageRatio;
+        } else {
+          // Image is taller than frame
+          optimalScale = imageRatio / frameRatio;
+        }
+        
+        setPhotoTransform({
+          scale: Math.max(0.5, Math.min(2, optimalScale)),
+          rotation: 0,
+          x: 0,
+          y: 0
+        });
+      }, 100);
+    };
+    img.src = photoData.url;
     
     toast.success('Photo loaded! Use the tools to customize positioning and effects.');
   };
