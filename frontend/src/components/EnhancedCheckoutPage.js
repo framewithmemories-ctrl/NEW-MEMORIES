@@ -62,6 +62,7 @@ export const EnhancedCheckoutPage = () => {
           name: profile.name || '',
           email: profile.email || '',
           phone: profile.phone || '',
+          alternatePhone: profile.alternatePhone || '',
           address: profile.city || ''
         }));
       }
