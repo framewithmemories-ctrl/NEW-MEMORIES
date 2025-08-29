@@ -196,12 +196,102 @@ export const AdvancedPhotoCustomizer = () => {
     toast.success('Photo loaded! Use the tools to customize positioning and effects.');
   };
 
-  // Calculate price
+  // Detect image orientation and set appropriate size options
+  const detectImageOrientation = (img) => {
+    const aspectRatio = img.width / img.height;
+    let detectedOrientation;
+    
+    if (Math.abs(aspectRatio - 1) < 0.1) {
+      detectedOrientation = 'square';
+    } else if (aspectRatio > 1.2) {
+      detectedOrientation = 'landscape';
+    } else {
+      detectedOrientation = 'portrait';
+    }
+    
+    setImageMetadata({
+      width: img.width,
+      height: img.height,
+      aspectRatio: aspectRatio,
+      naturalOrientation: detectedOrientation
+    });
+    
+    setSelectedOrientation(detectedOrientation);
+    
+    // Auto-select appropriate size based on orientation
+    const firstSizeKey = Object.keys(sizes[detectedOrientation])[2]; // Select 3rd option (usually 8x10 equivalent)
+    setSelectedSize(firstSizeKey);
+    
+    toast.success(`📐 Detected ${detectedOrientation} orientation (${img.width}×${img.height}px)`, {
+      description: `Auto-selected ${detectedOrientation} frame sizes`
+    });
+  };
+
+  // Calculate total price with frame and size
+  const calculateTotalPrice = () => {
+    const currentSizeGroup = sizes[selectedOrientation] || sizes.portrait;
+    const sizePrice = currentSizeGroup[selectedSize]?.price || 0;
+    const framePrice = frameStyles[selectedFrame]?.price || 0;
+    const borderPrice = parseInt(borderThickness) * 25; // ₹25 per unit thickness
+    
+    return sizePrice + framePrice + borderPrice;
+  };
+
+  // Apply frame overlay styling with scaling
+  const getFrameOverlayStyle = () => {
+    const currentFrame = frameStyles[selectedFrame];
+    const borderWidth = parseInt(borderThickness) * (currentFrame?.borderWidth || 10);
+    
+    return {
+      border: `${borderWidth}px solid ${currentFrame?.color}`,
+      boxShadow: getFrameShadowEffect(),
+      background: getFrameBackgroundPattern(),
+      position: 'relative',
+      overflow: 'hidden'
+    };
+  };
+
+  const getFrameShadowEffect = () => {
+    const currentFrame = frameStyles[selectedFrame];
+    const shadowEffects = {
+      'warm-shadow': '0 8px 25px rgba(139, 69, 19, 0.3), inset 0 0 20px rgba(139, 69, 19, 0.1)',
+      'crystal-shadow': '0 8px 32px rgba(224, 224, 224, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.3)',
+      'sharp-shadow': '0 4px 20px rgba(192, 192, 192, 0.5), inset 0 0 10px rgba(192, 192, 192, 0.2)',
+      'glow-shadow': '0 0 30px rgba(255, 215, 0, 0.6), inset 0 0 20px rgba(255, 215, 0, 0.2)',
+      'soft-shadow': '0 6px 20px rgba(44, 44, 44, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.1)',
+      'decorative-shadow': '0 10px 30px rgba(212, 165, 116, 0.4), inset 0 0 25px rgba(212, 165, 116, 0.15)',
+      'antique-shadow': '0 8px 25px rgba(184, 134, 11, 0.4), inset 0 0 20px rgba(184, 134, 11, 0.1)',
+      'subtle-shadow': '0 2px 15px rgba(0, 0, 0, 0.1), inset 0 0 5px rgba(0, 0, 0, 0.05)'
+    };
+    
+    return shadowEffects[currentFrame?.shadowEffect] || shadowEffects['subtle-shadow'];
+  };
+
+  const getFrameBackgroundPattern = () => {
+    const currentFrame = frameStyles[selectedFrame];
+    
+    if (!currentFrame?.overlay || currentFrame.overlay === 'clean-border') {
+      return currentFrame?.color || '#FFFFFF';
+    }
+    
+    // Generate CSS background patterns for different overlay types
+    const patterns = {
+      'wooden-texture': `linear-gradient(45deg, ${currentFrame.color} 25%, transparent 25%), 
+                        linear-gradient(-45deg, ${currentFrame.color} 25%, transparent 25%)`,
+      'glass-reflection': `linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(255,255,255,0.1) 100%)`,
+      'metallic-finish': `linear-gradient(45deg, ${currentFrame.color} 0%, rgba(255,255,255,0.3) 50%, ${currentFrame.color} 100%)`,
+      'led-glow': `radial-gradient(circle, rgba(255,215,0,0.3) 0%, ${currentFrame.color} 70%)`,
+      'matte-finish': currentFrame.color,
+      'ornate-pattern': `repeating-linear-gradient(45deg, ${currentFrame.color} 0px, ${currentFrame.color} 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)`,
+      'vintage-pattern': `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, ${currentFrame.color} 60%)`
+    };
+    
+    return patterns[currentFrame.overlay] || currentFrame.color;
+  };
+
+  // Keep backward compatibility - alias for calculateTotalPrice
   const calculatePrice = () => {
-    const basePrice = sizes[selectedSize].price;
-    const framePrice = frameStyles[selectedFrame].price;
-    const borderPrice = parseFloat(borderThickness) * 50;
-    return basePrice + framePrice + borderPrice;
+    return calculateTotalPrice();
   };
 
   // Photo manipulation handlers
