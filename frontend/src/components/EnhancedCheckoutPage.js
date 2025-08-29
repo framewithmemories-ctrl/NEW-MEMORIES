@@ -24,7 +24,8 @@ import {
   Clock,
   Wallet,
   Plus,
-  Minus
+  Minus,
+  ArrowRight
 } from "lucide-react";
 
 export const EnhancedCheckoutPage = () => {
