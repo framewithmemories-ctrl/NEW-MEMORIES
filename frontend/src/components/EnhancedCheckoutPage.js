@@ -290,8 +290,8 @@ export const EnhancedCheckoutPage = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <Card className="w-full max-w-md">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Card className="w-full max-w-md mx-auto">
           <CardHeader>
             <CardTitle className="flex items-center">
               <ShoppingCart className="w-5 h-5 mr-2" />
@@ -300,7 +300,7 @@ export const EnhancedCheckoutPage = () => {
           </CardHeader>
           <CardContent className="text-center py-8">
             <p className="text-gray-600 mb-4">Add some beautiful photo frames to get started!</p>
-            <Button onClick={onClose}>Continue Shopping</Button>
+            <Button onClick={() => window.location.href = '/'}>Continue Shopping</Button>
           </CardContent>
         </Card>
       </div>
