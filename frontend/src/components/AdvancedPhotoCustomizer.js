@@ -398,7 +398,7 @@ export const AdvancedPhotoCustomizer = () => {
     const customProduct = {
       id: `custom_frame_${Date.now()}`,
       name: `Custom Photo Frame - ${frameStyles[selectedFrame].name}`,
-      description: `${sizes[selectedSize].name} with ${borderThickness}" border`,
+      description: `${(sizes[selectedOrientation] || sizes.portrait)[selectedSize]?.name} with ${borderThickness}" border`,
       base_price: calculatePrice(),
       category: 'frames',
       image_url: selectedImage.url,
