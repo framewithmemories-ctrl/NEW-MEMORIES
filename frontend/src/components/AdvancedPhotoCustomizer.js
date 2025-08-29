@@ -320,6 +320,33 @@ export const AdvancedPhotoCustomizer = () => {
     }));
   };
 
+  // Handle orientation change and update size selection
+  const handleOrientationChange = (newOrientation) => {
+    setSelectedOrientation(newOrientation);
+    
+    // Auto-select first available size for new orientation
+    const availableSizes = Object.keys(sizes[newOrientation]);
+    if (availableSizes.length > 0) {
+      // Try to find a similar size, or default to the first one
+      const currentSizeName = (sizes[selectedOrientation] || sizes.portrait)[selectedSize]?.name;
+      let newSize = availableSizes[0]; // Default to first
+      
+      // Try to find a similar size by name matching
+      if (currentSizeName) {
+        const similarSize = availableSizes.find(sizeKey => {
+          const sizeName = sizes[newOrientation][sizeKey]?.name;
+          return sizeName && sizeName.includes(currentSizeName.split(' ')[0]);
+        });
+        if (similarSize) {
+          newSize = similarSize;
+        }
+      }
+      
+      setSelectedSize(newSize);
+      toast.success(`📐 Switched to ${newOrientation} orientation`);
+    }
+  };
+
   const resetPhotoPosition = () => {
     setPhotoTransform({
       scale: 1,
