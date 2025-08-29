@@ -831,11 +831,11 @@ export const AdvancedPhotoCustomizer = () => {
                     <span className="text-3xl font-bold text-rose-600">₹{calculatePrice()}</span>
                   </div>
                   <div className="text-sm text-gray-600 space-y-1">
-                    <div>Base ({sizes[selectedSize].name}): ₹{sizes[selectedSize].price}</div>
+                    <div>Base ({(sizes[selectedOrientation] || sizes.portrait)[selectedSize]?.name}): ₹{(sizes[selectedOrientation] || sizes.portrait)[selectedSize]?.price}</div>
                     {frameStyles[selectedFrame].price > 0 && (
                       <div>Frame Style: +₹{frameStyles[selectedFrame].price}</div>
                     )}
-                    <div>Border ({borderThickness}"): +₹{parseFloat(borderThickness) * 50}</div>
+                    <div>Border ({borderThickness}"): +₹{parseInt(borderThickness) * 25}</div>
                     <div className="pt-2 border-t border-rose-200 font-medium">
                       Includes: Professional printing + Free gift wrap + Quality guarantee
                     </div>
