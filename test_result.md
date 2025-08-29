@@ -422,9 +422,7 @@ test_plan:
   current_focus:
     - "Cart Icon Navigation Fix"
     - "Google Maps Links Implementation"
-  stuck_tasks:
-    - "Checkout & COD Flow (Critical Phase 1)"
-    - "Google Reviews & Maps Integration (Critical Phase 1)"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
