@@ -27,12 +27,13 @@ import {
   Minus
 } from "lucide-react";
 
-export const EnhancedCheckoutPage = ({ onClose }) => {
-  const { cartItems, updateQuantity, removeFromCart } = useCart();
+export const EnhancedCheckoutPage = () => {
+  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    alternatePhone: '',
     address: '',
     instructions: '',
     deliveryType: 'delivery',
@@ -43,6 +44,7 @@ export const EnhancedCheckoutPage = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [useWalletBalance, setUseWalletBalance] = useState(false);
   const [showLiveUpdates, setShowLiveUpdates] = useState(true);
+  const [orderHistory, setOrderHistory] = useState([]);
 
   // Load user profile and wallet on mount
   useEffect(() => {
