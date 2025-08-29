@@ -60,72 +60,105 @@ export const AdvancedPhotoCustomizer = () => {
   const { addToCart } = useCart();
   const canvasRef = useRef(null);
 
-  // Enhanced frame styles with overlay templates
+  // Enhanced frame styles with overlay templates and scaling support
   const frameStyles = {
     wooden: { 
       name: 'Classic Wooden Frame', 
       color: '#8B4513', 
       price: 0,
       texture: 'wood-grain',
-      overlay: null
+      overlay: 'wooden-texture',
+      borderWidth: 15,
+      shadowEffect: 'warm-shadow'
     },
     acrylic: { 
       name: 'Modern Acrylic Frame', 
       color: '#E0E0E0', 
       price: 200,
       texture: 'glass',
-      overlay: null
+      overlay: 'glass-reflection',
+      borderWidth: 8,
+      shadowEffect: 'crystal-shadow'
     },
     metal: { 
       name: 'Sleek Metal Frame', 
       color: '#C0C0C0', 
       price: 150,
       texture: 'metallic',
-      overlay: null
+      overlay: 'metallic-finish',
+      borderWidth: 10,
+      shadowEffect: 'sharp-shadow'
     },
     led: { 
       name: 'LED Backlit Frame', 
       color: '#FFD700', 
       price: 500,
       texture: 'illuminated',
-      overlay: 'led-glow'
+      overlay: 'led-glow',
+      borderWidth: 12,
+      shadowEffect: 'glow-shadow'
     },
     mattblack: { 
       name: 'Matt Black Frame', 
       color: '#2C2C2C', 
       price: 300,
       texture: 'matte',
-      overlay: null
+      overlay: 'matte-finish',
+      borderWidth: 12,
+      shadowEffect: 'soft-shadow'
     },
     design: { 
       name: 'Designer Frame', 
       color: '#D4A574', 
       price: 400,
       texture: 'ornate',
-      overlay: 'ornate-pattern'
+      overlay: 'ornate-pattern',
+      borderWidth: 20,
+      shadowEffect: 'decorative-shadow'
     },
     vintage: { 
       name: 'Vintage Ornate Frame', 
       color: '#B8860B', 
       price: 350,
       texture: 'antique',
-      overlay: 'vintage-pattern'
+      overlay: 'vintage-pattern',
+      borderWidth: 18,
+      shadowEffect: 'antique-shadow'
     },
     minimal: { 
       name: 'Minimal Clean Frame', 
       color: '#FFFFFF', 
       price: 250,
       texture: 'clean',
-      overlay: null
+      overlay: 'clean-border',
+      borderWidth: 5,
+      shadowEffect: 'subtle-shadow'
     }
   };
 
-  // Frame size options
+  // Enhanced size options with orientation support
   const sizes = {
-    '8x10': { name: '8" × 10"', price: 899, width: 8, height: 10 },
-    '12x16': { name: '12" × 16"', price: 1199, width: 12, height: 16 },
-    '16x20': { name: '16" × 20"', price: 1599, width: 16, height: 20 },
-    '20x24': { name: '20" × 24"', price: 1999, width: 20, height: 24 }
+    portrait: {
+      '4x6': { name: '4" × 6" (Portrait)', price: 599, width: 4, height: 6, orientation: 'portrait' },
+      '5x7': { name: '5" × 7" (Portrait)', price: 699, width: 5, height: 7, orientation: 'portrait' },
+      '8x10': { name: '8" × 10" (Portrait)', price: 899, width: 8, height: 10, orientation: 'portrait' },
+      '11x14': { name: '11" × 14" (Portrait)', price: 1299, width: 11, height: 14, orientation: 'portrait' },
+      '16x20': { name: '16" × 20" (Portrait)', price: 1599, width: 16, height: 20, orientation: 'portrait' }
+    },
+    landscape: {
+      '6x4': { name: '6" × 4" (Landscape)', price: 599, width: 6, height: 4, orientation: 'landscape' },
+      '7x5': { name: '7" × 5" (Landscape)', price: 699, width: 7, height: 5, orientation: 'landscape' },
+      '10x8': { name: '10" × 8" (Landscape)', price: 899, width: 10, height: 8, orientation: 'landscape' },
+      '14x11': { name: '14" × 11" (Landscape)', price: 1299, width: 14, height: 11, orientation: 'landscape' },
+      '20x16': { name: '20" × 16" (Landscape)', price: 1599, width: 20, height: 16, orientation: 'landscape' }
+    },
+    square: {
+      '4x4': { name: '4" × 4" (Square)', price: 649, width: 4, height: 4, orientation: 'square' },
+      '6x6': { name: '6" × 6" (Square)', price: 749, width: 6, height: 6, orientation: 'square' },
+      '8x8': { name: '8" × 8" (Square)', price: 949, width: 8, height: 8, orientation: 'square' },
+      '12x12': { name: '12" × 12" (Square)', price: 1349, width: 12, height: 12, orientation: 'square' },
+      '16x16': { name: '16" × 16" (Square)', price: 1649, width: 16, height: 16, orientation: 'square' }
+    }
   };
 
   const borderThicknesses = [
