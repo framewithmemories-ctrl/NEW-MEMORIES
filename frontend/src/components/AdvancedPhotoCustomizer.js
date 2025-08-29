@@ -404,7 +404,7 @@ export const AdvancedPhotoCustomizer = () => {
       image_url: selectedImage.url,
       customOptions: {
         frameStyle: frameStyles[selectedFrame].name,
-        size: sizes[selectedSize].name,
+        size: (sizes[selectedOrientation] || sizes.portrait)[selectedSize]?.name,
         borderThickness: `${borderThickness}"`,
         photoTransform,
         filters,
