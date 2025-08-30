@@ -22,7 +22,9 @@ export const CartProvider = ({ children }) => {
       try {
         const parsedCart = JSON.parse(savedCart);
         setCartItems(parsedCart);
-        setCartCount(parsedCart.length);
+        // Fix: Calculate total quantity, not just number of items
+        const totalQuantity = parsedCart.reduce((total, item) => total + (item.quantity || 1), 0);
+        setCartCount(totalQuantity);
       } catch (error) {
         console.error('Error loading cart from localStorage:', error);
       }
@@ -32,7 +34,9 @@ export const CartProvider = ({ children }) => {
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('memoriesCart', JSON.stringify(cartItems));
-    setCartCount(cartItems.length);
+    // Fix: Calculate total quantity, not just number of items
+    const totalQuantity = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+    setCartCount(totalQuantity);
   }, [cartItems]);
 
   const addToCart = (product, customOptions = {}) => {
