@@ -355,15 +355,15 @@ export const ReviewSystemEnhanced = () => {
         </div>
       </div>
 
-      {/* Reviews List */}
-      <div className="space-y-6">
+      {/* Reviews Display - Compact Grid Layout */}
+      <div>
         {isLoading && reviews.length === 0 ? (
           <div className="text-center py-8">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-rose-500" />
             <p className="text-gray-600">Loading reviews...</p>
           </div>
         ) : filteredReviews.length > 0 ? (
-          <>
+          <div className="space-y-6">
             {/* Compact Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredReviews.map((review) => (
@@ -377,7 +377,7 @@ export const ReviewSystemEnhanced = () => {
                         <div className="flex-1 min-w-0">
                           <h4 className="font-semibold text-gray-900 text-sm truncate">{review.name}</h4>
                           <div className="flex items-center space-x-1">
-                            {renderStars(review.rating, false, null, 'w-3 h-3')}
+                            {renderStars(review.rating)}
                           </div>
                         </div>
                       </div>
@@ -413,7 +413,6 @@ export const ReviewSystemEnhanced = () => {
                 </Card>
               ))}
             </div>
-            </div>
             
             {pagination.hasMore && !isLoading && (
               <div className="text-center mt-6">
@@ -426,7 +425,7 @@ export const ReviewSystemEnhanced = () => {
                 </Button>
               </div>
             )}
-          </>
+          </div>
         ) : (
           <div className="text-center py-12">
             <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
