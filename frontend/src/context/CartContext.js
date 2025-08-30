@@ -42,6 +42,7 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product, customOptions = {}) => {
     try {
+      console.log('🛒 Adding to cart:', product.name);
       const cartItem = {
         id: `${product.id}_${Date.now()}`,
         productId: product.id,
@@ -57,6 +58,7 @@ export const CartProvider = ({ children }) => {
 
       setCartItems(prevItems => {
         const updatedItems = [...prevItems, cartItem];
+        console.log('🛒 Cart updated:', updatedItems.length, 'items');
         return updatedItems;
       });
 
