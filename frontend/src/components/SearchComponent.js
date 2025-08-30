@@ -4,6 +4,7 @@ import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Search, X, ShoppingCart, Palette } from "lucide-react";
 import { toast } from "sonner";
+import { useCart } from "../context/CartContext";
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
