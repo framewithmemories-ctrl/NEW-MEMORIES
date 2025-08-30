@@ -340,7 +340,25 @@ const Header = () => {
               <a href="#home" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Home</a>
               <a href="#shop" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Shop</a>
               <a href="#customizer" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Customize</a>
-              <a href="#ai-finder" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Gift Finder</a>
+              <a 
+                href="#ai-finder" 
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const element = document.getElementById('ai-finder');
+                  if (element) {
+                    const headerHeight = 80; // Account for sticky header
+                    const elementPosition = element.offsetTop - headerHeight;
+                    window.scrollTo({
+                      top: elementPosition,
+                      behavior: 'smooth'
+                    });
+                  }
+                  setIsMenuOpen(false); // Close mobile menu
+                }}
+              >
+                Gift Finder
+              </a>
               <a href="/about" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">About Us</a>
               <SmartCallButton className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white mx-4">
                 <Phone className="w-4 h-4 mr-2" />
