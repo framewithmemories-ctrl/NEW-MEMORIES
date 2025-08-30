@@ -350,8 +350,11 @@ const Header = () => {
                   e.preventDefault();
                   const element = document.getElementById('ai-finder');
                   if (element) {
-                    const headerHeight = 80; // Account for sticky header
-                    const elementPosition = element.offsetTop - headerHeight;
+                    // More accurate header height calculation
+                    const headerElement = document.querySelector('header') || document.querySelector('[class*="sticky"]');
+                    const headerHeight = headerElement ? headerElement.offsetHeight : 100;
+                    const elementPosition = element.offsetTop - headerHeight - 20; // Extra 20px padding
+                    console.log('🎯 Scrolling to Gift Finder:', elementPosition);
                     window.scrollTo({
                       top: elementPosition,
                       behavior: 'smooth'
