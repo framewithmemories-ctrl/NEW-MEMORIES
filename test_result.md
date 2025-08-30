@@ -502,8 +502,9 @@ test_plan:
   test_priority: "high_first"
 
 agent_communication:
+agent_communication:
   - agent: "main"
-    message: "🎉 CRITICAL PHASE 1 FIXES COMPLETED SUCCESSFULLY! (1) ✅ CHECKOUT & COD FLOW - Converted to dedicated page, implemented COD logic with payment skip, added phone validation, enhanced order flow with success messages and cart clearing. Backend confirmed 93.8% success rate. (2) ✅ GOOGLE MAPS INTEGRATION - Updated all links to permanent location URL, fixed Read All Reviews and Visit Store buttons. (3) ✅ FOOTER FIXES - About Us links to /about, fixed Bulk Orders hover. (4) ✅ NAVIGATION FIXES - Added Home button to About Us page. (5) 🔧 TROUBLESHOOTING & RESOLUTION - Fixed duplicate CartIcon component conflict, resolved navigation issues. Both critical user flows now production-ready!"
+    message: "🎉 CRITICAL BUG FIXES COMPLETED SUCCESSFULLY! (1) ✅ CART PERSISTENCE FIX - Disabled automatic cart clearing in checkout, improved localStorage handling, added debug logging to CartContext. Cart should now persist across add→checkout flow. (2) ✅ AI GIFT FINDER SCROLL FIX - Implemented dynamic header height calculation, proper scroll positioning with 20px padding for both desktop and mobile navigation. (3) ✅ GOOGLE REVIEWS PLACE ID FIX - Updated 'Read All Reviews' to use correct Google Maps review URL instead of local/reviews endpoint that caused 404s. (4) ✅ REVIEWS LAYOUT OPTIMIZATION - Converted full-width review cards to compact 3-column grid layout, reduced card padding, truncated text, smaller images for better page height management. Ready for manual browser verification."
   - agent: "main"
     message: "Fixed critical frontend error by adding missing Shirt import. Website now loads properly with business branding. Ready to proceed with backend testing and feature completion."
   - agent: "testing"
