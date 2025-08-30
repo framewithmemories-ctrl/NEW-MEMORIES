@@ -201,9 +201,11 @@ export const SearchComponent = ({ onClose = null }) => {
                         size="sm"
                         className="text-xs bg-rose-500 hover:bg-rose-600"
                         onClick={() => {
-                          // This will be connected to cart context
-                          toast.success(`${result.name} added to cart!`);
-                          onClose?.();
+                          // Fix: Actually add to cart using cart context
+                          const success = addToCart(result);
+                          if (success) {
+                            onClose?.();
+                          }
                         }}
                       >
                         <ShoppingCart className="w-3 h-3 mr-1" />
