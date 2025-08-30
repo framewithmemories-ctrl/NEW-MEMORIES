@@ -1083,7 +1083,7 @@ const TestimonialsSection = () => {
               <Button 
                 variant="outline"
                 className="border-green-200 text-green-700 hover:bg-green-50"
-                onClick={() => window.open('https://search.google.com/local/writereview?placeid=ChIJX8W6BJ8VqzsRQH_MrOqcD9A', '_blank')}
+                onClick={() => window.open('https://www.google.com/maps/place/Memories+-+Photo+Frames+%26+Customized+Gift+Shop/@11.0755,76.9983,17z/data=!3m1!5s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!4m16!1m7!3m6!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!2sMemories+-+Photo+Frames+%26+Customized+Gift+Shop!8m2!3d11.0755!4d76.9983!16s%2Fg%2F11s2y8k8qw!3m7!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!2sMemories+-+Photo+Frames+%26+Customized+Gift+Shop!8m2!3d11.0755!4d76.9983!10e5!16s%2Fg%2F11s2y8k8qw?hl=en#lrd=0x3ba859410e43c55f:0xd0f1eaeacbc9bf40,3', '_blank')}
               >
                 <Star className="w-4 h-4 mr-2" />
                 Write a Review
