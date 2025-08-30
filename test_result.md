@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Photo Frames & Custom Gift Shop website with branding integration, photo customizer, AI gift finder, and business growth features. Fix unexpected error after branding updates and complete missing features."
+user_problem_statement: "CRITICAL BUG FIXES: Fix 14 critical issues including cart emptying after add (highest priority), checkout home button, header layout issues, search add-to-cart, Google Reviews links, testimonial duplicates, Gift Finder scroll bugs, and product catalog updates. Focus on maintaining existing functionality while fixing user-blocking bugs."
 
 backend:
   - task: "FastAPI Backend Setup"
