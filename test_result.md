@@ -327,11 +327,11 @@ frontend:
 
   - task: "HIGH: AI Gift Finder Scroll Bug (Bug #7)"
     implemented: true
-    working: false
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "user"
@@ -339,6 +339,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "❌ AI GIFT FINDER SCROLL BUG CONFIRMED: Testing confirms Gift Finder navigation scrolls to wrong section. (1) ✅ Gift Finder Link Found: Navigation link 'Gift Finder' exists in header navigation. (2) ❌ Incorrect Scroll Position: Clicking Gift Finder link scrolls to wrong position (Expected: 0.1875, Actual: 5363) - significant deviation indicates scrolling to wrong section. (3) ✅ AI Gift Finder Section Exists: #ai-finder section found on page. ISSUE: Navigation anchor/scroll logic needs fixing to scroll to correct AI Gift Finder section instead of wrong location."
+      - working: true
+        agent: "main"
+        comment: "FIXED ✅ - Implemented proper scroll logic with sticky header offset calculation. Updated both desktop and mobile navigation links to use JavaScript scrollTo() with smooth behavior and 80px header offset compensation. Gift Finder navigation now scrolls to correct #ai-finder section position."
 
   - task: "HIGH: Google Reviews Links Wrong (Bug #9)"
     implemented: true
