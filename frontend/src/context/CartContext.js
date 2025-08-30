@@ -100,6 +100,8 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => {
     setCartItems([]);
+    // Also clear from localStorage
+    localStorage.removeItem('memoriesCart');
     toast.success('Cart cleared');
   };
 
