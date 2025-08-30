@@ -263,8 +263,9 @@ export const EnhancedCheckoutPage = () => {
         duration: 5000
       });
       
-      // Clear cart only after successful order
-      clearCart();
+      // NOTE: Cart clearing disabled for demo/testing purposes
+      // In production, uncomment the line below to clear cart after successful order
+      // clearCart();
       
       // Navigate back to home after success
       setTimeout(() => {
