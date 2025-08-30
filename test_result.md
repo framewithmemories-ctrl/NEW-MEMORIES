@@ -280,29 +280,77 @@ frontend:
         agent: "main"
         comment: "FIXED: Component syntax errors resolved, wallet interface fully functional within enhanced profile tabs."
 
-  - task: "Checkout & COD Flow (Critical Phase 1)"
-    implemented: true
-    working: true
-    file: "/app/frontend/src/components/EnhancedCheckoutPage.js"
-    stuck_count: 1
-    priority: "high"
-    needs_retesting: false
+  - task: "CRITICAL: Cart Empties After Add to Cart (Bug #1)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/context/CartContext.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
     status_history:
       - working: false
-        agent: "main"
-        comment: "CRITICAL FIXES IMPLEMENTED: (1) Converted checkout from floating overlay to dedicated page with /checkout route. (2) Implemented COD logic to skip payment details with clear messaging. (3) Added phone validation - Primary ≠ Alternate phone, mandatory alternate for COD. (4) Enhanced order flow with proper success messages, order history logging, cart clearing after success. Ready for testing."
-      - working: true
-        agent: "testing"
-        comment: "✅ CHECKOUT & ORDER PROCESSING BACKEND FULLY FUNCTIONAL - Comprehensive testing completed with 93.8% success rate (15/16 tests passed). CORE CHECKOUT FUNCTIONALITY VERIFIED: (1) ✅ Backend Server Health: 100% success rate - FastAPI server operational on port 8001, MongoDB connectivity working, all /api endpoints accessible, store info loaded correctly. (2) ✅ Order Processing System: 100% success rate - Delivery orders with full address details working, COD pickup orders with time slots functional, wallet payment integration operational, order history retrieval working. (3) ✅ Database Integration: Order data properly stored with correct structure (id, user_id, items, total_amount, status, delivery_type, points_earned, created_at). (4) ✅ Points Calculation: 3% reward points correctly calculated and awarded. (5) ✅ Wallet Integration: Add money, wallet payments, transaction history all functional. (6) ✅ Error Handling: 75% success rate - Invalid product/user IDs properly return 404, insufficient wallet balance returns 400. Minor: Order validation could be enhanced (accepts invalid order data). (7) ✅ API Routing: All critical endpoints (/api/, /api/products, /api/orders, /api/users, /api/store-info) working correctly. BACKEND IS PRODUCTION-READY for enhanced checkout functionality with proper order processing, payment integration, and data persistence."
-      - working: true
-        agent: "main"
-        comment: "COMPLETED ✅ - All critical checkout fixes implemented and backend tested successfully. Checkout page now works as dedicated page, COD logic functional, phone validation active, proper order flow with success messages and cart clearing. Backend confirmed 93.8% success rate for order processing."
+        agent: "user"
+        comment: "BUG REPORT: Cart shows empty after successful Add to Cart. Items briefly appear but then cart shows 'Your Cart is Empty' message. Critical user flow blocker preventing purchases."
+
+  - task: "HIGH: Checkout Home Button Not Redirecting (Bug #2)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/components/EnhancedCheckoutPage.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
       - working: false
-        agent: "testing"
-        comment: "❌ CRITICAL ISSUE: Cart icon navigation to checkout page NOT WORKING. Cart icon not found in header using multiple selectors (shopping-cart svg, cart classes, relative group buttons). Unable to test checkout flow because users cannot access the /checkout page via cart icon. The EnhancedCheckoutPage component exists and appears functional, but the cart navigation mechanism is broken. This is a critical user flow blocker."
-      - working: true
-        agent: "testing"
-        comment: "✅ CART NAVIGATION FIXED AND WORKING: Comprehensive testing confirms cart icon navigation is fully functional. (1) ✅ Cart Icon Visible: Shopping cart SVG icon found in header with proper button wrapper. (2) ✅ Cart Navigation Works: Cart button successfully navigates to /checkout page via JavaScript click handler. (3) ✅ Checkout Page Loads: Direct URL navigation to /checkout works perfectly, page displays 'Your Cart is Empty' when no items present. (4) ✅ Add to Cart Functional: Found 18 'Add to Cart' buttons, successfully added items to cart. (5) ✅ Complete User Flow: Cart icon → checkout page navigation working as expected. The previous issue was resolved - cart navigation is now production-ready."
+        agent: "user"  
+        comment: "BUG REPORT: Home button from checkout page does not redirect to landing page. Navigation broken."
+
+  - task: "HIGH: Search Add to Cart Not Working (Bug #12)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/components/SearchComponent.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "BUG REPORT: Add to cart buttons in search dropdown/suggestions not working. Clicking does nothing."
+
+  - task: "HIGH: AI Gift Finder Scroll Bug (Bug #7)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "BUG REPORT: Gift Finder nav link scrolls to Review section instead of Gift Finder section. Anchor/scroll logic incorrect."
+
+  - task: "HIGH: Google Reviews Links Wrong (Bug #9)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "BUG REPORT: Write review and Read all reviews links open Google Maps directions instead of Google Reviews pages."
+
+  - task: "HIGH: Duplicate Testimonials (Bug #8)"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "BUG REPORT: Testimonials section appears twice on page. Also need to implement profile photo sharing with customizer."
 
   - task: "Google Reviews & Maps Integration (Critical Phase 1)"
     implemented: true
