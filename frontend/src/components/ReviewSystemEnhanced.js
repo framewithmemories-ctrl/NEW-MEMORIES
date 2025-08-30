@@ -364,50 +364,55 @@ export const ReviewSystemEnhanced = () => {
           </div>
         ) : filteredReviews.length > 0 ? (
           <>
-            {filteredReviews.map((review) => (
-              <Card key={review.id} className="border-gray-200 hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                      {review.name.charAt(0).toUpperCase()}
-                    </div>
-                    
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold text-gray-900">{review.name}</h4>
-                          <div className="flex items-center space-x-2">
-                            {renderStars(review.rating)}
-                            <Badge variant="secondary" className="bg-green-100 text-green-800">
-                              Verified Customer
-                            </Badge>
-                          </div>
+            {/* Compact Grid Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredReviews.map((review) => (
+                <Card key={review.id} className="border-gray-200 hover:shadow-md transition-shadow h-fit">
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                          {review.name.charAt(0).toUpperCase()}
                         </div>
-                        <div className="text-sm text-gray-500">
-                          {new Date(review.created_at).toLocaleDateString()}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-gray-900 text-sm truncate">{review.name}</h4>
+                          <div className="flex items-center space-x-1">
+                            {renderStars(review.rating, false, null, 'w-3 h-3')}
+                          </div>
                         </div>
                       </div>
                       
-                      <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">{review.comment}</p>
                       
                       {review.photos && review.photos.length > 0 && (
-                        <div className="flex space-x-2">
-                          {review.photos.map((photo, index) => (
+                        <div className="flex space-x-1">
+                          {review.photos.slice(0, 2).map((photo, index) => (
                             <img 
                               key={index}
                               src={photo} 
-                              alt={`Review photo ${index + 1}`}
-                              className="w-20 h-20 object-cover rounded-lg shadow-sm"
+                              alt={`Review ${index + 1}`}
+                              className="w-12 h-12 object-cover rounded-md shadow-sm"
                             />
                           ))}
+                          {review.photos.length > 2 && (
+                            <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center text-xs text-gray-600">
+                              +{review.photos.length - 2}
+                            </div>
+                          )}
                         </div>
                       )}
                       
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <button className="flex items-center space-x-1 hover:text-rose-600 transition-colors">
-                          <ThumbsUp className="w-4 h-4" />
-                          <span>Helpful</span>
-                        </button>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                          Verified
+                        </Badge>
+                        <span>{new Date(review.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
                       </div>
                     </div>
                   </div>
