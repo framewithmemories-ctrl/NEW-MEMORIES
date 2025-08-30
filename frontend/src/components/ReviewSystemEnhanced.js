@@ -413,15 +413,10 @@ export const ReviewSystemEnhanced = () => {
                 </Card>
               ))}
             </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            </div>
             
             {pagination.hasMore && !isLoading && (
-              <div className="text-center">
+              <div className="text-center mt-6">
                 <Button 
                   onClick={() => loadReviews(false)}
                   variant="outline"
