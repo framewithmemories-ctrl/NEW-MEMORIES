@@ -31,12 +31,10 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes (but avoid initial empty save)
+  // Save cart to localStorage whenever it changes (but avoid race conditions)
   useEffect(() => {
-    // Only save if this is not the initial empty state
-    if (cartItems.length > 0) {
-      localStorage.setItem('memoriesCart', JSON.stringify(cartItems));
-    }
+    // Save current state to localStorage (including empty state for clearCart)
+    localStorage.setItem('memoriesCart', JSON.stringify(cartItems));
     // Always update cart count
     const totalQuantity = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
     setCartCount(totalQuantity);
