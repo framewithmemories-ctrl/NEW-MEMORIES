@@ -1075,7 +1075,7 @@ const TestimonialsSection = () => {
             <div className="space-x-4">
               <Button 
                 className="bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => window.open('https://search.google.com/local/reviews?placeid=ChIJX8W6BJ8VqzsRQH_MrOqcD9A', '_blank')}
+                onClick={() => window.open('https://www.google.com/maps/place/Memories+-+Photo+Frames+%26+Customized+Gift+Shop/@11.0755,76.9983,17z/data=!4m8!3m7!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!8m2!3d11.0755!4d76.9983!9m1!1b1!16s%2Fg%2F11s2y8k8qw?hl=en#lrd=0x3ba859410e43c55f:0xd0f1eaeacbc9bf40,1', '_blank')}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Read All Reviews
