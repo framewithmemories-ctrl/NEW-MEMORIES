@@ -260,18 +260,34 @@ const Header = () => {
                 className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group"
                 onClick={(e) => {
                   e.preventDefault();
-                  const element = document.getElementById('ai-finder');
-                  if (element) {
-                    // More accurate header height calculation
-                    const headerElement = document.querySelector('header') || document.querySelector('[class*="sticky"]');
-                    const headerHeight = headerElement ? headerElement.offsetHeight : 100;
-                    const elementPosition = element.offsetTop - headerHeight - 20; // Extra 20px padding
-                    console.log('Scrolling to Gift Finder:', elementPosition);
-                    window.scrollTo({
-                      top: elementPosition,
-                      behavior: 'smooth'
-                    });
-                  }
+                  console.log('🎯 Gift Finder navigation clicked');
+                  
+                  // Wait a moment for any dynamic content to load
+                  setTimeout(() => {
+                    const element = document.getElementById('ai-finder');
+                    console.log('🎯 AI Finder element found:', element);
+                    
+                    if (element) {
+                      const headerElement = document.querySelector('header') || document.querySelector('[class*="sticky"]');
+                      const headerHeight = headerElement ? headerElement.offsetHeight : 100;
+                      console.log('🎯 Header height:', headerHeight);
+                      
+                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+                      console.log('🎯 Calculated scroll position:', elementPosition);
+                      
+                      window.scrollTo({
+                        top: elementPosition,
+                        behavior: 'smooth'
+                      });
+                    } else {
+                      console.log('❌ AI Finder element not found');
+                      // Fallback: scroll to approximate position
+                      window.scrollTo({
+                        top: 3000,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }, 100);
                 }}
               >
                 Gift Finder
