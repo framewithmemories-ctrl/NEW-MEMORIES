@@ -1121,9 +1121,49 @@ const Home = () => {
       try {
         const response = await axios.get(`${API}/products`);
         setProducts(response.data);
+        console.log('✅ Products loaded from API:', response.data.length);
       } catch (error) {
-        console.error('Error fetching products:', error);
-        toast.error("Unable to load products - but you can still browse and call us!");
+        console.error('❌ Error fetching products from API:', error);
+        
+        // Fallback: Use local products data when API fails
+        const fallbackProducts = [
+          {
+            id: 'frame-wooden-classic',
+            name: 'Classic Wooden Frame',
+            description: 'Handcrafted wooden frame perfect for cherished memories',
+            category: 'frames',
+            base_price: 899,
+            image_url: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=400&h=300'
+          },
+          {
+            id: 'frame-acrylic-premium',
+            name: 'Premium Acrylic Frame', 
+            description: 'Modern acrylic frame with crystal-clear finish',
+            category: 'frames',
+            base_price: 1299,
+            image_url: 'https://images.unsplash.com/photo-1465161191540-aac346fcbaff?auto=format&fit=crop&w=400&h=300'
+          },
+          {
+            id: 'mug-photo-ceramic',
+            name: 'Custom Photo Mug',
+            description: 'Personalized ceramic mug with your favorite photo',
+            category: 'mugs',
+            base_price: 599,
+            image_url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=400&h=300'
+          },
+          {
+            id: 'pillow-custom-square',
+            name: 'Custom Photo Pillow',
+            description: 'Soft, comfortable pillow with your custom photo print',
+            category: 'pillows', 
+            base_price: 799,
+            image_url: 'https://images.unsplash.com/photo-1586210579191-33b45e38fa8c?auto=format&fit=crop&w=400&h=300'
+          }
+        ];
+        
+        setProducts(fallbackProducts);
+        console.log('✅ Using fallback products:', fallbackProducts.length);
+        toast.error("Using offline product catalog - Call us for latest prices!");
       } finally {
         setLoading(false);
       }
