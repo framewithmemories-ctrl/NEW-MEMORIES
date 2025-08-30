@@ -483,9 +483,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Cart Icon Navigation Fix"
-    - "Google Maps Links Implementation"
-  stuck_tasks: []
+    - "AI Gift Finder Scroll Bug Fix"
+  stuck_tasks:
+    - "HIGH: AI Gift Finder Scroll Bug (Bug #7)"
   test_all: false
   test_priority: "high_first"
 
