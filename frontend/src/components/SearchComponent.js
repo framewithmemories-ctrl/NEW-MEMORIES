@@ -15,6 +15,7 @@ export const SearchComponent = ({ onClose = null }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
+  const { addToCart } = useCart();
 
   // Load all products for searching
   useEffect(() => {
