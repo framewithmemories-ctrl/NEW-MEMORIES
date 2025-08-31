@@ -52,6 +52,9 @@ export const EnhancedCheckoutPage = () => {
 
   // Load user profile and wallet on mount
   useEffect(() => {
+    // Scroll to top when checkout page loads
+    window.scrollTo(0, 0);
+    
     try {
       const profile = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
       const wallet = profile.id ? JSON.parse(localStorage.getItem(`memories_wallet_${profile.id}`) || '{}') : {};
