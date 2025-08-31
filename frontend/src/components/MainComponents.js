@@ -575,7 +575,7 @@ export const ProductGrid = ({ products }) => {
               <span>All Products</span>
             </Button>
             
-            {navigationStructure.slice(0, 6).map((category) => (
+            {navigationStructure.slice(0, 5).map((category) => (
               <Button
                 key={category.key}
                 variant={selectedCategory === category.key ? "default" : "outline"}
