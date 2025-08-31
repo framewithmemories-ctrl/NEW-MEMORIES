@@ -660,47 +660,20 @@ const Header = () => {
               ))}
               
               <button 
-                onClick={() => {
-                  handleNavigation('#customizer', true);
-                  setActiveSection('customizer');
-                }}
-                className={`
-                  nav-hover-fix font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-all duration-200
-                  ${activeSection === 'customizer' 
-                    ? 'text-red-800 bg-red-50 border-l-4 border-red-800' 
-                    : 'text-gray-700'
-                  }
-                `}
+                onClick={() => handleNavigation('#customizer', true)}
+                className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-colors"
               >
                 🎨 Customize
               </button>
               <button 
-                onClick={() => {
-                  handleNavigation('#ai-finder', true);
-                  setActiveSection('ai-finder');
-                }}
-                className={`
-                  nav-hover-fix font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-all duration-200
-                  ${activeSection === 'ai-finder' 
-                    ? 'text-red-800 bg-red-50 border-l-4 border-red-800' 
-                    : 'text-gray-700'
-                  }
-                `}
+                onClick={() => handleNavigation('#ai-finder', true)}
+                className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-colors"
               >
                 🤖 Gift Finder
               </button>
               <button 
-                onClick={() => {
-                  handleNavigation('/about', true);
-                  setActiveSection('about');
-                }}
-                className={`
-                  nav-hover-fix font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-all duration-200
-                  ${activeSection === 'about' || location.pathname === '/about' 
-                    ? 'text-red-800 bg-red-50 border-l-4 border-red-800' 
-                    : 'text-gray-700'
-                  }
-                `}
+                onClick={() => handleNavigation('/about', true)}
+                className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-colors"
               >
                 ℹ️ About Us
               </button>
