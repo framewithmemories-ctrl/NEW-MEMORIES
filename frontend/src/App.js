@@ -465,20 +465,15 @@ const Header = () => {
           </div>
           
           {/* Right side - All action buttons */}
-          <div className="flex items-center space-x-3">
-            <div className="hidden sm:block">
+          <div className="flex items-center space-x-2">
+            <div className="hidden lg:block">
               <SearchComponent />
             </div>
-            
-            <Badge variant="secondary" className="bg-orange-100 text-orange-800 animate-pulse hidden sm:flex">
-              <Gift className="w-3 h-3 mr-1" />
-              Free Gift Wrap
-            </Badge>
             
             <UserProfileButton />
             <CartIcon />
             
-            <SmartCallButton className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white hidden sm:flex">
+            <SmartCallButton className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white hidden lg:flex">
               <Phone className="w-4 h-4 mr-2" />
               Call Now
             </SmartCallButton>
