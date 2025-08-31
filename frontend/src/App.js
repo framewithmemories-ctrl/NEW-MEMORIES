@@ -349,9 +349,43 @@ const UserProfileButton = () => {
   );
 };
 
-// Enhanced Header Component
+// Enhanced Header Component with Universal Navigation
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Universal navigation handler
+  const handleNavigation = (target, closeMenu = false) => {
+    if (closeMenu) {
+      setIsMenuOpen(false);
+    }
+    
+    if (target === '/') {
+      // Navigate to home
+      navigate('/');
+    } else if (target === '/about') {
+      // Navigate to About Us page
+      navigate('/about');
+    } else if (target === '/checkout') {
+      // Navigate to checkout
+      navigate('/checkout');
+    } else if (target.startsWith('#')) {
+      // Same-page anchor navigation
+      const elementId = target.substring(1);
+      
+      if (location.pathname !== '/') {
+        // Navigate to home first, then scroll
+        navigate('/');
+        setTimeout(() => {
+          smoothScrollToElement(elementId);
+        }, 300);
+      } else {
+        // Already on home page, just scroll
+        smoothScrollToElement(elementId);
+      }
+    }
+  };
   
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-rose-100 shadow-lg">
