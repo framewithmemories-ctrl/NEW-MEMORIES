@@ -38,11 +38,13 @@ export const CartProvider = ({ children }) => {
 
   // Save cart to localStorage whenever it changes (but avoid race conditions)
   useEffect(() => {
+    console.log('💾 Saving cart to localStorage:', cartItems.length, 'items');
     // Save current state to localStorage (including empty state for clearCart)
     localStorage.setItem('memoriesCart', JSON.stringify(cartItems));
     // Always update cart count
     const totalQuantity = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
     setCartCount(totalQuantity);
+    console.log('💾 Cart saved, count updated to:', totalQuantity);
   }, [cartItems]);
 
   const addToCart = (product, customOptions = {}) => {
