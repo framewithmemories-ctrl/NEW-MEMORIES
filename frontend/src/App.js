@@ -390,9 +390,13 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-rose-100 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Bar */}
+        {/* Top Bar - Restructured */}
         <div className="hidden md:flex justify-between items-center py-2 text-sm border-b border-rose-50">
-          <div className="flex items-center space-x-6 text-gray-700">
+          {/* Left side - Empty for logo expansion */}
+          <div></div>
+          
+          {/* Right side - All contact info and badges */}
+          <div className="flex items-center space-x-4 text-gray-700">
             <SmartCallButton className="flex items-center space-x-2 text-gray-800 hover:text-rose-600 transition-colors cursor-pointer bg-transparent p-0 h-auto">
               <Phone className="w-3 h-3 text-rose-600" />
               <span className="font-semibold text-gray-900">+91 81480 40148</span>
@@ -405,8 +409,6 @@ const Header = () => {
               <MapPin className="w-3 h-3 text-green-600" />
               <span className="text-gray-800 font-medium">Keeranatham Road, Coimbatore</span>
             </div>
-          </div>
-          <div className="flex items-center space-x-4">
             <Badge variant="secondary" className="bg-green-100 text-green-800 animate-pulse">
               <Truck className="w-3 h-3 mr-1" />
               Free Delivery Available
