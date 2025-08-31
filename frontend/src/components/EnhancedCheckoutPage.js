@@ -329,8 +329,13 @@ export const EnhancedCheckoutPage = () => {
 
   // FIXED: Show Order Confirmation Screen - Compact Bill Format
   if (orderConfirmation) {
+    // Ensure page loads from top
+    React.useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
     return (
-      <div className="max-w-md mx-auto px-4 py-8">
+      <div className="max-w-md mx-auto px-4 py-8" style={{ marginTop: '0px', paddingTop: '20px' }}>
         <div className="bg-white border-2 border-gray-200 p-6 font-mono text-sm">
           
           {/* Enhanced Shop Logo and Branding - Horizontal Layout Like Header */}
