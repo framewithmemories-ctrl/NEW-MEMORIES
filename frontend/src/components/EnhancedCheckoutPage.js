@@ -289,7 +289,113 @@ export const EnhancedCheckoutPage = () => {
     }
   };
 
-  if (cartItems.length === 0) {
+  // FIXED: Show Order Confirmation Screen
+  if (orderConfirmation) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-green-600 mb-2">Order Placed Successfully!</h1>
+          <p className="text-gray-600">{orderConfirmation.description}</p>
+        </div>
+
+        {/* Order Summary */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Order Summary</CardTitle>
+            <CardDescription>Order ID: {orderConfirmation.orderId}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Items Ordered */}
+              <div>
+                <h3 className="font-medium text-gray-900 mb-3">Items Ordered:</h3>
+                <div className="space-y-2">
+                  {orderConfirmation.items.map((item, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
+                        <div>
+                          <p className="font-medium">{item.name}</p>
+                          <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                        </div>
+                      </div>
+                      <p className="font-medium">₹{item.price * item.quantity}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Customer Details */}
+              <div className="border-t pt-4">
+                <h3 className="font-medium text-gray-900 mb-3">Delivery Information:</h3>
+                <div className="grid md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p><strong>Name:</strong> {orderConfirmation.customerInfo.name}</p>
+                    <p><strong>Email:</strong> {orderConfirmation.customerInfo.email}</p>
+                    <p><strong>Phone:</strong> {orderConfirmation.customerInfo.phone}</p>
+                    {orderConfirmation.customerInfo.alternatePhone && (
+                      <p><strong>Alternate Phone:</strong> {orderConfirmation.customerInfo.alternatePhone}</p>
+                    )}
+                  </div>
+                  <div>
+                    <p><strong>Delivery Type:</strong> {orderConfirmation.deliveryType === 'pickup' ? 'Store Pickup' : 'Home Delivery'}</p>
+                    <p><strong>Payment Method:</strong> {orderConfirmation.paymentMethod}</p>
+                    {orderConfirmation.customerInfo.address && (
+                      <p><strong>Address:</strong> {orderConfirmation.customerInfo.address}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Totals */}
+              <div className="border-t pt-4">
+                <h3 className="font-medium text-gray-900 mb-3">Order Total:</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span>₹{orderConfirmation.totals.subtotal}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Delivery:</span>
+                    <span>{orderConfirmation.totals.delivery === 0 ? 'FREE' : `₹${orderConfirmation.totals.delivery}`}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax (GST):</span>
+                    <span>₹{orderConfirmation.totals.tax}</span>
+                  </div>
+                  {orderConfirmation.totals.walletDiscount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Wallet Discount:</span>
+                      <span>-₹{orderConfirmation.totals.walletDiscount}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-lg border-t pt-2">
+                    <span>Total:</span>
+                    <span>₹{orderConfirmation.totals.final}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Actions */}
+        <div className="text-center space-x-4">
+          <Button onClick={() => navigate('/')} className="bg-rose-500 hover:bg-rose-600">
+            Continue Shopping
+          </Button>
+          <Button variant="outline" onClick={() => window.print()}>
+            Print Order Summary
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (cartItems.length === 0 && !orderConfirmation) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Card className="w-full max-w-md mx-auto">
