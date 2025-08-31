@@ -213,7 +213,9 @@ export const EnhancedCheckoutPage = () => {
           walletDiscount: getWalletDiscount(),
           final: getFinalTotal()
         },
-        paymentMethod: codEnabled ? 'cod' : 'online',
+        paymentMethod: formData.deliveryType === 'pickup' 
+          ? (storePickupPayment === 'cash-at-store' ? 'cod' : 'online')
+          : (codEnabled ? 'cod' : 'online'),
         deliveryType: formData.deliveryType,
         createdAt: new Date().toISOString()
       };
