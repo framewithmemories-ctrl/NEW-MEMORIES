@@ -433,8 +433,6 @@ const Header = () => {
           {/* Center - Navigation */}
           <div className="flex-1 flex justify-center">
             <nav className="hidden md:flex space-x-8">
-            
-            <nav className="hidden md:flex space-x-8">
               <button 
                 onClick={() => handleNavigation('#shop')}
                 className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
@@ -466,10 +464,16 @@ const Header = () => {
             </nav>
           </div>
           
-          <div className="flex items-center space-x-4">
+          {/* Right side - All action buttons */}
+          <div className="flex items-center space-x-3">
             <div className="hidden sm:block">
               <SearchComponent />
             </div>
+            
+            <Badge variant="secondary" className="bg-orange-100 text-orange-800 animate-pulse hidden sm:flex">
+              <Gift className="w-3 h-3 mr-1" />
+              Free Gift Wrap
+            </Badge>
             
             <UserProfileButton />
             <CartIcon />
