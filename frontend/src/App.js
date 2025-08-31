@@ -752,7 +752,7 @@ const UserProfileButton = () => {
           
         case 'preferences':
           const prefs = userData.reminder_preferences || {};
-          contentDiv.innerHTML = \`
+          contentDiv.innerHTML = `
             <div class="space-y-6">
               <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">Reminder Preferences</h3>
@@ -768,7 +768,7 @@ const UserProfileButton = () => {
                       </div>
                     </div>
                     <label class="switch relative inline-block w-10 h-6">
-                      <input type="checkbox" \${prefs.email ? 'checked' : ''} class="opacity-0 w-0 h-0">
+                      <input type="checkbox" ${prefs.email ? 'checked' : ''} class="opacity-0 w-0 h-0">
                       <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300"></span>
                     </label>
                   </div>
@@ -805,7 +805,7 @@ const UserProfileButton = () => {
                 <button class="mt-6 bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600">Save Preferences</button>
               </div>
             </div>
-          \`;
+          `;
           break;
           
         case 'privacy':
