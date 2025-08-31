@@ -220,7 +220,11 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
   return (
     <nav className="hidden lg:flex space-x-2">
       {/* Shop with Mega Menu */}
-      <div className="relative">
+      <div 
+        className="relative"
+        onMouseEnter={() => setActiveDropdown('shop')}
+        onMouseLeave={() => setActiveDropdown(null)}
+      >
         <NavItem 
           name="Shop" 
           section="shop" 
@@ -230,7 +234,11 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
         
         {/* Enhanced Mega Menu Dropdown */}
         {activeDropdown === 'shop' && (
-          <div className="absolute top-full left-0 mt-2 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50">
+          <div 
+            className="absolute top-full left-0 mt-1 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50"
+            onMouseEnter={() => setActiveDropdown('shop')}
+            onMouseLeave={() => setActiveDropdown(null)}
+          >
             <div className="grid grid-cols-3 gap-6 p-6">
               {navigationStructure.map((category, index) => (
                 <div key={category.key} className="space-y-3">
@@ -247,11 +255,7 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
                           setActiveDropdown(null);
                           setActiveSection('shop');
                         }}
-                        className="block text-xs text-gray-600 hover:text-red-800 hover:bg-red-50 py-2 px-3 rounded transition-all duration-200 text-left bg-transparent border-none cursor-pointer w-full"
-                        style={{
-                          '--hover-color': '#be123c',
-                          '--hover-bg': '#fef2f2'
-                        }}
+                        className="text-xs py-2 px-3 rounded-md text-left bg-transparent border-none cursor-pointer w-full text-gray-600 hover:text-red-800 hover:bg-red-50 transition-colors duration-200"
                       >
                         {sub}
                       </button>
