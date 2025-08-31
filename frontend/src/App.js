@@ -180,88 +180,34 @@ const HierarchicalNavigation = ({ handleNavigation }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   
   return (
-    <nav className="hidden lg:flex space-x-2">
-      {/* Shop with Mega Menu */}
-      <div 
-        className="relative"
-        onMouseEnter={() => setActiveDropdown('shop')}
-        onMouseLeave={() => setActiveDropdown(null)}
+    <nav className="hidden lg:flex space-x-6">
+      {/* Simple Shop Button */}
+      <button 
+        onClick={() => handleNavigation('#shop')}
+        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
       >
-        <NavItem 
-          name="Shop" 
-          section="shop" 
-          hasDropdown={true}
-          onClick={() => handleNavigation('#shop')}
-        />
-        
-        {/* Enhanced Mega Menu Dropdown */}
-        {activeDropdown === 'shop' && (
-          <div 
-            className="absolute top-full left-0 mt-1 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50"
-            onMouseEnter={() => setActiveDropdown('shop')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <div className="grid grid-cols-3 gap-6 p-6">
-              {navigationStructure.map((category, index) => (
-                <div key={category.key} className="space-y-3">
-                  <div className="flex items-center space-x-2 font-semibold text-gray-900 border-b border-gray-100 pb-2">
-                    <span className="text-lg">{category.icon}</span>
-                    <span className="text-sm">{category.name}</span>
-                  </div>
-                  <div className="space-y-2">
-                    {category.subcategories.map((sub, subIndex) => (
-                      <button
-                        key={subIndex}
-                        onClick={() => {
-                          handleNavigation('#shop');
-                          setActiveDropdown(null);
-                          setActiveSection('shop');
-                        }}
-                        className="text-xs py-2 px-3 rounded-md text-left bg-transparent border-none cursor-pointer w-full text-gray-600 hover:text-red-800 hover:bg-red-50 transition-colors duration-200"
-                      >
-                        {sub}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-600">Browse our complete collection of personalized gifts</p>
-                <Button 
-                  onClick={() => {
-                    handleNavigation('#shop');
-                    setActiveDropdown(null);
-                    setActiveSection('shop');
-                  }}
-                  size="sm" 
-                  className="bg-rose-500 hover:bg-rose-600 transition-colors duration-200"
-                >
-                  View All Products
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+        Shop
+      </button>
       
       {/* Other Navigation Items */}
-      <NavItem 
-        name="Customize" 
-        section="customizer" 
+      <button 
         onClick={() => handleNavigation('#customizer')}
-      />
-      <NavItem 
-        name="Gift Finder" 
-        section="ai-finder" 
+        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
+      >
+        Customize
+      </button>
+      <button 
         onClick={() => handleNavigation('#ai-finder')}
-      />
-      <NavItem 
-        name="About Us" 
-        section="about" 
+        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
+      >
+        Gift Finder
+      </button>
+      <button 
         onClick={() => handleNavigation('/about')}
-      />
+        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
+      >
+        About Us
+      </button>
     </nav>
   );
 };
