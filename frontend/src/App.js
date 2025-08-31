@@ -177,8 +177,15 @@ const CartIcon = () => {
   const { cartCount } = useCart();
   
   const handleCheckout = () => {
-    // Navigate to dedicated checkout page
-    window.location.href = '/checkout';
+    // Use React Router navigation instead of full page reload
+    // This preserves the React app state and cart items
+    console.log('🛒 Cart icon clicked, navigating to checkout...');
+    console.log('🛒 Current cart count:', cartCount);
+    
+    // Navigate to checkout without page reload
+    window.history.pushState({}, '', '/checkout');
+    // Trigger a popstate event to update the router
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
   
   return (
