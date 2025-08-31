@@ -1028,34 +1028,25 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white mb-6">Quick Links</h3>
             <div className="space-y-3">
               <button 
-                onClick={() => {
-                  window.open('/#shop', '_self');
-                  setTimeout(() => smoothScrollToElement('shop'), 300);
-                }}
+                onClick={() => handleFooterNavigation('#shop')}
                 className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
               >
                 Shop Products
               </button>
               <button 
-                onClick={() => {
-                  window.open('/#customizer', '_self');
-                  setTimeout(() => smoothScrollToElement('customizer'), 300);
-                }}
+                onClick={() => handleFooterNavigation('#customizer')}
                 className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
               >
                 Photo Customizer
               </button>
               <button 
-                onClick={() => {
-                  window.open('/#ai-finder', '_self');
-                  setTimeout(() => smoothScrollToElement('ai-finder'), 300);
-                }}
+                onClick={() => handleFooterNavigation('#ai-finder')}
                 className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
               >
                 AI Gift Finder
               </button>
               <button 
-                onClick={() => window.open('/about', '_self')}
+                onClick={() => handleFooterNavigation('/about')}
                 className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
               >
                 About Us
