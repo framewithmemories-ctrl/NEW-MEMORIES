@@ -305,11 +305,6 @@ const Header = () => {
               <SearchComponent />
             </div>
             
-            <Badge variant="secondary" className="bg-rose-100 text-rose-800 hidden sm:flex animate-pulse">
-              <Gift className="w-3 h-3 mr-1" />
-              Free Gift Wrap
-            </Badge>
-            
             <button 
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative group"
               onClick={() => {
