@@ -97,7 +97,29 @@ class User(BaseModel):
     wallet_balance: float = 0.0
     store_credits: float = 0.0
     total_spent: float = 0.0
+    
+    # New Profile Enhancement Fields
+    date_of_birth: Optional[str] = None  # Format: YYYY-MM-DD
+    important_dates: List[dict] = []  # [{name, date, type, reminder_enabled}]
+    reminder_preferences: dict = {
+        "email": False,
+        "sms": False, 
+        "whatsapp": False
+    }
+    privacy_consent: dict = {
+        "marketing_consent": False,
+        "data_processing_consent": True,
+        "reminder_consent": False,
+        "consent_timestamp": None
+    }
+    data_retention: dict = {
+        "auto_delete_photos": True,
+        "retention_period_months": 24,
+        "last_activity": None
+    }
+    
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserCreate(BaseModel):
     name: str
