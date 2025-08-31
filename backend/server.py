@@ -128,6 +128,35 @@ class UserCreate(BaseModel):
     address: Optional[str] = None
     preferences: Optional[str] = None
 
+# New models for Profile Enhancement features
+class ImportantDate(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str  # "Mom's Birthday", "Anniversary", etc.
+    date: str  # Format: YYYY-MM-DD
+    type: str  # "birthday", "anniversary", "custom"
+    reminder_enabled: bool = True
+    reminder_days_before: List[int] = [7, 1]  # Remind 7 days and 1 day before
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ConsentRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    consent_type: str  # "marketing", "reminders", "data_processing"
+    consent_given: bool
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+
+class DataExportRequest(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    request_type: str  # "export" or "delete"
+    status: str = "pending"  # "pending", "processing", "completed", "failed"
+    data_categories: List[str] = []  # ["profile", "orders", "photos", "reviews"]
+    export_url: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    completed_at: Optional[datetime] = None
+
 class SavedPhoto(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
