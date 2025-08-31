@@ -630,40 +630,56 @@ const Header = () => {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-rose-100 bg-white/95 backdrop-blur-md">
+          <div className="md:hidden py-4 border-t border-rose-100 bg-white/95 backdrop-blur-md max-h-96 overflow-y-auto">
             <div className="mb-4">
               <SearchComponent />
             </div>
-            <nav className="flex flex-col space-y-3">
+            <nav className="flex flex-col space-y-2">
               <button 
                 onClick={() => handleNavigation('/', true)}
                 className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
                 🏠 Home
               </button>
-              <button 
-                onClick={() => handleNavigation('#shop', true)}
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
-              >
-                Shop
-              </button>
+              
+              {/* Hierarchical Mobile Categories */}
+              {navigationStructure.map((category, index) => (
+                <div key={category.key} className="border-l-2 border-rose-100 ml-2 pl-3">
+                  <div className="flex items-center space-x-2 py-2 px-2 font-medium text-gray-800 text-sm">
+                    <span>{category.icon}</span>
+                    <span>{category.name}</span>
+                  </div>
+                  <div className="ml-6 space-y-1">
+                    {category.subcategories.map((sub, subIndex) => (
+                      <button
+                        key={subIndex}
+                        onClick={() => handleNavigation('#shop', true)}
+                        className="block text-xs text-gray-600 hover:text-rose-600 py-1 px-2 hover:bg-rose-50 rounded transition-all text-left bg-transparent border-none cursor-pointer w-full"
+                      >
+                        {sub}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              
               <button 
                 onClick={() => handleNavigation('#customizer', true)}
                 className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
-                Customize
+                🎨 Customize
               </button>
               <button 
                 onClick={() => handleNavigation('#ai-finder', true)}
                 className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
-                Gift Finder
+                🤖 Gift Finder
               </button>
               <button 
                 onClick={() => handleNavigation('/about', true)}
                 className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
-                About Us
+                ℹ️ About Us
               </button>
               <SmartCallButton className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white mx-4">
                 <Phone className="w-4 h-4 mr-2" />
