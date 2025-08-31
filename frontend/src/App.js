@@ -490,50 +490,36 @@ const Header = () => {
               <SearchComponent />
             </div>
             <nav className="flex flex-col space-y-3">
-              <a 
-                href="/" 
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
-                onClick={() => setIsMenuOpen(false)}
+              <button 
+                onClick={() => handleNavigation('/', true)}
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
                 🏠 Home
-              </a>
-              <a 
-                href="#shop" 
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button 
+                onClick={() => handleNavigation('#shop', true)}
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
                 Shop
-              </a>
-              <a 
-                href="#customizer" 
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button 
+                onClick={() => handleNavigation('#customizer', true)}
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
                 Customize
-              </a>
-              <a 
-                href="#ai-finder" 
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById('ai-finder');
-                  if (element) {
-                    // More accurate header height calculation
-                    const headerElement = document.querySelector('header') || document.querySelector('[class*="sticky"]');
-                    const headerHeight = headerElement ? headerElement.offsetHeight : 100;
-                    const elementPosition = element.offsetTop - headerHeight - 20; // Extra 20px padding
-                    console.log('🎯 Scrolling to Gift Finder:', elementPosition);
-                    window.scrollTo({
-                      top: elementPosition,
-                      behavior: 'smooth'
-                    });
-                  }
-                  setIsMenuOpen(false); // Close mobile menu
-                }}
+              </button>
+              <button 
+                onClick={() => handleNavigation('#ai-finder', true)}
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
               >
                 Gift Finder
-              </a>
-              <a href="/about" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">About Us</a>
+              </button>
+              <button 
+                onClick={() => handleNavigation('/about', true)}
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
+              >
+                About Us
+              </button>
               <SmartCallButton className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white mx-4">
                 <Phone className="w-4 h-4 mr-2" />
                 Call +91 81480 40148
