@@ -347,7 +347,6 @@ const Header = () => {
               <SearchComponent />
             </div>
             <nav className="flex flex-col space-y-3">
-              <a href="#home" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Home</a>
               <a href="#shop" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Shop</a>
               <a href="#customizer" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Customize</a>
               <a 
