@@ -309,15 +309,18 @@ export const EnhancedCheckoutPage = () => {
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="bg-white border-2 border-gray-200 p-6 font-mono text-sm">
           
-          {/* Logo */}
-          <div className="text-center mb-4">
-            <div className="w-16 h-16 mx-auto mb-2">
-              <div className="w-full h-full bg-gradient-to-br from-rose-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+          {/* Shop Logo and Branding */}
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 mx-auto mb-3">
+              <div className="w-full h-full bg-gradient-to-br from-rose-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold text-2xl">
                 M
               </div>
             </div>
-            <div className="font-bold text-lg">MEMORIES</div>
-            <div className="text-xs text-gray-600">Photo Frames & Gifts</div>
+            <div className="font-bold text-xl tracking-wide">MEMORIES</div>
+            <div className="text-xs text-gray-600 mt-1">Photo Frames & Custom Gift Shop</div>
+            <div className="text-xs text-rose-600 italic mt-1">Frame with Love • Crafted with Care</div>
+            <div className="text-xs text-gray-500 mt-2">📍 19B Kanni Illam, Keeranatham Rd, Coimbatore</div>
+            <div className="text-xs text-gray-500">📞 +91 81480 40148</div>
           </div>
 
           {/* Order Summary Heading */}
