@@ -895,7 +895,7 @@ const UserProfileButton = () => {
     document.head.appendChild(style);
     
     // Show default tab
-    showTab('profile');
+    window.showTab('profile');
     
     // Add ESC and click outside functionality
     const handleEscClose = (e) => {
