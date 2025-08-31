@@ -198,6 +198,105 @@ const CartIcon = () => {
   );
 };
 
+// Enhanced User Profile Component with Login/Logout
+const UserProfileButton = () => {
+  const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  
+  // Check for existing user on mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('memoriesUserProfile');
+    if (savedProfile) {
+      try {
+        const profile = JSON.parse(savedProfile);
+        if (profile.profileComplete) {
+          setUser(profile);
+        }
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      }
+    }
+  }, []);
+  
+  const handleLogin = () => {
+    // Load and execute the external profile modal script for login
+    if (!window.openProfileModal) {
+      const script = document.createElement('script');
+      script.src = '/profile-modal.js';
+      script.onload = () => {
+        window.openProfileModal();
+      };
+      document.head.appendChild(script);
+    } else {
+      window.openProfileModal();
+    }
+    setShowDropdown(false);
+  };
+  
+  const handleLogout = () => {
+    // Clear user data
+    localStorage.removeItem('memoriesUserProfile');
+    setUser(null);
+    setShowDropdown(false);
+    toast.success('Successfully logged out');
+  };
+  
+  return (
+    <div className="relative">
+      {user ? (
+        // Logged in state
+        <div className="flex items-center space-x-2">
+          <button 
+            className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+            <span className="hidden sm:block text-sm font-medium text-gray-700">
+              {user.name.split(' ')[0]}
+            </span>
+          </button>
+          
+          {showDropdown && (
+            <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+              <div className="p-3 border-b border-gray-100">
+                <p className="font-medium text-gray-900">{user.name}</p>
+                <p className="text-sm text-gray-600">{user.email}</p>
+              </div>
+              <div className="p-1">
+                <button 
+                  className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+                  onClick={handleLogin}
+                >
+                  View Profile
+                </button>
+                <button 
+                  className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md"
+                  onClick={handleLogout}
+                >
+                  🚪 Logout
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        // Logged out state
+        <button 
+          className="flex items-center space-x-1 px-3 py-1.5 text-sm bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors"
+          onClick={handleLogin}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <span>Sign In</span>
+        </button>
+      )}
+    </div>
+  );
+};
+
 // Enhanced Header Component
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
