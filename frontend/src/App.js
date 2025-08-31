@@ -101,6 +101,174 @@ const smoothScrollToElement = (elementId, offset = 80) => {
   }
 };
 
+// Hierarchical Navigation Structure - Competitor Best Practices
+const navigationStructure = [
+  {
+    name: 'Photo Frames & Prints',
+    key: 'photo-frames-prints',
+    icon: '🖼️',
+    subcategories: [
+      'Personalized Photo Frames',
+      'Collage Frames', 
+      'LED / Light-up Frames',
+      'Wooden / Acrylic Frames',
+      'Wall Photo Frames',
+      'Desk Frames'
+    ]
+  },
+  {
+    name: 'Photo Gifts',
+    key: 'photo-gifts',
+    icon: '🎁',
+    subcategories: [
+      'Photo Mugs',
+      'Photo Pillows / Cushions',
+      'Photo Keychains', 
+      'Photo Bottles / Sippers',
+      'Photo Clocks',
+      'Photo Lamps'
+    ]
+  },
+  {
+    name: 'Occasion-Based Gifts',
+    key: 'occasion-gifts',
+    icon: '🌟',
+    subcategories: [
+      'Birthday Gifts',
+      'Anniversary Gifts',
+      'Wedding Gifts',
+      'Friendship / Love Gifts',
+      'Festival Specials'
+    ]
+  },
+  {
+    name: 'Corporate & Bulk Orders',
+    key: 'corporate-bulk',
+    icon: '🏢',
+    subcategories: [
+      'Employee Awards & Frames',
+      'Corporate Gift Hampers',
+      'Custom Branding Gifts'
+    ]
+  },
+  {
+    name: 'Home & Lifestyle',
+    key: 'home-lifestyle',
+    icon: '🏠',
+    subcategories: [
+      'Wall Décor',
+      'Name Plates',
+      'Customized Clocks',
+      'Table Décor'
+    ]
+  },
+  {
+    name: 'Specials',
+    key: 'specials',
+    icon: '✨',
+    subcategories: [
+      'Kids Collection',
+      'Couple Gifts',
+      '3D / Crystal Gifts',
+      'Digital Portraits & Caricatures'
+    ]
+  }
+];
+
+// Hierarchical Navigation Component - Desktop
+const HierarchicalNavigation = ({ handleNavigation }) => {
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  
+  return (
+    <nav className="hidden lg:flex space-x-6">
+      {/* Shop with Mega Menu */}
+      <div 
+        className="relative group"
+        onMouseEnter={() => setActiveDropdown('shop')}
+        onMouseLeave={() => setActiveDropdown(null)}
+      >
+        <button 
+          onClick={() => handleNavigation('#shop')}
+          className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative bg-transparent border-none cursor-pointer flex items-center space-x-1"
+        >
+          <span>Shop</span>
+          <ChevronDown className="w-4 h-4" />
+          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
+        </button>
+        
+        {/* Mega Menu Dropdown */}
+        {activeDropdown === 'shop' && (
+          <div className="absolute top-full left-0 mt-2 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50">
+            <div className="grid grid-cols-3 gap-6 p-6">
+              {navigationStructure.map((category, index) => (
+                <div key={category.key} className="space-y-3">
+                  <div className="flex items-center space-x-2 font-semibold text-gray-900 border-b border-gray-100 pb-2">
+                    <span className="text-lg">{category.icon}</span>
+                    <span className="text-sm">{category.name}</span>
+                  </div>
+                  <div className="space-y-2">
+                    {category.subcategories.map((sub, subIndex) => (
+                      <button
+                        key={subIndex}
+                        onClick={() => {
+                          handleNavigation('#shop');
+                          setActiveDropdown(null);
+                          // Filter products by subcategory logic can be added here
+                        }}
+                        className="block text-xs text-gray-600 hover:text-rose-600 transition-colors text-left bg-transparent border-none cursor-pointer w-full"
+                      >
+                        {sub}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600">Browse our complete collection of personalized gifts</p>
+                <Button 
+                  onClick={() => {
+                    handleNavigation('#shop');
+                    setActiveDropdown(null);
+                  }}
+                  size="sm" 
+                  className="bg-rose-500 hover:bg-rose-600"
+                >
+                  View All Products
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* Other Navigation Items */}
+      <button 
+        onClick={() => handleNavigation('#customizer')}
+        className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
+      >
+        Customize
+        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
+      </button>
+      <button 
+        onClick={() => handleNavigation('#ai-finder')}
+        className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
+      >
+        Gift Finder
+        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
+      </button>
+      <button 
+        onClick={() => handleNavigation('/about')}
+        className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
+      >
+        About Us
+        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
+      </button>
+    </nav>
+  );
+};
+
 // Google Reviews Integration - Direct Links Only (No Fallback)
 const handleGoogleReviews = (action) => {
   const reviewUrls = {
