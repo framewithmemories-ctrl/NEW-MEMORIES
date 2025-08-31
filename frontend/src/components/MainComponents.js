@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
+import { expandedProductCatalog } from "../data/expandedProductCatalog";
+import { expandedProductCatalogPart2 } from "../data/expandedProductCatalogPart2";
+import { expandedProductCatalogPart3 } from "../data/expandedProductCatalogPart3";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
