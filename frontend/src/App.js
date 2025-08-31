@@ -180,7 +180,7 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
   const [activeDropdown, setActiveDropdown] = useState(null);
   const location = useLocation();
   
-  // Enhanced navigation item component
+  // Enhanced navigation item component with brand colors
   const NavItem = ({ name, section, hasDropdown = false, onClick }) => {
     const isActive = activeSection === section || (section === 'shop' && location.pathname === '/');
     
@@ -196,11 +196,8 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
             setActiveSection(section);
           }}
           className={`
-            font-medium transition-all duration-300 relative bg-transparent border-none cursor-pointer flex items-center space-x-1 px-3 py-2 rounded-lg
-            ${isActive 
-              ? 'text-rose-600 bg-rose-50 shadow-sm' 
-              : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50/50'
-            }
+            brand-nav-item font-medium relative border-none cursor-pointer flex items-center space-x-1 px-3 py-2 rounded-lg
+            ${isActive ? 'active' : ''}
           `}
         >
           <span>{name}</span>
@@ -209,10 +206,6 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
               activeDropdown === section ? 'rotate-180' : ''
             }`} />
           )}
-          <span className={`
-            absolute -bottom-1 left-3 right-3 h-0.5 bg-rose-600 transition-all duration-300
-            ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
-          `}></span>
         </button>
       </div>
     );
