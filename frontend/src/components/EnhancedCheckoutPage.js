@@ -551,6 +551,40 @@ export const EnhancedCheckoutPage = () => {
                 </div>
               </RadioGroup>
 
+              {/* Store Pickup Payment Choice */}
+              {formData.deliveryType === 'pickup' && (
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-3">How would you like to pay?</h4>
+                  <RadioGroup 
+                    value={storePickupPayment} 
+                    onValueChange={setStorePickupPayment}
+                  >
+                    <div className="flex items-center space-x-2 p-3 border border-blue-200 rounded-lg bg-white">
+                      <RadioGroupItem value="online" id="pickup-online" />
+                      <div className="flex-1">
+                        <Label htmlFor="pickup-online" className="font-medium">Pay Online Now</Label>
+                        <p className="text-sm text-gray-600">Secure online payment, faster pickup</p>
+                      </div>
+                      <CreditCard className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div className="flex items-center space-x-2 p-3 border border-blue-200 rounded-lg bg-white">
+                      <RadioGroupItem value="cash-at-store" id="pickup-cash" />
+                      <div className="flex-1">
+                        <Label htmlFor="pickup-cash" className="font-medium">Pay Cash at Store (COD)</Label>
+                        <p className="text-sm text-gray-600">Pay when you pick up your order</p>
+                      </div>
+                      <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                    </div>
+                  </RadioGroup>
+                  
+                  {!storePickupPayment && (
+                    <div className="mt-3 p-2 bg-orange-100 rounded text-sm text-orange-700">
+                      ⚠️ Please select a payment option for store pickup
+                    </div>
+                  )}
+                </div>
+              )}
+
               {formData.deliveryType === 'delivery' && (
                 <div>
                   <Label htmlFor="address">Delivery Address *</Label>
