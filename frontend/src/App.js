@@ -727,7 +727,7 @@ const UserProfileButton = () => {
           break;
           
         case 'dates':
-          contentDiv.innerHTML = \`
+          contentDiv.innerHTML = `
             <div class="space-y-6">
               <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <div class="flex justify-between items-center mb-4">
@@ -747,7 +747,7 @@ const UserProfileButton = () => {
                 </div>
               </div>
             </div>
-          \`;
+          `;
           break;
           
         case 'preferences':
