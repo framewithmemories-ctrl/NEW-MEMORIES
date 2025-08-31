@@ -278,7 +278,9 @@ export const EnhancedCheckoutPage = () => {
         items: cartItems,
         customerInfo: formData,
         totals: orderData.totals,
-        paymentMethod: codEnabled ? 'Cash on Delivery' : 'Online Payment',
+        paymentMethod: formData.deliveryType === 'pickup' 
+          ? (storePickupPayment === 'cash-at-store' ? 'Pay Cash at Store' : 'Paid Online') 
+          : (codEnabled ? 'Cash on Delivery' : 'Online Payment'),
         deliveryType: formData.deliveryType,
         successMessage,
         description,
