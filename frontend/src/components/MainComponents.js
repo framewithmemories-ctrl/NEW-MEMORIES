@@ -181,7 +181,7 @@ export const HeroSection = () => {
               <Button 
                 variant="outline" 
                 className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold px-6 py-3 rounded-xl"
-                onClick={() => window.open('https://www.google.com/maps?q=11.0818852,77.0013548', '_blank')}
+                onClick={() => window.open('https://www.google.com/maps/place/19+B+KANNI+NILLAM,+Keeranatham+Rd,+near+RUBY+SCHOOL,+Saravanampatti,+Coimbatore,+Tamil+Nadu+641035/@11.0818634,77.0015281,21z', '_blank')}
               >
                 <MapPin className="w-5 h-5 mr-2" />
                 Visit Store
