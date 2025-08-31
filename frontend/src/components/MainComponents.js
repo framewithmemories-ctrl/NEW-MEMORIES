@@ -565,25 +565,49 @@ export const ProductGrid = ({ products }) => {
           </p>
         </div>
         
-        {/* FIXED Category Filtering Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((category) => (
-            <Button 
-              key={category.name}
-              variant={selectedCategory === category.name ? 'default' : 'outline'} 
-              className={selectedCategory === category.name 
-                ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-lg' 
-                : 'border-rose-200 text-rose-700 hover:bg-rose-50'
-              }
-              onClick={() => {
-                console.log('Filtering by:', category.name);
-                setSelectedCategory(category.name);
-              }}
+        <div className="mb-8">
+          {/* Quick Category Filters */}
+          <div className="flex flex-wrap gap-2 justify-center mb-4">
+            <Button
+              variant={selectedCategory === 'All' ? "default" : "outline"}
+              className={`flex items-center space-x-2 transition-all ${
+                selectedCategory === 'All' 
+                  ? 'bg-rose-500 hover:bg-rose-600 text-white' 
+                  : 'border-rose-200 text-rose-700 hover:bg-rose-50'
+              }`}
+              onClick={() => setSelectedCategory('All')}
             >
-              {category.icon}
-              <span className="ml-2">{category.name}</span>
+              <Gift className="w-4 h-4" />
+              <span>All Products</span>
             </Button>
-          ))}
+            
+            {navigationStructure.slice(0, 6).map((category) => (
+              <Button
+                key={category.key}
+                variant={selectedCategory === category.key ? "default" : "outline"}
+                className={`flex items-center space-x-2 transition-all ${
+                  selectedCategory === category.key 
+                    ? 'bg-rose-500 hover:bg-rose-600 text-white' 
+                    : 'border-rose-200 text-rose-700 hover:bg-rose-50'
+                }`}
+                onClick={() => setSelectedCategory(category.key)}
+              >
+                <span>{category.icon}</span>
+                <span className="hidden sm:inline">{category.name}</span>
+              </Button>
+            ))}
+          </div>
+          
+          {/* Active Category Display */}
+          {selectedCategory !== 'All' && (
+            <div className="text-center mb-4">
+              <p className="text-sm text-gray-600">
+                Showing products in: <span className="font-semibold text-rose-600">
+                  {navigationStructure.find(cat => cat.key === selectedCategory)?.name || selectedCategory}
+                </span>
+              </p>
+            </div>
+          )}
         </div>
         
         {/* Products Count Indicator */}
