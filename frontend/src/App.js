@@ -707,18 +707,15 @@ const Header = () => {
               <SearchComponent />
             </div>
             <nav className="flex flex-col space-y-2">
-              {/* Enhanced Mobile Navigation Item Component */}
+              {/* Enhanced Mobile Navigation with Brand Colors */}
               <button 
                 onClick={() => {
                   handleNavigation('/', true);
                   setActiveSection('home');
                 }}
                 className={`
-                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
-                  ${activeSection === 'home' || location.pathname === '/' 
-                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
-                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
-                  }
+                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
+                  ${activeSection === 'home' || location.pathname === '/' ? 'active' : ''}
                 `}
               >
                 🏠 Home
