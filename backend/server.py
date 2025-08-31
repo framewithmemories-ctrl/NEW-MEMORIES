@@ -976,6 +976,223 @@ async def pay_with_wallet(user_id: str, amount: float, order_id: str):
         "transaction_id": transaction.id
     }
 
+# Profile Enhancement Endpoints
+@api_router.put("/users/{user_id}/profile")
+async def update_user_profile(user_id: str, profile_data: dict):
+    """Update user profile with new enhancement fields"""
+    # Update the updated_at timestamp
+    profile_data["updated_at"] = datetime.now(timezone.utc)
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": profile_data}
+    )
+    updated_user = await db.users.find_one({"id": user_id})
+    if not updated_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return User(**updated_user)
+
+@api_router.post("/users/{user_id}/important-dates")
+async def add_important_date(user_id: str, date_data: dict):
+    """Add a new important date for the user"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    important_date = ImportantDate(**date_data)
+    
+    # Add to user's important_dates array
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$push": {"important_dates": important_date.dict()},
+            "$set": {"updated_at": datetime.now(timezone.utc)}
+        }
+    )
+    
+    return {"message": "Important date added successfully", "date_id": important_date.id}
+
+@api_router.put("/users/{user_id}/important-dates/{date_id}")
+async def update_important_date(user_id: str, date_id: str, date_data: dict):
+    """Update an existing important date"""
+    result = await db.users.update_one(
+        {"id": user_id, "important_dates.id": date_id},
+        {
+            "$set": {
+                f"important_dates.$.name": date_data.get("name"),
+                f"important_dates.$.date": date_data.get("date"), 
+                f"important_dates.$.type": date_data.get("type"),
+                f"important_dates.$.reminder_enabled": date_data.get("reminder_enabled", True),
+                f"important_dates.$.reminder_days_before": date_data.get("reminder_days_before", [7, 1]),
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Date not found")
+    
+    return {"message": "Important date updated successfully"}
+
+@api_router.delete("/users/{user_id}/important-dates/{date_id}")
+async def delete_important_date(user_id: str, date_id: str):
+    """Delete an important date"""
+    result = await db.users.update_one(
+        {"id": user_id},
+        {
+            "$pull": {"important_dates": {"id": date_id}},
+            "$set": {"updated_at": datetime.now(timezone.utc)}
+        }
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Date not found")
+    
+    return {"message": "Important date deleted successfully"}
+
+@api_router.post("/users/{user_id}/consent")
+async def record_consent(user_id: str, consent_data: dict, request):
+    """Record user consent with tracking"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Record consent in user profile
+    consent_updates = {}
+    if "marketing_consent" in consent_data:
+        consent_updates["privacy_consent.marketing_consent"] = consent_data["marketing_consent"]
+    if "reminder_consent" in consent_data:
+        consent_updates["privacy_consent.reminder_consent"] = consent_data["reminder_consent"]
+    
+    consent_updates["privacy_consent.consent_timestamp"] = datetime.now(timezone.utc)
+    consent_updates["updated_at"] = datetime.now(timezone.utc)
+    
+    await db.users.update_one(
+        {"id": user_id}, 
+        {"$set": consent_updates}
+    )
+    
+    # Create consent record for audit trail
+    consent_record = ConsentRecord(
+        user_id=user_id,
+        consent_type=consent_data.get("type", "general"),
+        consent_given=consent_data.get("consent_given", True),
+        ip_address=getattr(request.client, 'host', None),
+        user_agent=request.headers.get('user-agent')
+    )
+    
+    await db.consent_records.insert_one(consent_record.dict())
+    
+    return {"message": "Consent recorded successfully", "consent_id": consent_record.id}
+
+@api_router.put("/users/{user_id}/reminder-preferences")
+async def update_reminder_preferences(user_id: str, preferences: dict):
+    """Update user's reminder preferences"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {
+                "reminder_preferences": preferences,
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    return {"message": "Reminder preferences updated successfully"}
+
+@api_router.post("/users/{user_id}/data-export")
+async def request_data_export(user_id: str, export_request: dict):
+    """Request user data export (GDPR compliance)"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Create export request record
+    export_req = DataExportRequest(
+        user_id=user_id,
+        request_type=export_request.get("type", "export"),
+        data_categories=export_request.get("categories", ["profile", "orders", "photos", "reviews"])
+    )
+    
+    await db.data_export_requests.insert_one(export_req.dict())
+    
+    # In a real implementation, this would trigger a background job
+    # For now, we'll mock the export process
+    if export_req.request_type == "export":
+        # Collect user data
+        user_data = {
+            "profile": user,
+            "orders": await db.orders.find({"user_id": user_id}).to_list(100),
+            "photos": await db.user_photos.find({"user_id": user_id}).to_list(100),
+            "reviews": await db.reviews.find({"user_id": user_id}).to_list(100) if "user_id" in await db.reviews.find_one({}) or {} else [],
+            "wallet_transactions": await db.wallet_transactions.find({"user_id": user_id}).to_list(100),
+            "consent_records": await db.consent_records.find({"user_id": user_id}).to_list(100)
+        }
+        
+        # In production, this would be saved to secure storage with signed URL
+        mock_export_url = f"https://secure-exports.memories.com/user-data-{user_id}-{export_req.id}.json"
+        
+        # Update request status
+        await db.data_export_requests.update_one(
+            {"id": export_req.id},
+            {
+                "$set": {
+                    "status": "completed",
+                    "export_url": mock_export_url,
+                    "completed_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        return {
+            "message": "Data export request processed successfully",
+            "request_id": export_req.id,
+            "export_url": mock_export_url,
+            "note": "Mock URL - In production, this would be a secure signed URL with expiration"
+        }
+    
+    return {"message": "Data export request submitted", "request_id": export_req.id}
+
+@api_router.post("/users/{user_id}/data-deletion")
+async def request_data_deletion(user_id: str, deletion_request: dict):
+    """Request user data deletion (GDPR compliance)"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Create deletion request record
+    deletion_req = DataExportRequest(
+        user_id=user_id,
+        request_type="delete",
+        data_categories=deletion_request.get("categories", ["profile", "orders", "photos", "reviews"])
+    )
+    
+    await db.data_export_requests.insert_one(deletion_req.dict())
+    
+    # In production, this would trigger a background job with proper verification
+    # For now, we'll provide a mock response
+    
+    return {
+        "message": "Data deletion request submitted successfully",
+        "request_id": deletion_req.id,
+        "note": "Your data deletion request will be processed within 30 days as per GDPR requirements",
+        "verification_required": True,
+        "next_steps": "You will receive an email confirmation link to verify your deletion request"
+    }
+
+@api_router.get("/users/{user_id}/export-requests")
+async def get_export_requests(user_id: str):
+    """Get user's data export/deletion requests"""
+    requests = await db.data_export_requests.find(
+        {"user_id": user_id}
+    ).sort("created_at", -1).to_list(50)
+    
+    return [DataExportRequest(**req) for req in requests]
+
 # Include the router in the main app
 app.include_router(api_router)
 
