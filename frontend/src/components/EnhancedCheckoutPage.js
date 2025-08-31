@@ -206,7 +206,7 @@ export const EnhancedCheckoutPage = () => {
           walletDiscount: getWalletDiscount(),
           final: getFinalTotal()
         },
-        paymentMethod: codEnabled ? 'cod' : formData.paymentMethod,
+        paymentMethod: codEnabled ? 'cod' : 'online',
         deliveryType: formData.deliveryType,
         createdAt: new Date().toISOString()
       };
