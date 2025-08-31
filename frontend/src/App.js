@@ -443,8 +443,27 @@ const Header = () => {
               <SearchComponent />
             </div>
             <nav className="flex flex-col space-y-3">
-              <a href="#shop" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Shop</a>
-              <a href="#customizer" className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all">Customize</a>
+              <a 
+                href="/" 
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                🏠 Home
+              </a>
+              <a 
+                href="#shop" 
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Shop
+              </a>
+              <a 
+                href="#customizer" 
+                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Customize
+              </a>
               <a 
                 href="#ai-finder" 
                 className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all"
