@@ -76,6 +76,12 @@ class Phase1ProfileEnhancementTester:
     def test_user_model_extensions(self):
         """Test User model with new Phase 1 fields"""
         try:
+            # First get the current user to verify it exists
+            get_response = requests.get(f"{self.api_url}/users/{self.test_user_id}", timeout=10)
+            if get_response.status_code != 200:
+                self.log_test("User Model Extensions", False, f"Test user not found: {get_response.status_code}")
+                return False
+            
             # Test updating user with new profile enhancement fields
             profile_data = {
                 "date_of_birth": "1990-05-15",
