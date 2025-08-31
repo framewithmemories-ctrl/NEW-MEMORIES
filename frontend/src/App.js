@@ -952,6 +952,30 @@ const PhotoCustomizer = () => {
 
 // Enhanced Footer with Correct Location
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Footer navigation handler - works from any page
+  const handleFooterNavigation = (target) => {
+    if (target === '/about') {
+      navigate('/about');
+    } else if (target.startsWith('#')) {
+      const elementId = target.substring(1);
+      
+      if (location.pathname !== '/') {
+        // Navigate to home first, then scroll
+        navigate('/');
+        // Use window.location.href for footer navigation to ensure proper scroll
+        setTimeout(() => {
+          window.location.href = `/#${elementId}`;
+        }, 100);
+      } else {
+        // Already on home page, just scroll
+        setTimeout(() => smoothScrollToElement(elementId), 100);
+      }
+    }
+  };
+  
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
