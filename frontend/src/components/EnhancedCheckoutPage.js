@@ -177,13 +177,8 @@ export const EnhancedCheckoutPage = () => {
       return;
     }
     
-    // Validation: Payment method selection
-    if (!codEnabled && !formData.paymentMethod) {
-      toast.error('Please select a payment method');
-      return;
-    }
-    
-    // Validation: Alternate phone is mandatory for COD
+    // COD is optional - if not selected, proceed with normal checkout
+    // Only validate COD requirements if user explicitly selected COD
     if (codEnabled && !formData.alternatePhone) {
       toast.error('Alternate phone number is mandatory for Cash on Delivery orders');
       return;
