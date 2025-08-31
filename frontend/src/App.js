@@ -241,7 +241,11 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
                           setActiveDropdown(null);
                           setActiveSection('shop');
                         }}
-                        className="block text-xs text-gray-600 hover:text-rose-600 hover:bg-rose-50 py-1 px-2 rounded transition-all duration-200 text-left bg-transparent border-none cursor-pointer w-full"
+                        className="block text-xs text-gray-600 hover:text-red-800 hover:bg-red-50 py-2 px-3 rounded transition-all duration-200 text-left bg-transparent border-none cursor-pointer w-full"
+                        style={{
+                          '--hover-color': '#be123c',
+                          '--hover-bg': '#fef2f2'
+                        }}
                       >
                         {sub}
                       </button>
