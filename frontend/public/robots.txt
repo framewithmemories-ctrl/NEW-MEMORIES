@@ -9,7 +9,7 @@ Allow: /reviews
 Allow: /about
 
 # Sitemap location
-Sitemap: https://frameshop-repair.preview.emergentagent.com/sitemap.xml
+Sitemap: https://customframe-shop.preview.emergentagent.com/sitemap.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1
