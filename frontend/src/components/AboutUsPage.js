@@ -62,6 +62,8 @@ const SmartCallButton = ({ className = "", children, phoneNumber = "+91814804014
 };
 
 export const AboutUsPage = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-orange-50">
       {/* Navigation Header */}
