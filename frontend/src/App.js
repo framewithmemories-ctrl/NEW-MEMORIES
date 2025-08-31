@@ -176,25 +176,58 @@ const navigationStructure = [
 ];
 
 // Hierarchical Navigation Component - Desktop
-const HierarchicalNavigation = ({ handleNavigation }) => {
+const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSection }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const location = useLocation();
   
-  return (
-    <nav className="hidden lg:flex space-x-6">
-      {/* Shop with Mega Menu */}
+  // Enhanced navigation item component
+  const NavItem = ({ name, section, hasDropdown = false, onClick }) => {
+    const isActive = activeSection === section || (section === 'shop' && location.pathname === '/');
+    
+    return (
       <div 
         className="relative group"
-        onMouseEnter={() => setActiveDropdown('shop')}
-        onMouseLeave={() => setActiveDropdown(null)}
+        onMouseEnter={() => hasDropdown && setActiveDropdown(section)}
+        onMouseLeave={() => hasDropdown && setActiveDropdown(null)}
       >
         <button 
-          onClick={() => handleNavigation('#shop')}
-          className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative bg-transparent border-none cursor-pointer flex items-center space-x-1"
+          onClick={() => {
+            onClick();
+            setActiveSection(section);
+          }}
+          className={`
+            font-medium transition-all duration-300 relative bg-transparent border-none cursor-pointer flex items-center space-x-1 px-3 py-2 rounded-lg
+            ${isActive 
+              ? 'text-rose-600 bg-rose-50 shadow-sm' 
+              : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50/50'
+            }
+          `}
         >
-          <span>Shop</span>
-          <ChevronDown className="w-4 h-4" />
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
+          <span>{name}</span>
+          {hasDropdown && (
+            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+              activeDropdown === section ? 'rotate-180' : ''
+            }`} />
+          )}
+          <span className={`
+            absolute -bottom-1 left-3 right-3 h-0.5 bg-rose-600 transition-all duration-300
+            ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+          `}></span>
         </button>
+      </div>
+    );
+  };
+  
+  return (
+    <nav className="hidden lg:flex space-x-2">
+      {/* Shop with Mega Menu */}
+      <div className="relative">
+        <NavItem 
+          name="Shop" 
+          section="shop" 
+          hasDropdown={true}
+          onClick={() => handleNavigation('#shop')}
+        />
         
         {/* Mega Menu Dropdown */}
         {activeDropdown === 'shop' && (
