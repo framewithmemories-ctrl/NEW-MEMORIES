@@ -422,8 +422,9 @@ const Header = () => {
           <div className="flex items-center justify-between space-x-4 lg:space-x-8">
             <div className="flex items-center space-x-2 md:space-x-3 group cursor-pointer flex-shrink-0">
               <BusinessLogo size="w-10 h-10 md:w-12 md:h-12" />
-              <div className="hidden sm:block">
+              <div className="block">
                 <BusinessName />
+                <p className="text-xs text-gray-500 italic block sm:hidden mt-1">Frame with Love • Crafted with Care</p>
               </div>
             </div>
             
