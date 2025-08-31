@@ -724,8 +724,11 @@ const Header = () => {
                   setActiveSection('home');
                 }}
                 className={`
-                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
-                  ${activeSection === 'home' || location.pathname === '/' ? 'active' : ''}
+                  nav-hover-fix font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-all duration-200
+                  ${activeSection === 'home' || location.pathname === '/' 
+                    ? 'text-red-800 bg-red-50 border-l-4 border-red-800' 
+                    : 'text-gray-700'
+                  }
                 `}
               >
                 🏠 Home
