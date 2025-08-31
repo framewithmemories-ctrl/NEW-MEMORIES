@@ -428,56 +428,34 @@ const Header = () => {
             </div>
             
             <nav className="hidden md:flex space-x-8">
-              <a href="#shop" className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group">
+              <button 
+                onClick={() => handleNavigation('#shop')}
+                className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
+              >
                 Shop
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
-              </a>
-              <a href="#customizer" className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group">
+              </button>
+              <button 
+                onClick={() => handleNavigation('#customizer')}
+                className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
+              >
                 Customize
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
-              </a>
-              <a 
-                href="#ai-finder" 
-                className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group"
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log('🎯 Gift Finder navigation clicked');
-                  
-                  // Wait a moment for any dynamic content to load
-                  setTimeout(() => {
-                    const element = document.getElementById('ai-finder');
-                    console.log('🎯 AI Finder element found:', element);
-                    
-                    if (element) {
-                      const headerElement = document.querySelector('header') || document.querySelector('[class*="sticky"]');
-                      const headerHeight = headerElement ? headerElement.offsetHeight : 100;
-                      console.log('🎯 Header height:', headerHeight);
-                      
-                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-                      console.log('🎯 Calculated scroll position:', elementPosition);
-                      
-                      window.scrollTo({
-                        top: elementPosition,
-                        behavior: 'smooth'
-                      });
-                    } else {
-                      console.log('❌ AI Finder element not found');
-                      // Fallback: scroll to approximate position
-                      window.scrollTo({
-                        top: 3000,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }, 100);
-                }}
+              </button>
+              <button 
+                onClick={() => handleNavigation('#ai-finder')}
+                className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
               >
                 Gift Finder
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
-              </a>
-              <a href="/about" className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group">
+              </button>
+              <button 
+                onClick={() => handleNavigation('/about')}
+                className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
+              >
                 About Us
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
-              </a>
+              </button>
             </nav>
           </div>
           
