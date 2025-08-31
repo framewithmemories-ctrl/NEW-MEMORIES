@@ -19,41 +19,23 @@ body {
   min-height: 100vh;
 }
 
-/* UNIVERSAL HOVER EFFECT - CONSISTENT WITH TESTIMONIALS STYLE */
+/* SIMPLE HOVER EFFECTS - NO ZOOMING/SCALING */
 
-/* Base transition for all interactive elements */
+/* Base transition for smooth effects */
 button,
 a,
-.card,
-.hover-item,
 nav button,
-nav a,
-.badge,
-.rounded-lg,
-.rounded-md {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+nav a {
+  transition: all 0.2s ease !important;
 }
 
-/* UNIVERSAL HOVER EFFECT - Same as testimonials */
-button:hover,
-a:hover,
-nav button:hover,
-nav a:hover,
-.hover-item:hover,
-.badge:hover,
-.card:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; /* xl shadow */
-  transform: scale(1.05) !important; /* Slight scale up */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-/* Navigation specific hover - maintains brand colors with scale effect */
+/* Navigation hover - simple color change only */
 header nav button,
 header nav a {
   color: #374151 !important; /* Gray text default */
   background-color: transparent !important;
   border: none !important;
-  border-radius: 0.5rem !important; /* Rounded corners */
+  border-radius: 0.5rem !important;
   padding: 0.5rem 0.75rem !important;
 }
 
@@ -61,8 +43,7 @@ header nav button:hover,
 header nav a:hover {
   color: #e11d48 !important; /* Rose text */
   background-color: #fef2f2 !important; /* Light rose background */
-  box-shadow: 0 25px 50px -12px rgba(225, 29, 72, 0.25) !important; /* Rose shadow */
-  transform: scale(1.05) !important; /* Scale effect */
+  /* NO SCALE OR SHADOW - just color change */
 }
 
 /* Ensure nested elements inherit hover colors */
@@ -71,29 +52,25 @@ header nav a:hover * {
   color: #e11d48 !important; /* Rose color for icons/text */
 }
 
-/* Badge hover effects - same scale and shadow */
+/* Simple badge hover - just slight highlight */
 .bg-rose-100:hover,
 .bg-green-100:hover,
 .bg-blue-100:hover,
 .animate-pulse:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-  transform: scale(1.05) !important;
-  color: #374151 !important; /* Keep original text color, no black */
+  opacity: 0.9 !important; /* Slight transparency on hover */
+  color: #374151 !important; /* Keep original text color */
 }
 
-/* Card hover effects - matching testimonials exactly */
-.border-2:hover,
-.bg-white:hover,
-.shadow-lg:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-  transform: scale(1.05) !important;
-}
-
-/* Override any black hover effects */
+/* Override any problematic hover effects */
 .hover\:bg-black:hover,
 .hover\:text-black:hover {
   background-color: #fef2f2 !important; /* Light rose instead of black */
   color: #e11d48 !important; /* Rose text instead of black */
+}
+
+/* Remove any transform or scale effects */
+*:hover {
+  transform: none !important; /* NO SCALING */
 }
 
 /* Custom scrollbar with rose theme */
