@@ -229,9 +229,9 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
           onClick={() => handleNavigation('#shop')}
         />
         
-        {/* Mega Menu Dropdown */}
+        {/* Enhanced Mega Menu Dropdown */}
         {activeDropdown === 'shop' && (
-          <div className="absolute top-full left-0 mt-2 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50">
+          <div className="absolute top-full left-0 mt-2 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50 animate-in fade-in-0 zoom-in-95 duration-200">
             <div className="grid grid-cols-3 gap-6 p-6">
               {navigationStructure.map((category, index) => (
                 <div key={category.key} className="space-y-3">
@@ -246,9 +246,9 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
                         onClick={() => {
                           handleNavigation('#shop');
                           setActiveDropdown(null);
-                          // Filter products by subcategory logic can be added here
+                          setActiveSection('shop');
                         }}
-                        className="block text-xs text-gray-600 hover:text-rose-600 transition-colors text-left bg-transparent border-none cursor-pointer w-full"
+                        className="block text-xs text-gray-600 hover:text-rose-600 hover:bg-rose-50 py-1 px-2 rounded transition-all duration-200 text-left bg-transparent border-none cursor-pointer w-full"
                       >
                         {sub}
                       </button>
@@ -264,9 +264,10 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
                   onClick={() => {
                     handleNavigation('#shop');
                     setActiveDropdown(null);
+                    setActiveSection('shop');
                   }}
                   size="sm" 
-                  className="bg-rose-500 hover:bg-rose-600"
+                  className="bg-rose-500 hover:bg-rose-600 transition-colors duration-200"
                 >
                   View All Products
                 </Button>
@@ -277,27 +278,21 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
       </div>
       
       {/* Other Navigation Items */}
-      <button 
+      <NavItem 
+        name="Customize" 
+        section="customizer" 
         onClick={() => handleNavigation('#customizer')}
-        className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
-      >
-        Customize
-        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
-      </button>
-      <button 
+      />
+      <NavItem 
+        name="Gift Finder" 
+        section="ai-finder" 
         onClick={() => handleNavigation('#ai-finder')}
-        className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
-      >
-        Gift Finder
-        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
-      </button>
-      <button 
+      />
+      <NavItem 
+        name="About Us" 
+        section="about" 
         onClick={() => handleNavigation('/about')}
-        className="text-gray-700 hover:text-rose-600 font-medium transition-colors relative group bg-transparent border-none cursor-pointer"
-      >
-        About Us
-        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-rose-600 transition-all group-hover:w-full"></span>
-      </button>
+      />
     </nav>
   );
 };
