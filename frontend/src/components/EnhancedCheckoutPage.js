@@ -492,52 +492,79 @@ export const EnhancedCheckoutPage = () => {
             <CardHeader>
               <CardTitle>Payment Method</CardTitle>
               <CardDescription>
-                {formData.paymentMethod === 'cod' ? 
-                  'Pay when you receive your order - No payment details needed!' : 
-                  'Choose your preferred payment method'
+                {codEnabled ? 
+                  'Cash on Delivery selected - Pay when you receive your order!' : 
+                  'Please select a payment method to continue'
                 }
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <RadioGroup 
-                value={formData.paymentMethod} 
-                onValueChange={(value) => setFormData(prev => ({...prev, paymentMethod: value}))}
-              >
-                <div className="flex items-center space-x-2 p-4 border rounded-lg">
-                  <RadioGroupItem value="cod" id="cod" />
-                  <div className="flex-1">
-                    <Label htmlFor="cod" className="font-medium">Cash on Delivery</Label>
-                    <p className="text-sm text-gray-600">Pay when you receive your order</p>
-                    <p className="text-xs text-green-600 font-medium">✓ Skip payment details - Just provide contact info!</p>
-                  </div>
-                </div>
-                
-                {userWallet && (userWallet.balance > 0) && (
-                  <div className="flex items-center space-x-2 p-4 border rounded-lg">
-                    <RadioGroupItem value="wallet" id="wallet" />
-                    <div className="flex-1">
-                      <Label htmlFor="wallet" className="font-medium">Digital Wallet</Label>
-                      <p className="text-sm text-gray-600">Available balance: ₹{userWallet.balance}</p>
-                    </div>
-                    <Wallet className="w-5 h-5 text-gray-400" />
-                  </div>
-                )}
-              </RadioGroup>
+            <CardContent className="space-y-4">
               
+              {/* Cash on Delivery Checkbox */}
+              <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                <Checkbox 
+                  id="cod-checkbox"
+                  checked={codEnabled}
+                  onCheckedChange={(checked) => {
+                    setCodEnabled(checked);
+                    if (checked) {
+                      setFormData(prev => ({...prev, paymentMethod: 'cod'}));
+                    } else {
+                      setFormData(prev => ({...prev, paymentMethod: ''}));
+                    }
+                  }}
+                  className="mt-1"
+                />
+                <div className="flex-1">
+                  <Label htmlFor="cod-checkbox" className="font-medium text-base cursor-pointer">
+                    Cash on Delivery (COD)
+                  </Label>
+                  <p className="text-sm text-gray-600 mt-1">Pay when you receive your order at your doorstep</p>
+                  {codEnabled && (
+                    <div className="mt-2 p-2 bg-green-50 rounded-md">
+                      <p className="text-xs text-green-700 font-medium">
+                        ✓ No advance payment needed • Alternate phone number required
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Digital Wallet Option (if available) */}
               {userWallet && (userWallet.balance > 0) && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="useWallet"
-                      checked={useWalletBalance}
-                      onCheckedChange={setUseWalletBalance}
-                    />
-                    <Label htmlFor="useWallet" className="text-sm">
-                      Use wallet balance (₹{Math.min(userWallet.balance, getSubtotal())})
+                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                  <Checkbox 
+                    id="wallet-checkbox"
+                    checked={formData.paymentMethod === 'wallet'}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setCodEnabled(false);
+                        setFormData(prev => ({...prev, paymentMethod: 'wallet'}));
+                      } else {
+                        setFormData(prev => ({...prev, paymentMethod: ''}));
+                      }
+                    }}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor="wallet-checkbox" className="font-medium text-base cursor-pointer flex items-center">
+                      Digital Wallet
+                      <Wallet className="w-4 h-4 ml-2 text-gray-400" />
                     </Label>
+                    <p className="text-sm text-gray-600 mt-1">Available balance: ₹{userWallet.balance}</p>
                   </div>
                 </div>
               )}
+
+              {/* Payment Method Selection Status */}
+              {!codEnabled && formData.paymentMethod !== 'wallet' && (
+                <div className="p-3 bg-orange-50 rounded-lg">
+                  <p className="text-sm text-orange-700">
+                    ⚠️ Please select a payment method to continue with your order
+                  </p>
+                </div>
+              )}
+              
             </CardContent>
           </Card>
         </div>
