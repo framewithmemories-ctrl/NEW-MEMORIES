@@ -263,20 +263,23 @@ export const EnhancedCheckoutPage = () => {
         description = `Ready for pickup at our Keeranatham Road store • Order ID: ${orderData.id}`;
       }
 
-      toast.success(successMessage, {
-        description: description,
-        duration: 5000
+      // FIXED: Set order confirmation instead of immediately clearing cart
+      setOrderConfirmation({
+        orderId: orderData.id,
+        items: cartItems,
+        customerInfo: formData,
+        totals: orderData.totals,
+        paymentMethod: codEnabled ? 'Cash on Delivery' : 'Online Payment',
+        deliveryType: formData.deliveryType,
+        successMessage,
+        description,
+        timestamp: new Date()
       });
       
-      // Clear cart after successful order
-      clearCart();
-      
-      // Stay on confirmation screen for better UX (don't redirect immediately)
-      // User can navigate manually or wait for natural timeout
+      // Clear cart in background after confirmation is set
       setTimeout(() => {
-        // Optional: Navigate to home after longer delay if needed
-        // navigate('/');
-      }, 5000);
+        clearCart();
+      }, 100);
       
     } catch (error) {
       console.error('Order submission error:', error);
