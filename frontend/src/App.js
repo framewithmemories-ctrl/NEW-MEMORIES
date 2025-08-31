@@ -764,8 +764,11 @@ const Header = () => {
                   setActiveSection('customizer');
                 }}
                 className={`
-                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
-                  ${activeSection === 'customizer' ? 'active' : ''}
+                  nav-hover-fix font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-all duration-200
+                  ${activeSection === 'customizer' 
+                    ? 'text-red-800 bg-red-50 border-l-4 border-red-800' 
+                    : 'text-gray-700'
+                  }
                 `}
               >
                 🎨 Customize
@@ -776,8 +779,11 @@ const Header = () => {
                   setActiveSection('ai-finder');
                 }}
                 className={`
-                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
-                  ${activeSection === 'ai-finder' ? 'active' : ''}
+                  nav-hover-fix font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-all duration-200
+                  ${activeSection === 'ai-finder' 
+                    ? 'text-red-800 bg-red-50 border-l-4 border-red-800' 
+                    : 'text-gray-700'
+                  }
                 `}
               >
                 🤖 Gift Finder
@@ -788,8 +794,11 @@ const Header = () => {
                   setActiveSection('about');
                 }}
                 className={`
-                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
-                  ${activeSection === 'about' || location.pathname === '/about' ? 'active' : ''}
+                  nav-hover-fix font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full transition-all duration-200
+                  ${activeSection === 'about' || location.pathname === '/about' 
+                    ? 'text-red-800 bg-red-50 border-l-4 border-red-800' 
+                    : 'text-gray-700'
+                  }
                 `}
               >
                 ℹ️ About Us
