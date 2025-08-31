@@ -166,10 +166,27 @@ img[src] {
   color: #be123c !important;
 }
 
-/* Simple navigation hover fix - no complex overrides */
+/* Complete navigation hover fix */
+nav button,
+nav button * {
+  color: #374151 !important; /* gray-700 default */
+}
+
+nav button:hover,
+nav button:hover * {
+  color: #991b1b !important; /* red-800 hover */
+  background-color: #fef2f2 !important; /* red-50 background */
+}
+
 .nav-hover-fix:hover {
-  color: #991b1b !important; /* red-800 */
-  background-color: #fef2f2 !important; /* red-50 */
+  color: #991b1b !important;
+  background-color: #fef2f2 !important;
+}
+
+/* Prevent any black colors in navigation */
+header nav *,
+header button * {
+  color: inherit !important;
 }
 
 /* Rose-themed text selection */
