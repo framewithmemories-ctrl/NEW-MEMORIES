@@ -39,8 +39,9 @@ export const EnhancedCheckoutPage = () => {
     address: '',
     instructions: '',
     deliveryType: 'delivery',
-    paymentMethod: 'cod'
+    paymentMethod: '' // No default payment method - user must choose
   });
+  const [codEnabled, setCodEnabled] = useState(false); // COD checkbox state
   const [userProfile, setUserProfile] = useState(null);
   const [userWallet, setUserWallet] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
