@@ -420,15 +420,19 @@ const Header = () => {
           </div>
         </div>
         
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center justify-between space-x-4 lg:space-x-8">
-            <div className="flex items-center space-x-2 md:space-x-3 group cursor-pointer flex-shrink-0">
-              <BusinessLogo size="w-10 h-10 md:w-12 md:h-12" />
-              <div className="block">
-                <BusinessName />
-                <p className="text-xs text-gray-500 italic block sm:hidden mt-1">Frame with Love • Crafted with Care</p>
-              </div>
+        <div className="flex items-center justify-between h-20">
+          {/* Left side - Larger Logo and Brand */}
+          <div className="flex items-center space-x-3 md:space-x-4 group cursor-pointer flex-shrink-0">
+            <BusinessLogo size="w-16 h-16 md:w-20 md:h-20" />
+            <div className="block">
+              <BusinessName />
+              <p className="text-xs text-gray-500 italic block sm:hidden mt-1">Frame with Love • Crafted with Care</p>
             </div>
+          </div>
+          
+          {/* Center - Navigation */}
+          <div className="flex-1 flex justify-center">
+            <nav className="hidden md:flex space-x-8">
             
             <nav className="hidden md:flex space-x-8">
               <button 
