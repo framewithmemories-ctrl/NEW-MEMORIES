@@ -448,19 +448,42 @@ const UserProfileButton = () => {
     // For Phase 1, show our new enhanced profile in a dialog
     // Later we can integrate with proper authentication
     setShowDropdown(false);
-    // Create and show enhanced profile dialog
+    // Create and show enhanced profile modal with proper close functionality
     const profileDialog = document.createElement('div');
     profileDialog.innerHTML = `
       <div id="enhanced-profile-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-auto p-6 m-4">
-          <div id="enhanced-profile-content"></div>
-          <button onclick="document.getElementById('enhanced-profile-modal').remove()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+        <div class="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-auto p-6 m-4 relative">
+          <button onclick="document.getElementById('enhanced-profile-modal').remove()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold">
             ✕
           </button>
+          <div id="enhanced-profile-content"></div>
         </div>
       </div>
     `;
     document.body.appendChild(profileDialog);
+    
+    // Add ESC key functionality
+    const handleEscClose = (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('enhanced-profile-modal');
+        if (modal) {
+          modal.remove();
+          document.removeEventListener('keydown', handleEscClose);
+        }
+      }
+    };
+    document.addEventListener('keydown', handleEscClose);
+    
+    // Add click outside to close
+    const modal = document.getElementById('enhanced-profile-modal');
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+          document.removeEventListener('keydown', handleEscClose);
+        }
+      });
+    }
     
     // Note: In production, this would render the React component properly
     // For now, we show a message about the enhanced profile
@@ -475,6 +498,14 @@ const UserProfileButton = () => {
           <li>✅ Privacy consent management</li>
           <li>✅ GDPR-compliant data export/deletion</li>
         </ul>
+        <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+          <p class="text-sm text-blue-800 font-medium">💡 How to close this modal:</p>
+          <ul class="text-xs text-blue-700 mt-2 space-y-1">
+            <li>• Click the ✕ button in the top-right corner</li>
+            <li>• Press the ESC key</li>
+            <li>• Click outside the modal area</li>
+          </ul>
+        </div>
         <p class="text-sm text-gray-500 mt-4">Check the console for detailed functionality logs</p>
       </div>
     `;
