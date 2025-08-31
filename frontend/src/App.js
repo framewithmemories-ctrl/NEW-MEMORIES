@@ -175,17 +175,14 @@ const SmartCallButton = ({ className = "", children, phoneNumber = "+91814804014
 // Cart Icon Component with Navigation to Dedicated Checkout Page
 const CartIcon = () => {
   const { cartCount } = useCart();
+  const navigate = useNavigate();
   
   const handleCheckout = () => {
-    // Use React Router navigation instead of full page reload
-    // This preserves the React app state and cart items
     console.log('🛒 Cart icon clicked, navigating to checkout...');
     console.log('🛒 Current cart count:', cartCount);
     
-    // Navigate to checkout without page reload
-    window.history.pushState({}, '', '/checkout');
-    // Trigger a popstate event to update the router
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    // Use React Router navigation to preserve app state
+    navigate('/checkout');
   };
   
   return (
