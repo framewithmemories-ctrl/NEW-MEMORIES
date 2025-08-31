@@ -19,6 +19,26 @@ body {
   min-height: 100vh;
 }
 
+/* NAVIGATION HOVER FIX - Force proper colors */
+header nav button,
+header nav a,
+.nav-item {
+  color: #374151 !important; /* Gray-700 default */
+  background-color: transparent !important;
+}
+
+header nav button:hover,
+header nav a:hover,
+.nav-item:hover {
+  color: #991b1b !important; /* Red-800 hover - NO BLACK */
+  background-color: #fef2f2 !important; /* Red-50 background */
+}
+
+/* Override any Tailwind or other CSS causing black text */
+nav * {
+  color: inherit !important;
+}
+
 /* Custom scrollbar with rose theme */
 ::-webkit-scrollbar {
   width: 10px;
