@@ -520,6 +520,7 @@ const UserProfileButton = () => {
 // Enhanced Header Component with Universal Navigation
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   
