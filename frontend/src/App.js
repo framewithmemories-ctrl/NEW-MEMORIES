@@ -88,9 +88,9 @@ const SEOHead = () => (
     <meta property="og:title" content="Memories - Photo Frames & Customized Gift Shop Coimbatore" />
     <meta property="og:description" content="Frame with Love and Crafted with Care - Premium photo frames and personalized gifts. Sublimation printing specialist in Coimbatore." />
     <meta property="og:image" content="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/t3qf6xi2_NAME.png" />
-    <meta property="og:url" content="https://memories-shop.preview.emergentagent.com" />
+    <meta property="og:url" content="https://frameshop-repair.preview.emergentagent.com" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href="https://memories-shop.preview.emergentagent.com" />
+    <link rel="canonical" href="https://frameshop-repair.preview.emergentagent.com" />
     <link rel="icon" href="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/6aq8xona_LOGO.png" />
     <script type="application/ld+json">
       {JSON.stringify({
@@ -108,7 +108,7 @@ const SEOHead = () => (
         },
         "telephone": "+91 81480 40148",
         "email": "memories@photogifthub.com",
-        "url": "https://memories-shop.preview.emergentagent.com",
+        "url": "https://frameshop-repair.preview.emergentagent.com",
         "openingHours": ["Mo-Sa 09:30-21:00"],
         "priceRange": "₹₹",
         "aggregateRating": {
