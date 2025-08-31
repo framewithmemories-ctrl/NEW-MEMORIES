@@ -175,36 +175,98 @@ const navigationStructure = [
   }
 ];
 
-// Simple Navigation Component - Desktop
+// Fixed Navigation Component with Working Dropdown
 const HierarchicalNavigation = ({ handleNavigation }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
-  
+
   return (
     <nav className="hidden lg:flex space-x-6">
-      {/* Simple Shop Button */}
-      <button 
-        onClick={() => handleNavigation('#shop')}
-        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
+      {/* Shop with Working Dropdown */}
+      <div 
+        className="relative"
+        onMouseEnter={() => setActiveDropdown('shop')}
+        onMouseLeave={() => setActiveDropdown(null)}
       >
-        Shop
-      </button>
+        <button 
+          onClick={() => handleNavigation('#shop')}
+          className="text-gray-700 hover:text-rose-600 font-medium transition-colors px-3 py-2 rounded-lg flex items-center space-x-1"
+          style={{ color: '#374151' }}
+          onMouseOver={(e) => e.target.style.color = '#e11d48'}
+          onMouseOut={(e) => e.target.style.color = '#374151'}
+        >
+          <span>Shop</span>
+          <ChevronDown className="w-4 h-4" />
+        </button>
+        
+        {/* Working Dropdown Menu */}
+        {activeDropdown === 'shop' && (
+          <div 
+            className="absolute top-full left-0 mt-1 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50"
+            onMouseEnter={() => setActiveDropdown('shop')}
+            onMouseLeave={() => setActiveDropdown(null)}
+          >
+            <div className="grid grid-cols-3 gap-6 p-6">
+              {navigationStructure.map((category, index) => (
+                <div key={category.key} className="space-y-3">
+                  <div className="flex items-center space-x-2 font-semibold text-gray-900 border-b border-gray-100 pb-2">
+                    <span className="text-lg">{category.icon}</span>
+                    <span className="text-sm">{category.name}</span>
+                  </div>
+                  <div className="space-y-2">
+                    {category.subcategories && category.subcategories.map((sub, subIndex) => (
+                      <button
+                        key={subIndex}
+                        onClick={() => {
+                          handleNavigation('#shop');
+                          setActiveDropdown(null);
+                        }}
+                        className="block text-xs py-2 px-3 rounded-md text-left bg-transparent border-none cursor-pointer w-full text-gray-600"
+                        style={{ color: '#6b7280' }}
+                        onMouseOver={(e) => {
+                          e.target.style.color = '#e11d48';
+                          e.target.style.backgroundColor = '#fef2f2';
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.color = '#6b7280';
+                          e.target.style.backgroundColor = 'transparent';
+                        }}
+                      >
+                        {sub}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
       
       {/* Other Navigation Items */}
       <button 
         onClick={() => handleNavigation('#customizer')}
-        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
+        className="text-gray-700 hover:text-rose-600 font-medium transition-colors px-3 py-2 rounded-lg"
+        style={{ color: '#374151' }}
+        onMouseOver={(e) => e.target.style.color = '#e11d48'}
+        onMouseOut={(e) => e.target.style.color = '#374151'}
       >
         Customize
       </button>
       <button 
         onClick={() => handleNavigation('#ai-finder')}
-        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
+        className="text-gray-700 hover:text-rose-600 font-medium transition-colors px-3 py-2 rounded-lg"
+        style={{ color: '#374151' }}
+        onMouseOver={(e) => e.target.style.color = '#e11d48'}
+        onMouseOut={(e) => e.target.style.color = '#374151'}
       >
         Gift Finder
       </button>
       <button 
         onClick={() => handleNavigation('/about')}
-        className="text-gray-700 hover:text-red-800 hover:bg-red-50 font-medium transition-colors px-3 py-2 rounded-lg"
+        className="text-gray-700 hover:text-rose-600 font-medium transition-colors px-3 py-2 rounded-lg"
+        style={{ color: '#374151' }}
+        onMouseOver={(e) => e.target.style.color = '#e11d48'}
+        onMouseOut={(e) => e.target.style.color = '#374151'}
       >
         About Us
       </button>
