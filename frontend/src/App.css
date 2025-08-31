@@ -19,65 +19,61 @@ body {
   min-height: 100vh;
 }
 
-/* TARGETED HOVER FIX - NO BLACK TEXT ON SPECIFIC ELEMENTS */
+/* MENU HOVER FIX - WHITE TEXT WITH ORIGINAL BACKGROUND */
 
-/* Navigation hover fix */
+/* Navigation menu hover - WHITE TEXT, NO BLACK BACKGROUND */
 header nav button,
+header nav button *,
 header nav a,
-.nav-item {
-  color: #374151 !important; /* Gray-700 default */
-  background-color: transparent !important;
+header nav a * {
+  color: #374151 !important; /* Default gray text */
+  background-color: transparent !important; /* Transparent background */
 }
 
 header nav button:hover,
+header nav button:hover *,
 header nav a:hover,
-.nav-item:hover {
-  color: #e11d48 !important; /* Rose-600 hover - NO BLACK */
-  background-color: #fef2f2 !important; /* Red-50 background */
+header nav a:hover * {
+  color: #ffffff !important; /* WHITE TEXT on hover */
+  background-color: #e11d48 !important; /* Rose background - NOT BLACK */
 }
 
-/* Top bar elements (Since 2020, Free Delivery, etc.) */
-.bg-rose-100:hover,
-.bg-green-100:hover,
-.bg-blue-100:hover {
-  color: #e11d48 !important; /* Rose-600 hover instead of black */
+/* Force override any black backgrounds on hover */
+* {
+  transition: all 0.2s ease !important;
 }
 
-/* Badge elements hover fix */
-.animate-pulse:hover,
-.badge:hover,
-.rounded-md:hover {
-  color: #e11d48 !important; /* Rose-600 hover */
+*:hover {
+  background-color: inherit !important; /* Keep original background */
 }
 
-/* Text elements that turn black on hover */
-.text-rose-800:hover,
-.text-green-800:hover,
-.text-blue-800:hover,
-.text-gray-700:hover,
-.text-gray-600:hover,
-.text-gray-500:hover {
-  color: #e11d48 !important; /* Rose-600 hover */
+/* Specific menu button hover override */
+nav button:hover,
+nav a:hover {
+  color: #ffffff !important; /* WHITE text */
+  background-color: #e11d48 !important; /* Rose background */
 }
 
-/* Footer and link elements */
-footer a:hover,
-footer button:hover,
-footer *:hover {
-  color: #e11d48 !important; /* Rose-600 hover */
+/* Prevent any black backgrounds */
+.hover\:bg-black:hover,
+.hover\:bg-gray-900:hover {
+  background-color: #e11d48 !important; /* Rose instead of black */
+  color: #ffffff !important; /* White text */
 }
 
-/* Prevent specific black hover classes */
-.hover\:text-black:hover,
-.hover\:text-gray-900:hover {
-  color: #e11d48 !important; /* Override black hover */
+/* Override Tailwind black hover utilities */
+button:hover,
+a:hover {
+  background-color: #e11d48 !important; /* Rose background */
+  color: #ffffff !important; /* White text */
 }
 
-/* Common interactive elements */
+/* Ensure text inside hovered elements is also white */
 button:hover span,
+button:hover div,
 a:hover span,
-div:hover span {
-  color: inherit !important; /* Inherit parent hover color */
+a:hover div {
+  color: #ffffff !important; /* White text for nested elements */
 }
 
 /* Custom scrollbar with rose theme */
