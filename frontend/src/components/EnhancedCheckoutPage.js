@@ -329,10 +329,8 @@ export const EnhancedCheckoutPage = () => {
 
   // FIXED: Show Order Confirmation Screen - Compact Bill Format
   if (orderConfirmation) {
-    // Ensure page loads from top
-    React.useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
+    // Ensure page loads from top - moved outside conditional
+    setTimeout(() => window.scrollTo(0, 0), 100);
     
     return (
       <div className="max-w-md mx-auto px-4 py-8" style={{ marginTop: '0px', paddingTop: '20px' }}>
