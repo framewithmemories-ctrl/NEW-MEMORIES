@@ -641,9 +641,9 @@ const Header = () => {
         </div>
         
         <div className="flex items-center justify-between h-20">
-          {/* Left side - Larger Logo and Brand */}
-          <div className="flex items-center space-x-3 md:space-x-4 group cursor-pointer flex-shrink-0">
-            <BusinessLogo size="w-16 h-16 md:w-20 md:h-20" />
+          {/* Left side - Aligned Logo and Brand */}
+          <div className="flex items-center space-x-3 group cursor-pointer flex-shrink-0">
+            <BusinessLogo size="w-12 h-12" />
             <div className="block">
               <BusinessName />
               <p className="text-xs text-gray-500 italic block sm:hidden mt-1">Frame with Love • Crafted with Care</p>
