@@ -42,6 +42,7 @@ export const EnhancedCheckoutPage = () => {
     paymentMethod: '' // No default payment method - user must choose
   });
   const [codEnabled, setCodEnabled] = useState(false); // COD checkbox state
+  const [orderConfirmation, setOrderConfirmation] = useState(null); // Order confirmation state
   const [userProfile, setUserProfile] = useState(null);
   const [userWallet, setUserWallet] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
