@@ -1051,7 +1051,7 @@ async def delete_important_date(user_id: str, date_id: str):
     return {"message": "Important date deleted successfully"}
 
 @api_router.post("/users/{user_id}/consent")
-async def record_consent(user_id: str, consent_data: dict, request):
+async def record_consent(user_id: str, consent_data: dict, request: Request):
     """Record user consent with tracking"""
     user = await db.users.find_one({"id": user_id})
     if not user:
