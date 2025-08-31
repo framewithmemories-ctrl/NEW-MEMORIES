@@ -265,14 +265,15 @@ export const EnhancedCheckoutPage = () => {
         duration: 5000
       });
       
-      // NOTE: Cart clearing disabled for demo/testing purposes
-      // In production, uncomment the line below to clear cart after successful order
-      // clearCart();
+      // Clear cart after successful order
+      clearCart();
       
-      // Navigate back to home after success
+      // Stay on confirmation screen for better UX (don't redirect immediately)
+      // User can navigate manually or wait for natural timeout
       setTimeout(() => {
-        navigate('/');
-      }, 2000);
+        // Optional: Navigate to home after longer delay if needed
+        // navigate('/');
+      }, 5000);
       
     } catch (error) {
       console.error('Order submission error:', error);
