@@ -465,36 +465,63 @@ export const ProductGrid = ({ products }) => {
     }
   ];
 
-  // Enhanced filtering logic for new categories
+  // Enhanced filtering logic for hierarchical navigation structure
   const filteredProducts = enhancedProducts.filter(product => {
     if (selectedCategory === 'All') return true;
     
-    const categoryLower = selectedCategory.toLowerCase();
     const productCategory = (product.category || '').toLowerCase();
     
-    // Handle category matching
-    if (categoryLower === 'photo prints') {
+    // Find the selected navigation item
+    const selectedNavItem = navigationStructure.find(nav => 
+      nav.key === selectedCategory || nav.name === selectedCategory
+    );
+    
+    if (selectedNavItem) {
+      // If it's a main category, check all its subcategories
+      if (selectedNavItem.subcategories && selectedNavItem.subcategories.length > 0) {
+        return selectedNavItem.subcategories.some(sub => 
+          sub.matchCategories.some(matchCat => 
+            productCategory === matchCat.toLowerCase() || 
+            productCategory.includes(matchCat.toLowerCase())
+          )
+        );
+      }
+      
+      // Direct category matching for subcategories
+      if (selectedNavItem.matchCategories) {
+        return selectedNavItem.matchCategories.some(matchCat => 
+          productCategory === matchCat.toLowerCase() || 
+          productCategory.includes(matchCat.toLowerCase())
+        );
+      }
+    }
+    
+    // Legacy filtering logic for backward compatibility
+    const categoryLower = selectedCategory.toLowerCase();
+    
+    // Handle specific category matching
+    if (categoryLower === 'photo prints' || categoryLower === 'photo-prints') {
       return productCategory === 'photo-prints';
     }
-    if (categoryLower === 'photo gifts') {
+    if (categoryLower === 'photo gifts' || categoryLower === 'photo-gifts') {
       return productCategory === 'photo-gifts';
     }
-    if (categoryLower === 'wooden gifts') {
+    if (categoryLower === 'wooden gifts' || categoryLower === 'wooden-gifts') {
       return productCategory === 'wooden-gifts';
     }
-    if (categoryLower === 'photo frames') {
+    if (categoryLower === 'photo frames' || categoryLower === 'photo-frames') {
       return productCategory === 'photo-frames' || productCategory.includes('frame');
     }
-    if (categoryLower === 'photo albums') {
+    if (categoryLower === 'photo albums' || categoryLower === 'photo-albums') {
       return productCategory === 'photo-albums';
     }
-    if (categoryLower === 'canvas prints') {
+    if (categoryLower === 'canvas prints' || categoryLower === 'canvas-prints') {
       return productCategory === 'canvas-prints';
     }
-    if (categoryLower === 'corporate gifts') {
+    if (categoryLower === 'corporate gifts' || categoryLower === 'corporate-gifts') {
       return productCategory === 'corporate-gifts' || productCategory.includes('corporate');
     }
-    if (categoryLower === 'print shop') {
+    if (categoryLower === 'print shop' || categoryLower === 'print-shop') {
       return productCategory === 'print-shop';
     }
     
