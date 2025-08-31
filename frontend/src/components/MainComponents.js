@@ -365,12 +365,6 @@ export const ProductGrid = ({ products }) => {
   // New Hierarchical Navigation Structure - Competitor Best Practices
   const navigationStructure = [
     {
-      name: 'All Products',
-      key: 'All',
-      icon: <Gift className="w-4 h-4" />,
-      subcategories: []
-    },
-    {
       name: 'Photo Frames & Prints',
       key: 'photo-frames-prints',
       icon: <Camera className="w-4 h-4" />,
