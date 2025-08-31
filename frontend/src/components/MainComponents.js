@@ -362,17 +362,88 @@ export const ProductGrid = ({ products }) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { addToCart } = useCart();
   
-  const categories = [
-    { name: 'All', icon: <Gift className="w-4 h-4" /> },
-    { name: 'Photo Prints', icon: <Camera className="w-4 h-4" /> },
-    { name: 'Photo Gifts', icon: <Heart className="w-4 h-4" /> },
-    { name: 'Wooden Gifts', icon: <Hammer className="w-4 h-4" /> },
-    { name: 'Photo Frames', icon: <Camera className="w-4 h-4" /> },
-    { name: 'Photo Albums', icon: <Package className="w-4 h-4" /> },
-    { name: 'Canvas Prints', icon: <Palette className="w-4 h-4" /> },
-    { name: 'Corporate Gifts', icon: <Package className="w-4 h-4" /> },
-    { name: 'Print Shop', icon: <Sparkles className="w-4 h-4" /> }
+  // New Hierarchical Navigation Structure - Competitor Best Practices
+  const navigationStructure = [
+    {
+      name: 'All Products',
+      key: 'All',
+      icon: <Gift className="w-4 h-4" />,
+      subcategories: []
+    },
+    {
+      name: 'Photo Frames & Prints',
+      key: 'photo-frames-prints',
+      icon: <Camera className="w-4 h-4" />,
+      subcategories: [
+        { name: 'Personalized Photo Frames', key: 'photo-frames', matchCategories: ['photo-frames'] },
+        { name: 'Collage Frames', key: 'collage-frames', matchCategories: ['photo-frames'] },
+        { name: 'LED / Light-up Frames', key: 'led-frames', matchCategories: ['photo-frames'] },
+        { name: 'Wooden / Acrylic Frames', key: 'wooden-acrylic-frames', matchCategories: ['photo-frames', 'wooden-gifts'] },
+        { name: 'Wall Photo Frames', key: 'wall-frames', matchCategories: ['photo-frames'] },
+        { name: 'Desk Frames', key: 'desk-frames', matchCategories: ['photo-frames'] }
+      ]
+    },
+    {
+      name: 'Photo Gifts',
+      key: 'photo-gifts',
+      icon: <Heart className="w-4 h-4" />,
+      subcategories: [
+        { name: 'Photo Mugs', key: 'photo-mugs', matchCategories: ['photo-gifts'] },
+        { name: 'Photo Pillows / Cushions', key: 'photo-pillows', matchCategories: ['photo-gifts'] },
+        { name: 'Photo Keychains', key: 'photo-keychains', matchCategories: ['photo-gifts'] },
+        { name: 'Photo Bottles / Sippers', key: 'photo-bottles', matchCategories: ['photo-gifts'] },
+        { name: 'Photo Clocks', key: 'photo-clocks', matchCategories: ['photo-gifts'] },
+        { name: 'Photo Lamps', key: 'photo-lamps', matchCategories: ['photo-gifts'] }
+      ]
+    },
+    {
+      name: 'Occasion-Based Gifts',
+      key: 'occasion-gifts',
+      icon: <Star className="w-4 h-4" />,
+      subcategories: [
+        { name: 'Birthday Gifts', key: 'birthday-gifts', matchCategories: ['photo-gifts', 'photo-frames'] },
+        { name: 'Anniversary Gifts', key: 'anniversary-gifts', matchCategories: ['photo-gifts', 'photo-frames'] },
+        { name: 'Wedding Gifts', key: 'wedding-gifts', matchCategories: ['photo-gifts', 'photo-frames'] },
+        { name: 'Friendship / Love Gifts', key: 'friendship-love-gifts', matchCategories: ['photo-gifts', 'photo-frames'] },
+        { name: 'Festival Specials', key: 'festival-specials', matchCategories: ['photo-gifts', 'photo-frames'] }
+      ]
+    },
+    {
+      name: 'Corporate & Bulk Orders',
+      key: 'corporate-bulk',
+      icon: <Package className="w-4 h-4" />,
+      subcategories: [
+        { name: 'Employee Awards & Frames', key: 'employee-awards', matchCategories: ['photo-frames', 'wooden-gifts'] },
+        { name: 'Corporate Gift Hampers', key: 'corporate-hampers', matchCategories: ['corporate-gifts'] },
+        { name: 'Custom Branding Gifts', key: 'custom-branding', matchCategories: ['corporate-gifts', 'print-shop'] }
+      ]
+    },
+    {
+      name: 'Home & Lifestyle',
+      key: 'home-lifestyle',
+      icon: <Palette className="w-4 h-4" />,
+      subcategories: [
+        { name: 'Wall Décor', key: 'wall-decor', matchCategories: ['canvas-prints'] },
+        { name: 'Name Plates', key: 'name-plates', matchCategories: ['wooden-gifts', 'print-shop'] },
+        { name: 'Customized Clocks', key: 'customized-clocks', matchCategories: ['photo-gifts'] },
+        { name: 'Table Décor', key: 'table-decor', matchCategories: ['photo-gifts'] }
+      ]
+    },
+    {
+      name: 'Specials',
+      key: 'specials',
+      icon: <Sparkles className="w-4 h-4" />,
+      subcategories: [
+        { name: 'Kids Collection', key: 'kids-collection', matchCategories: ['photo-gifts', 'photo-frames'] },
+        { name: 'Couple Gifts', key: 'couple-gifts', matchCategories: ['photo-gifts', 'photo-frames'] },
+        { name: '3D / Crystal Gifts', key: '3d-crystal-gifts', matchCategories: ['photo-gifts'] },
+        { name: 'Digital Portraits & Caricatures', key: 'digital-portraits', matchCategories: ['photo-prints'] }
+      ]
+    }
   ];
+
+  // Legacy categories for backward compatibility
+  const categories = navigationStructure;
   
   // Combine all product catalogs
   const enhancedProducts = [
