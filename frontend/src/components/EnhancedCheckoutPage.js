@@ -74,6 +74,13 @@ export const EnhancedCheckoutPage = () => {
   const [useWalletBalance, setUseWalletBalance] = useState(false);
   const [showLiveUpdates, setShowLiveUpdates] = useState(true);
 
+  // Fix order summary page loading from header
+  useEffect(() => {
+    if (orderConfirmation) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [orderConfirmation]);
+
   // Load user profile and wallet on mount
   useEffect(() => {
     // Scroll to top when checkout page loads
