@@ -343,12 +343,25 @@ export const EnhancedCheckoutPage = () => {
       <div className="max-w-md mx-auto px-4 py-8" style={{ marginTop: '0px', paddingTop: '20px' }}>
         <div className="bg-white border-2 border-gray-200 p-6 font-mono text-sm">
           
-          {/* Enhanced Shop Logo and Branding - Horizontal Layout Like Header */}
+          {/* Enhanced Shop Logo and Branding - Always Visible for Print */}
           <div className="text-center mb-8 border-b-2 border-dashed border-gray-300 pb-6">
             {/* Logo + Business Name Side by Side (Like Header) */}
-            <div className="flex items-center justify-center space-x-3 mb-4">
-              <BusinessLogo size="w-16 h-16" />
-              <BusinessName />
+            <div className="flex items-center justify-center space-x-4 mb-4">
+              <div className="w-20 h-20 relative">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/6aq8xona_LOGO.png"
+                  alt="Memories Logo"
+                  className="w-20 h-20 object-contain rounded-xl shadow-lg"
+                />
+              </div>
+              <div className="flex flex-col items-start">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/t3qf6xi2_NAME.png"
+                  alt="Memories - Frame with Love and Crafted with Care"
+                  className="h-12 object-contain mb-2"
+                />
+                <p className="text-sm text-gray-600 font-medium">Photo Frames & Custom Gift Shop</p>
+              </div>
             </div>
             
             {/* Business Type */}
