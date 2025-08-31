@@ -19,61 +19,49 @@ body {
   min-height: 100vh;
 }
 
-/* MENU HOVER FIX - WHITE TEXT WITH ORIGINAL BACKGROUND */
+/* FINAL MENU HOVER FIX - WHITE TEXT, ROSE BACKGROUND, NO BLACK */
 
-/* Navigation menu hover - WHITE TEXT, NO BLACK BACKGROUND */
+/* Default navigation styles */
 header nav button,
-header nav button *,
-header nav a,
-header nav a * {
-  color: #374151 !important; /* Default gray text */
-  background-color: transparent !important; /* Transparent background */
-}
-
-header nav button:hover,
-header nav button:hover *,
-header nav a:hover,
-header nav a:hover * {
-  color: #ffffff !important; /* WHITE TEXT on hover */
-  background-color: #e11d48 !important; /* Rose background - NOT BLACK */
-}
-
-/* Force override any black backgrounds on hover */
-* {
+header nav a {
+  color: #374151 !important; /* Gray text default */
+  background-color: transparent !important;
+  border: none !important;
   transition: all 0.2s ease !important;
 }
 
-*:hover {
-  background-color: inherit !important; /* Keep original background */
+/* CRITICAL HOVER FIX - WHITE TEXT, ROSE BACKGROUND */
+header nav button:hover,
+header nav a:hover {
+  color: #ffffff !important; /* WHITE TEXT */
+  background-color: #e11d48 !important; /* ROSE BACKGROUND */
 }
 
-/* Specific menu button hover override */
-nav button:hover,
-nav a:hover {
-  color: #ffffff !important; /* WHITE text */
-  background-color: #e11d48 !important; /* Rose background */
+/* Ensure nested elements inside navigation also get white text */
+header nav button:hover *,
+header nav a:hover * {
+  color: #ffffff !important; /* WHITE TEXT for all nested elements */
 }
 
-/* Prevent any black backgrounds */
+/* Override any Tailwind classes that might cause black backgrounds */
 .hover\:bg-black:hover,
-.hover\:bg-gray-900:hover {
-  background-color: #e11d48 !important; /* Rose instead of black */
+.hover\:bg-gray-900:hover,
+.hover\:text-black:hover {
+  background-color: #e11d48 !important; /* Rose background instead of black */
   color: #ffffff !important; /* White text */
 }
 
-/* Override Tailwind black hover utilities */
-button:hover,
-a:hover {
+/* Specific class overrides for menu buttons */
+nav .text-gray-700:hover,
+nav .hover\:text-rose-600:hover {
+  color: #ffffff !important; /* White text */
   background-color: #e11d48 !important; /* Rose background */
-  color: #ffffff !important; /* White text */
 }
 
-/* Ensure text inside hovered elements is also white */
-button:hover span,
-button:hover div,
-a:hover span,
-a:hover div {
-  color: #ffffff !important; /* White text for nested elements */
+/* Ensure Shop dropdown arrow also gets white color */
+header nav button:hover svg,
+header nav a:hover svg {
+  color: #ffffff !important; /* White SVG icons */
 }
 
 /* Custom scrollbar with rose theme */
