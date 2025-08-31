@@ -1008,10 +1008,39 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-6">Quick Links</h3>
             <div className="space-y-3">
-              <a href="#shop" className="block text-gray-300 hover:text-white transition-colors">Shop Products</a>
-              <a href="#customizer" className="block text-gray-300 hover:text-white transition-colors">Photo Customizer</a>
-              <a href="#ai-finder" className="block text-gray-300 hover:text-white transition-colors">AI Gift Finder</a>
-              <a href="/about" className="block text-gray-300 hover:text-white transition-colors">About Us</a>
+              <button 
+                onClick={() => {
+                  window.open('/#shop', '_self');
+                  setTimeout(() => smoothScrollToElement('shop'), 300);
+                }}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                Shop Products
+              </button>
+              <button 
+                onClick={() => {
+                  window.open('/#customizer', '_self');
+                  setTimeout(() => smoothScrollToElement('customizer'), 300);
+                }}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                Photo Customizer
+              </button>
+              <button 
+                onClick={() => {
+                  window.open('/#ai-finder', '_self');
+                  setTimeout(() => smoothScrollToElement('ai-finder'), 300);
+                }}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                AI Gift Finder
+              </button>
+              <button 
+                onClick={() => window.open('/about', '_self')}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                About Us
+              </button>
               <Button 
                 variant="ghost" 
                 className="p-0 text-gray-300 hover:text-white hover:bg-gray-800 h-auto transition-colors"
