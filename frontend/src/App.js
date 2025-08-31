@@ -1597,16 +1597,8 @@ const CheckoutFooter = () => {
     if (target === '/about') {
       navigate('/about');
     } else if (target.startsWith('#')) {
-      // Navigate to home first, then scroll to section
-      navigate('/');
-      const elementId = target.substring(1);
-      // Use a timeout to ensure page loads before scrolling
-      setTimeout(() => {
-        const element = document.getElementById(elementId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 500);
+      // Navigate to home with hash for proper section navigation
+      window.location.href = `/${target}`;
     }
   };
   
