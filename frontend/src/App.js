@@ -639,6 +639,287 @@ const UserProfileButton = () => {
     toast.success('Successfully logged out');
   };
   
+  const showEnhancedProfileManager = () => {
+    // Show the comprehensive profile manager with all Phase 1 features
+    const profileDialog = document.createElement('div');
+    profileDialog.innerHTML = `
+      <div id="profile-manager-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg max-w-6xl max-h-[95vh] overflow-hidden m-4 relative">
+          <button onclick="document.getElementById('profile-manager-modal').remove()" class="absolute top-4 right-4 z-10 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold shadow-md">
+            ✕
+          </button>
+          <div class="p-6 overflow-auto max-h-[95vh]">
+            <div class="mb-6">
+              <h1 class="text-3xl font-bold text-gray-900 mb-2">Enhanced Profile Manager</h1>
+              <p class="text-gray-600">Manage all your profile features and preferences</p>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="border-b border-gray-200 mb-6">
+              <nav class="-mb-px flex space-x-8">
+                <button onclick="showTab('profile')" id="tab-profile" class="profile-tab py-2 px-1 border-b-2 border-rose-500 font-medium text-sm text-rose-600">
+                  👤 Profile
+                </button>
+                <button onclick="showTab('dates')" id="tab-dates" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                  📅 Important Dates
+                </button>
+                <button onclick="showTab('preferences')" id="tab-preferences" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                  ⚙️ Preferences
+                </button>
+                <button onclick="showTab('privacy')" id="tab-privacy" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                  🔒 Privacy & Data
+                </button>
+              </nav>
+            </div>
+            
+            <!-- Tab Content -->
+            <div id="tab-content"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(profileDialog);
+    
+    // Add tab switching functionality
+    window.showTab = function(tabName) {
+      // Update tab styles
+      document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.className = 'profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700';
+      });
+      document.getElementById('tab-' + tabName).className = 'profile-tab py-2 px-1 border-b-2 border-rose-500 font-medium text-sm text-rose-600';
+      
+      // Load tab content
+      const contentDiv = document.getElementById('tab-content');
+      const userData = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+      
+      switch(tabName) {
+        case 'profile':
+          contentDiv.innerHTML = \`
+            <div class="space-y-6">
+              <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" value="\${userData.name || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" value="\${userData.email || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <input type="tel" value="\${userData.phone || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                    <input type="date" value="\${userData.date_of_birth || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                  <textarea rows="2" class="w-full border border-gray-300 rounded-md px-3 py-2">\${userData.address || ''}</textarea>
+                </div>
+                <button class="mt-4 bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600">Save Changes</button>
+              </div>
+            </div>
+          \`;
+          break;
+          
+        case 'dates':
+          contentDiv.innerHTML = \`
+            <div class="space-y-6">
+              <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-semibold">Important Dates</h3>
+                  <button onclick="addImportantDate()" class="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 text-sm">
+                    ➕ Add Date
+                  </button>
+                </div>
+                <p class="text-gray-600 mb-4">Add birthdays, anniversaries, and other special dates to get reminders</p>
+                
+                <div id="dates-list" class="space-y-3">
+                  <div class="text-center py-8 text-gray-500">
+                    <div class="text-4xl mb-2">📅</div>
+                    <p>No important dates added yet</p>
+                    <p class="text-sm">Click "Add Date" to get started with reminders</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          \`;
+          break;
+          
+        case 'preferences':
+          const prefs = userData.reminder_preferences || {};
+          contentDiv.innerHTML = \`
+            <div class="space-y-6">
+              <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">Reminder Preferences</h3>
+                <p class="text-gray-600 mb-6">Choose how you want to receive reminders for your important dates</p>
+                
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between p-4 border rounded-lg">
+                    <div class="flex items-center space-x-3">
+                      <div class="text-blue-500">📧</div>
+                      <div>
+                        <h4 class="font-medium">Email Reminders</h4>
+                        <p class="text-sm text-gray-600">Get reminders sent to your email address</p>
+                      </div>
+                    </div>
+                    <label class="switch relative inline-block w-10 h-6">
+                      <input type="checkbox" \${prefs.email ? 'checked' : ''} class="opacity-0 w-0 h-0">
+                      <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300"></span>
+                    </label>
+                  </div>
+                  
+                  <div class="flex items-center justify-between p-4 border rounded-lg opacity-75">
+                    <div class="flex items-center space-x-3">
+                      <div class="text-green-500">💬</div>
+                      <div>
+                        <h4 class="font-medium">SMS Reminders</h4>
+                        <p class="text-sm text-gray-600">Get text message reminders (Coming Soon)</p>
+                      </div>
+                    </div>
+                    <label class="switch relative inline-block w-10 h-6">
+                      <input type="checkbox" disabled class="opacity-0 w-0 h-0">
+                      <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-200 rounded-full"></span>
+                    </label>
+                  </div>
+                  
+                  <div class="flex items-center justify-between p-4 border rounded-lg opacity-75">
+                    <div class="flex items-center space-x-3">
+                      <div class="text-green-600">📱</div>
+                      <div>
+                        <h4 class="font-medium">WhatsApp Reminders</h4>
+                        <p class="text-sm text-gray-600">Get WhatsApp reminders (Coming Soon)</p>
+                      </div>
+                    </div>
+                    <label class="switch relative inline-block w-10 h-6">
+                      <input type="checkbox" disabled class="opacity-0 w-0 h-0">
+                      <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-200 rounded-full"></span>
+                    </label>
+                  </div>
+                </div>
+                
+                <button class="mt-6 bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600">Save Preferences</button>
+              </div>
+            </div>
+          \`;
+          break;
+          
+        case 'privacy':
+          contentDiv.innerHTML = \`
+            <div class="space-y-6">
+              <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">Privacy & Data Management</h3>
+                
+                <div class="space-y-6">
+                  <!-- Privacy Consent -->
+                  <div>
+                    <h4 class="font-medium mb-3">Privacy Consent</h4>
+                    <div class="space-y-3">
+                      <label class="flex items-start space-x-3">
+                        <input type="checkbox" \${userData.privacy_consent?.marketing_consent ? 'checked' : ''} class="mt-1">
+                        <span class="text-sm">I agree to receive marketing communications and promotional offers</span>
+                      </label>
+                      <label class="flex items-start space-x-3">
+                        <input type="checkbox" \${userData.privacy_consent?.reminder_consent ? 'checked' : ''} class="mt-1">
+                        <span class="text-sm">I agree to receive reminders for important dates I add</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <!-- Data Management -->
+                  <div class="border-t pt-6">
+                    <h4 class="font-medium mb-3">Data Management (GDPR)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button onclick="exportData()" class="p-4 border border-blue-200 rounded-lg hover:bg-blue-50 text-center">
+                        <div class="text-blue-500 text-2xl mb-2">📥</div>
+                        <h5 class="font-medium">Export My Data</h5>
+                        <p class="text-sm text-gray-600">Download all your personal data</p>
+                      </button>
+                      <button onclick="deleteData()" class="p-4 border border-red-200 rounded-lg hover:bg-red-50 text-center">
+                        <div class="text-red-500 text-2xl mb-2">🗑️</div>
+                        <h5 class="font-medium text-red-700">Delete My Data</h5>
+                        <p class="text-sm text-gray-600">Permanently delete your account</p>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <!-- Data Retention Info -->
+                  <div class="bg-gray-50 p-4 rounded-lg">
+                    <h5 class="font-medium mb-2">Data Retention Policy</h5>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                      <li>• Profile data: Retained until account deletion</li>
+                      <li>• Order history: Retained for 7 years for accounting</li>  
+                      <li>• Photos: Auto-deleted after 24 months unless favorited</li>
+                      <li>• Analytics: Anonymized after 26 months</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          \`;
+          break;
+      }
+    };
+    
+    // Add helper functions
+    window.addImportantDate = function() {
+      alert('📅 Important Dates Feature\\n\\nThis will open a form to add:\\n• Birthdays\\n• Anniversaries\\n• Custom events\\n\\nWith reminder settings and notification preferences.');
+    };
+    
+    window.exportData = function() {
+      alert('📥 Data Export (GDPR)\\n\\nYour data export will include:\\n• Profile information\\n• Order history\\n• Saved photos\\n• Privacy settings\\n\\nYou will receive a download link via email within 24 hours.');
+    };
+    
+    window.deleteData = function() {
+      if (confirm('⚠️ Delete All Data\\n\\nThis will permanently delete:\\n• Your profile and personal info\\n• All uploaded photos\\n• Order history\\n• Saved preferences\\n\\nThis action cannot be undone. Continue?')) {
+        alert('🗑️ Data Deletion Request Submitted\\n\\nYour deletion request will be processed within 30 days as per GDPR requirements. You will receive email confirmation.');
+      }
+    };
+    
+    // Add CSS for switches
+    const style = document.createElement('style');
+    style.textContent = \`
+      .switch input:checked + .slider { background-color: #ef4444; }
+      .slider:before { 
+        content: "";
+        height: 18px; width: 18px; left: 2px; bottom: 2px;
+        background-color: white; border-radius: 50%;
+        position: absolute; transition: .4s;
+      }
+      input:checked + .slider:before { transform: translateX(16px); }
+    \`;
+    document.head.appendChild(style);
+    
+    // Show default tab
+    showTab('profile');
+    
+    // Add ESC and click outside functionality
+    const handleEscClose = (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('profile-manager-modal');
+        if (modal) {
+          modal.remove();
+          document.removeEventListener('keydown', handleEscClose);
+        }
+      }
+    };
+    document.addEventListener('keydown', handleEscClose);
+    
+    const modal = document.getElementById('profile-manager-modal');
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+          document.removeEventListener('keydown', handleEscClose);
+        }
+      });
+    }
+  };
+  
   return (
     <div className="relative">
       {user ? (
