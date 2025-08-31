@@ -882,7 +882,7 @@ const UserProfileButton = () => {
     
     // Add CSS for switches
     const style = document.createElement('style');
-    style.textContent = \`
+    style.textContent = `
       .switch input:checked + .slider { background-color: #ef4444; }
       .slider:before { 
         content: "";
@@ -891,7 +891,7 @@ const UserProfileButton = () => {
         position: absolute; transition: .4s;
       }
       input:checked + .slider:before { transform: translateX(16px); }
-    \`;
+    `;
     document.head.appendChild(style);
     
     // Show default tab
