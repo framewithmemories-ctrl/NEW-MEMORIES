@@ -294,7 +294,7 @@ export const EnhancedCheckoutPage = () => {
           </CardHeader>
           <CardContent className="text-center py-8">
             <p className="text-gray-600 mb-4">Add some beautiful photo frames to get started!</p>
-            <Button onClick={() => window.location.href = '/'}>Continue Shopping</Button>
+            <Button onClick={() => navigate('/')}>Continue Shopping</Button>
           </CardContent>
         </Card>
       </div>
