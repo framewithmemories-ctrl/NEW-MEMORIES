@@ -30,6 +30,7 @@ import {
 
 export const EnhancedCheckoutPage = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
