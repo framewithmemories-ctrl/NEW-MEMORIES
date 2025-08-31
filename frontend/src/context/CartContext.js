@@ -99,6 +99,8 @@ export const CartProvider = ({ children }) => {
   };
 
   const clearCart = () => {
+    console.log('🗑️ clearCart() called - clearing all items');
+    console.trace('clearCart call stack:'); // This will show where clearCart was called from
     setCartItems([]);
     // Also clear from localStorage
     localStorage.removeItem('memoriesCart');
