@@ -311,13 +311,9 @@ class Phase1ProfileEnhancementTester:
                 "reminder_consent": False
             }
             
-            # Mock request object for IP and user agent
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Test Browser) Phase1ProfileTester/1.0'
-            }
-            
+            # The endpoint expects request parameter, let's check the backend implementation
             response = requests.post(f"{self.api_url}/users/{self.test_user_id}/consent", 
-                                   json=consent_data, headers=headers, timeout=10)
+                                   json=consent_data, timeout=10)
             success = response.status_code == 200
             
             if success:
