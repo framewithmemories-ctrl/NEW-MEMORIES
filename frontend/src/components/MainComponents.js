@@ -361,11 +361,14 @@ export const ProductGrid = ({ products }) => {
   
   const categories = [
     { name: 'All', icon: <Gift className="w-4 h-4" /> },
-    { name: 'Frames', icon: <Camera className="w-4 h-4" /> },
-    { name: 'Mugs', icon: <Heart className="w-4 h-4" /> },
-    { name: 'T-Shirts', icon: <Shirt className="w-4 h-4" /> },
-    { name: 'Acrylic', icon: <Sparkles className="w-4 h-4" /> },
-    { name: 'Corporate', icon: <Package className="w-4 h-4" /> }
+    { name: 'Photo Prints', icon: <Camera className="w-4 h-4" /> },
+    { name: 'Photo Gifts', icon: <Heart className="w-4 h-4" /> },
+    { name: 'Wooden Gifts', icon: <Hammer className="w-4 h-4" /> },
+    { name: 'Photo Frames', icon: <Camera className="w-4 h-4" /> },
+    { name: 'Photo Albums', icon: <Package className="w-4 h-4" /> },
+    { name: 'Canvas Prints', icon: <Palette className="w-4 h-4" /> },
+    { name: 'Corporate Gifts', icon: <Package className="w-4 h-4" /> },
+    { name: 'Print Shop', icon: <Sparkles className="w-4 h-4" /> }
   ];
   
   const enhancedProducts = [
