@@ -1308,6 +1308,179 @@ const RouteWrapper = ({ children }) => {
 };
 
 // Dedicated Checkout Page Component  
+// Checkout-specific Footer with proper navigation
+const CheckoutFooter = () => {
+  const navigate = useNavigate();
+  
+  const handleCheckoutFooterNavigation = (target) => {
+    if (target === '/about') {
+      navigate('/about');
+    } else if (target.startsWith('#')) {
+      // Navigate to home first, then scroll to section
+      navigate('/');
+      const elementId = target.substring(1);
+      // Use a timeout to ensure page loads before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500);
+    }
+  };
+  
+  return (
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-16">
+          {/* Company Info */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3">
+              <BusinessLogo size="w-12 h-12" />
+              <div>
+                <BusinessName />
+              </div>
+            </div>
+            
+            <p className="text-gray-300 leading-relaxed">
+              Creating beautiful personalized memories since 2020. Your trusted partner for premium photo frames, 
+              custom gifts, and sublimation printing in Coimbatore.
+            </p>
+            
+            <div className="flex space-x-4">
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-gray-400 hover:text-white hover:bg-gray-800"
+                onClick={() => window.open('https://instagram.com/memories_photoframes', '_blank')}
+              >
+                <Instagram className="w-5 h-5" />
+              </Button>
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-gray-400 hover:text-white hover:bg-gray-800"
+                onClick={() => window.open('https://facebook.com/memories.photoframes', '_blank')}
+              >
+                <Facebook className="w-5 h-5" />
+              </Button>
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-gray-400 hover:text-white hover:bg-gray-800"
+                onClick={() => window.open('https://wa.me/918148040148', '_blank')}
+              >
+                <MessageCircle className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-6">Quick Links</h3>
+            <div className="space-y-3">
+              <button 
+                onClick={() => handleCheckoutFooterNavigation('#shop')}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                Shop Products
+              </button>
+              <button 
+                onClick={() => handleCheckoutFooterNavigation('#customizer')}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                Photo Customizer
+              </button>
+              <button 
+                onClick={() => handleCheckoutFooterNavigation('#ai-finder')}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                AI Gift Finder
+              </button>
+              <button 
+                onClick={() => handleCheckoutFooterNavigation('/about')}
+                className="block text-gray-300 hover:text-white transition-colors bg-transparent border-none cursor-pointer text-left"
+              >
+                About Us
+              </button>
+              <Button 
+                variant="ghost" 
+                className="p-0 text-gray-300 hover:text-white hover:bg-gray-800 h-auto transition-colors"
+                onClick={() => window.open('https://wa.me/918148040148?text=Hi! I need a bulk order quote', '_blank')}
+              >
+                Bulk Orders
+              </Button>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-6">Contact Info</h3>
+            <div className="space-y-4 text-gray-300">
+              <div className="flex items-start space-x-3">
+                <MapPin className="w-5 h-5 text-rose-400 mt-1 flex-shrink-0" />
+                <div>
+                  <div className="font-medium text-white">Visit Our Store</div>
+                  <div className="text-sm">19B Kanni Illam, Keeranatham Road</div>
+                  <div className="text-sm">Near Ruby School, Saravanampatti</div>
+                  <div className="text-sm">Coimbatore, Tamil Nadu 641035</div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2 border-rose-500 text-rose-400 hover:bg-rose-500 hover:text-white"
+                    onClick={() => window.open('https://www.google.com/maps/place/19+B+KANNI+NILLAM,+Keeranatham+Rd,+near+RUBY+SCHOOL,+Saravanampatti,+Coimbatore,+Tamil+Nadu+641035/@11.0818634,77.0015281,21z', '_blank')}
+                  >
+                    <MapPin className="w-3 h-3 mr-1" />
+                    Visit Store
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Phone className="w-5 h-5 text-green-400" />
+                <div>+91 81480 40148</div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Clock className="w-5 h-5 text-blue-400" />
+                <div>Mon-Sat: 9:30 AM - 9:00 PM</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-6">Our Services</h3>
+            <div className="space-y-2 text-gray-300 text-sm">
+              <div>📸 Custom Photo Frames</div>
+              <div>🎨 Photo Customization</div>
+              <div>🖨️ Sublimation Printing</div>
+              <div>☕ Custom Mugs & Gifts</div>
+              <div>👕 Personalized T-Shirts</div>
+              <div>🏢 Corporate Gifts</div>
+              <div>🎁 Gift Wrapping (Free)</div>
+              <div>🚚 Home Delivery</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="text-gray-400 text-sm">
+              © 2024 Memories Photo Frames & Gifts. All rights reserved.
+            </div>
+            <div className="flex items-center space-x-4 mt-4 md:mt-0">
+              <span className="text-gray-400 text-sm">Proudly serving Coimbatore since 2020</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
 const CheckoutPage = () => {
   return (
     <RouteWrapper>
@@ -1317,7 +1490,7 @@ const CheckoutPage = () => {
         <div className="py-8">
           <EnhancedCheckoutPage />
         </div>
-        <Footer />
+        <CheckoutFooter />
         <WhatsAppFloat />
         <Toaster />
       </div>
