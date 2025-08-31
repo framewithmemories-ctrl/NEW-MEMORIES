@@ -394,28 +394,48 @@ export const ProductGrid = ({ products }) => {
     }
   ];
 
-  // FIXED filtering logic
+  // Enhanced filtering logic for new categories
   const filteredProducts = enhancedProducts.filter(product => {
     if (selectedCategory === 'All') return true;
     
     const categoryLower = selectedCategory.toLowerCase();
     const productCategory = (product.category || '').toLowerCase();
     
-    // Handle special case matching
-    if (categoryLower === 'frames') {
-      return productCategory.includes('frame') || productCategory === 'frames';
+    // Handle category matching
+    if (categoryLower === 'photo prints') {
+      return productCategory === 'photo-prints';
     }
+    if (categoryLower === 'photo gifts') {
+      return productCategory === 'photo-gifts';
+    }
+    if (categoryLower === 'wooden gifts') {
+      return productCategory === 'wooden-gifts';
+    }
+    if (categoryLower === 'photo frames') {
+      return productCategory === 'photo-frames' || productCategory.includes('frame');
+    }
+    if (categoryLower === 'photo albums') {
+      return productCategory === 'photo-albums';
+    }
+    if (categoryLower === 'canvas prints') {
+      return productCategory === 'canvas-prints';
+    }
+    if (categoryLower === 'corporate gifts') {
+      return productCategory === 'corporate-gifts' || productCategory.includes('corporate');
+    }
+    if (categoryLower === 'print shop') {
+      return productCategory === 'print-shop';
+    }
+    
+    // Legacy category support
     if (categoryLower === 'mugs') {
       return productCategory.includes('mug') || productCategory === 'mugs';
     }
     if (categoryLower === 't-shirts') {
-      return productCategory.includes('t-shirt') || productCategory.includes('tshirt') || productCategory === 't-shirts';
+      return productCategory.includes('t-shirt') || productCategory.includes('tshirt');
     }
     if (categoryLower === 'acrylic') {
       return productCategory.includes('acrylic') || productCategory.includes('led');
-    }
-    if (categoryLower === 'corporate') {
-      return productCategory.includes('corporate');
     }
     
     return productCategory === categoryLower;
