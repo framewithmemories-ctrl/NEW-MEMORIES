@@ -330,7 +330,7 @@ export const AboutUsSection = () => {
                 <div className="pt-4 space-y-3">
                   <Button 
                     className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-                    onClick={() => window.open('https://maps.google.com/?q=32J2%2BPJ+Coimbatore,+Tamil+Nadu', '_blank')}
+                    onClick={() => window.open('https://www.google.com/maps?q=11.0818852,77.0013548', '_blank')}
                   >
                     <MapPin className="w-4 h-4 mr-2" />
                     Get Directions
