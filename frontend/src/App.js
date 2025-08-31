@@ -552,6 +552,48 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
+  // Detect active section based on scroll position
+  useEffect(() => {
+    const detectActiveSection = () => {
+      if (location.pathname === '/about') {
+        setActiveSection('about');
+        return;
+      } else if (location.pathname === '/checkout') {
+        setActiveSection('checkout');
+        return;
+      } else if (location.pathname === '/') {
+        const sections = ['shop', 'customizer', 'ai-finder'];
+        const headerHeight = 100;
+        
+        for (const section of sections) {
+          const element = document.getElementById(section);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            if (rect.top <= headerHeight && rect.bottom >= headerHeight) {
+              setActiveSection(section);
+              return;
+            }
+          }
+        }
+        
+        // Default to home if no section is active
+        if (window.scrollY < 200) {
+          setActiveSection('home');
+        }
+      }
+    };
+
+    // Initial detection
+    detectActiveSection();
+    
+    // Listen for scroll events
+    window.addEventListener('scroll', detectActiveSection);
+    
+    return () => {
+      window.removeEventListener('scroll', detectActiveSection);
+    };
+  }, [location.pathname]);
+
   // Universal navigation handler
   const handleNavigation = (target, closeMenu = false) => {
     if (closeMenu) {
@@ -561,15 +603,19 @@ const Header = () => {
     if (target === '/') {
       // Navigate to home
       navigate('/');
+      setActiveSection('home');
     } else if (target === '/about') {
       // Navigate to About Us page
       navigate('/about');
+      setActiveSection('about');
     } else if (target === '/checkout') {
       // Navigate to checkout
       navigate('/checkout');
+      setActiveSection('checkout');
     } else if (target.startsWith('#')) {
       // Same-page anchor navigation
       const elementId = target.substring(1);
+      setActiveSection(elementId);
       
       if (location.pathname !== '/') {
         // Navigate to home first, then scroll
