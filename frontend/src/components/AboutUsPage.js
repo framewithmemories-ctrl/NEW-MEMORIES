@@ -81,7 +81,7 @@ export const AboutUsPage = () => {
               <Button 
                 variant="ghost" 
                 className="text-gray-700 hover:text-rose-600 font-medium"
-                onClick={() => window.location.href = '/'}
+                onClick={() => navigate('/')}
               >
                 ← Home
               </Button>
