@@ -1251,19 +1251,27 @@ const TestimonialsSection = () => {
   );
 };
 
+// Route Component Wrapper with Scroll-to-Top
+const RouteWrapper = ({ children }) => {
+  useScrollToTop();
+  return children;
+};
+
 // Dedicated Checkout Page Component  
 const CheckoutPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-rose-50">
-      <SEOHead />
-      <Header />
-      <div className="py-8">
-        <EnhancedCheckoutPage />
+    <RouteWrapper>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-rose-50">
+        <SEOHead />
+        <Header />
+        <div className="py-8">
+          <EnhancedCheckoutPage />
+        </div>
+        <Footer />
+        <WhatsAppFloat />
+        <Toaster />
       </div>
-      <Footer />
-      <WhatsAppFloat />
-      <Toaster />
-    </div>
+    </RouteWrapper>
   );
 };
 
