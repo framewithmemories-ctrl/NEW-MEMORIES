@@ -191,6 +191,12 @@ export const EnhancedCheckoutPage = () => {
       toast.error('Please provide delivery address');
       return;
     }
+    
+    // Validation: Store pickup payment choice
+    if (formData.deliveryType === 'pickup' && !storePickupPayment) {
+      toast.error('Please select a payment option for store pickup');
+      return;
+    }
 
     setIsSubmitting(true);
 
