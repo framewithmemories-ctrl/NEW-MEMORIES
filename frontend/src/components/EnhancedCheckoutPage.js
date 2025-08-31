@@ -660,15 +660,6 @@ export const EnhancedCheckoutPage = () => {
                   </div>
                 </div>
               )}
-
-              {/* Payment Method Selection Status */}
-              {!codEnabled && formData.paymentMethod !== 'wallet' && (
-                <div className="p-3 bg-orange-50 rounded-lg">
-                  <p className="text-sm text-orange-700">
-                    ⚠️ Please select a payment method to continue with your order
-                  </p>
-                </div>
-              )}
               
             </CardContent>
           </Card>
