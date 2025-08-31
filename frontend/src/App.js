@@ -66,40 +66,27 @@ import {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 const API = `${BACKEND_URL}/api`;
 
-// Enhanced Google Reviews Integration with Fallback
+// Enhanced Google Reviews Integration - Fixed (No Broken Short Links)
 const handleGoogleReviews = (action) => {
-  const primaryUrls = {
+  const reviewUrls = {
     read: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,1',
     write: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,3'
   };
   
-  const fallbackUrl = 'https://maps.app.goo.gl/dAKqZ7AjvDzH1rM89';
+  // Safe Google Maps fallback (only if needed)
+  const safeMapsFallback = 'https://www.google.com/maps/place/Memories+Frames+%26+Gift+Shop/@11.0818852,77.0013548,21z';
   
-  // Try primary URL first
-  const primaryUrl = primaryUrls[action];
-  const newWindow = window.open(primaryUrl, '_blank', 'noopener,noreferrer');
+  // Open the correct Google Review URL directly
+  const reviewUrl = reviewUrls[action];
+  const newWindow = window.open(reviewUrl, '_blank', 'noopener,noreferrer');
   
-  // Implement fallback mechanism
+  // Only use fallback if window completely fails to open (rare case)
   if (!newWindow) {
-    // If popup blocked or failed, try fallback
-    console.log('Primary URL failed, using fallback');
-    window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
-    return;
+    console.log('Primary review URL blocked, using Maps fallback');
+    window.open(safeMapsFallback, '_blank', 'noopener,noreferrer');
+  } else {
+    console.log(`Google ${action} reviews opened successfully`);
   }
-  
-  // Check if window loaded properly after a delay
-  setTimeout(() => {
-    try {
-      // If window is still loading or has issues, redirect to fallback
-      if (newWindow.closed || newWindow.location.href === 'about:blank') {
-        newWindow.close();
-        window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
-      }
-    } catch (error) {
-      // Cross-origin restrictions prevent access, assume it loaded properly
-      console.log('Google Reviews opened successfully');
-    }
-  }, 3000);
 };
 
 // SEO Component with New Branding
