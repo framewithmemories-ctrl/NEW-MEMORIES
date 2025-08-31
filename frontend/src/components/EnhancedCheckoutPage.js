@@ -599,7 +599,7 @@ export const EnhancedCheckoutPage = () => {
               <CardDescription>
                 {codEnabled ? 
                   'Cash on Delivery selected - Pay when you receive your order!' : 
-                  'Please select a payment method to continue'
+                  'Select payment options if needed (Optional - Default is online payment)'
                 }
               </CardDescription>
             </CardHeader>
