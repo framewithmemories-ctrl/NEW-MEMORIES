@@ -16,6 +16,7 @@ import { Toaster } from "./components/ui/sonner";
 import { CartProvider, useCart } from "./context/CartContext";
 import { SearchComponent } from "./components/SearchComponent";
 import { UserProfileSimple } from "./components/UserProfileSimple";
+import { UserProfileEnhanced } from "./components/UserProfileEnhanced";
 import { EnhancedAIGiftFinder } from "./components/EnhancedAIGiftFinder";
 import { HeroSection, AboutUsSection, ProductGrid } from "./components/MainComponents";
 import { AboutUsPage } from "./components/AboutUsPage";
