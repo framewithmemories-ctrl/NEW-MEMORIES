@@ -66,27 +66,17 @@ import {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 const API = `${BACKEND_URL}/api`;
 
-// Enhanced Google Reviews Integration - Fixed (No Broken Short Links)
+// Google Reviews Integration - Direct Links Only (No Fallback)
 const handleGoogleReviews = (action) => {
   const reviewUrls = {
     read: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,1',
     write: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,3'
   };
   
-  // Safe Google Maps fallback (only if needed)
-  const safeMapsFallback = 'https://www.google.com/maps/place/Memories+Frames+%26+Gift+Shop/@11.0818852,77.0013548,21z';
-  
-  // Open the correct Google Review URL directly
+  // Open ONLY the Google Review URL - no fallback, no extra tabs
   const reviewUrl = reviewUrls[action];
-  const newWindow = window.open(reviewUrl, '_blank', 'noopener,noreferrer');
-  
-  // Only use fallback if window completely fails to open (rare case)
-  if (!newWindow) {
-    console.log('Primary review URL blocked, using Maps fallback');
-    window.open(safeMapsFallback, '_blank', 'noopener,noreferrer');
-  } else {
-    console.log(`Google ${action} reviews opened successfully`);
-  }
+  window.open(reviewUrl, '_blank', 'noopener,noreferrer');
+  console.log(`Google ${action} reviews opened: ${reviewUrl}`);
 };
 
 // SEO Component with New Branding
