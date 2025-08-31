@@ -17,17 +17,22 @@ export const CartProvider = ({ children }) => {
 
   // Load cart from localStorage on mount
   useEffect(() => {
+    console.log('🔄 Loading cart from localStorage on component mount');
     const savedCart = localStorage.getItem('memoriesCart');
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
+        console.log('✅ Found saved cart with', parsedCart.length, 'items:', parsedCart);
         setCartItems(parsedCart);
         // Fix: Calculate total quantity, not just number of items
         const totalQuantity = parsedCart.reduce((total, item) => total + (item.quantity || 1), 0);
         setCartCount(totalQuantity);
+        console.log('✅ Cart loaded successfully, total quantity:', totalQuantity);
       } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
+        console.error('❌ Error parsing cart from localStorage:', error);
       }
+    } else {
+      console.log('ℹ️ No saved cart found in localStorage');
     }
   }, []);
 
