@@ -307,33 +307,39 @@ export const EnhancedCheckoutPage = () => {
   if (orderConfirmation) {
     return (
       <div className="max-w-md mx-auto px-4 py-8">
-        {/* Print-Specific Header - Only visible when printing */}
-        <div className="hidden print-header">
-          <div className="print-logo">M</div>
-          <div className="print-business-name">MEMORIES</div>
-          <div className="print-tagline">Photo Frames & Custom Gift Shop</div>
-          <div className="print-tagline">Frame with Love • Crafted with Care</div>
-          <div className="print-contact">
-            📍 19B Kanni Illam, Keeranatham Rd, near Ruby School, Saravanampatti, Coimbatore, Tamil Nadu 641035<br/>
-            📞 +91 81480 40148 | 🌐 memories-photoframes.com
-          </div>
-          <hr style={{border: '1px solid #000', margin: '15px 0'}} />
-        </div>
-        
         <div className="bg-white border-2 border-gray-200 p-6 font-mono text-sm">
           
-          {/* Shop Logo and Branding - Screen version */}
-          <div className="text-center mb-6 no-print">
-            <div className="w-20 h-20 mx-auto mb-3">
-              <div className="w-full h-full bg-gradient-to-br from-rose-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold text-2xl">
+          {/* Enhanced Shop Logo and Branding - Universal version */}
+          <div className="text-center mb-8 border-b-2 border-dashed border-gray-300 pb-6">
+            {/* Logo */}
+            <div className="w-24 h-24 mx-auto mb-4">
+              <div className="w-full h-full bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-3xl shadow-lg">
                 M
               </div>
             </div>
-            <div className="font-bold text-xl tracking-wide">MEMORIES</div>
-            <div className="text-xs text-gray-600 mt-1">Photo Frames & Custom Gift Shop</div>
-            <div className="text-xs text-rose-600 italic mt-1">Frame with Love • Crafted with Care</div>
-            <div className="text-xs text-gray-500 mt-2">📍 19B Kanni Illam, Keeranatham Rd, Coimbatore</div>
-            <div className="text-xs text-gray-500">📞 +91 81480 40148</div>
+            
+            {/* Business Name */}
+            <div className="font-bold text-2xl tracking-widest mb-2 text-gray-900">MEMORIES</div>
+            
+            {/* Business Type */}
+            <div className="text-sm text-gray-700 font-medium mb-2">Photo Frames & Custom Gift Shop</div>
+            
+            {/* Tagline */}
+            <div className="text-sm text-rose-600 italic font-medium mb-4">Frame with Love • Crafted with Care</div>
+            
+            {/* Contact Information */}
+            <div className="text-xs text-gray-600 space-y-1">
+              <div className="flex items-center justify-center space-x-1">
+                <span>📍</span>
+                <span>19B Kanni Illam, Keeranatham Rd, near Ruby School</span>
+              </div>
+              <div>Saravanampatti, Coimbatore, Tamil Nadu 641035</div>
+              <div className="flex items-center justify-center space-x-4 mt-2">
+                <span>📞 +91 81480 40148</span>
+                <span>🕒 Mon-Sat: 9:30AM-9PM</span>
+              </div>
+              <div className="text-blue-600">🌐 memories-photoframes.com</div>
+            </div>
           </div>
 
           {/* Order Summary Heading */}
