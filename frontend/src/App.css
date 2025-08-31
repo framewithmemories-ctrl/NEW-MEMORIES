@@ -166,30 +166,10 @@ img[src] {
   color: #be123c !important;
 }
 
-/* Override any conflicting styles */
-nav button:hover {
-  color: #be123c !important;
-  background-color: #fef2f2 !important;
-  transform: translateY(-1px) !important;
-}
-
-nav button.active {
-  color: #be123c !important;
-  background-color: #fef2f2 !important;
-}
-
-/* Ensure no black colors in navigation */
-nav button,
-nav a,
-.nav-item {
-  color: #374151 !important; /* Default gray */
-}
-
-nav button:hover,
-nav a:hover,
-.nav-item:hover {
-  color: #be123c !important; /* Brand deep maroon */
-  background-color: #fef2f2 !important;
+/* Simple navigation hover fix - no complex overrides */
+.nav-hover-fix:hover {
+  color: #991b1b !important; /* red-800 */
+  background-color: #fef2f2 !important; /* red-50 */
 }
 
 /* Rose-themed text selection */
