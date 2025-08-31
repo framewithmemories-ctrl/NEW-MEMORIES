@@ -310,7 +310,7 @@ export const EnhancedCheckoutPage = () => {
             <h1 className="text-3xl font-bold text-gray-900">Secure Checkout</h1>
             <p className="text-gray-600 mt-2">Review and complete your order</p>
           </div>
-          <Button variant="outline" onClick={() => window.location.href = '/'}>
+          <Button variant="outline" onClick={() => navigate('/')}>
             <ArrowRight className="w-4 h-4 mr-2 transform rotate-180" />
             Continue Shopping
           </Button>
