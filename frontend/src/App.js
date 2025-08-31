@@ -1359,24 +1359,26 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <SEOHead />
-      <Header />
-      <AboutUsPopup />
-      <HeroSection />
-      <ProductGrid products={products} />
-      <PhotoCustomizer />
-      <EnhancedAIGiftFinder />
-      <section id="reviews" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <ReviewSystemEnhanced />
-        </div>
-      </section>
-      <TestimonialsSection />
-      <Footer />
-      <WhatsAppFloat />
-      <Toaster />
-    </div>
+    <RouteWrapper>
+      <div className="min-h-screen bg-white">
+        <SEOHead />
+        <Header />
+        <AboutUsPopup />
+        <HeroSection />
+        <ProductGrid products={products} />
+        <PhotoCustomizer />
+        <EnhancedAIGiftFinder />
+        <section id="reviews" className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <ReviewSystemEnhanced />
+          </div>
+        </section>
+        <TestimonialsSection />
+        <Footer />
+        <WhatsAppFloat />
+        <Toaster />
+      </div>
+    </RouteWrapper>
   );
 };
 
