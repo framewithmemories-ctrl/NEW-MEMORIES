@@ -66,6 +66,41 @@ import {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 const API = `${BACKEND_URL}/api`;
 
+// Universal Scroll to Top Hook
+const useScrollToTop = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // Scroll to top on route changes
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+    
+    console.log('📍 Page loaded - Scrolled to top for route:', location.pathname);
+  }, [location.pathname]);
+};
+
+// Smooth scroll utility for same-page navigation
+const smoothScrollToElement = (elementId, offset = 80) => {
+  const element = document.getElementById(elementId);
+  if (element) {
+    const headerElement = document.querySelector('header') || document.querySelector('[class*="sticky"]');
+    const headerHeight = headerElement ? headerElement.offsetHeight : offset;
+    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+    
+    console.log(`🎯 Scrolling to #${elementId} at position:`, elementPosition);
+    
+    window.scrollTo({
+      top: elementPosition,
+      behavior: 'smooth'
+    });
+  } else {
+    console.warn(`❌ Element #${elementId} not found`);
+  }
+};
+
 // Google Reviews Integration - Direct Links Only (No Fallback)
 const handleGoogleReviews = (action) => {
   const reviewUrls = {
