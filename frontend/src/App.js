@@ -751,11 +751,8 @@ const Header = () => {
                   setActiveSection('customizer');
                 }}
                 className={`
-                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
-                  ${activeSection === 'customizer' 
-                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
-                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
-                  }
+                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
+                  ${activeSection === 'customizer' ? 'active' : ''}
                 `}
               >
                 🎨 Customize
@@ -766,11 +763,8 @@ const Header = () => {
                   setActiveSection('ai-finder');
                 }}
                 className={`
-                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
-                  ${activeSection === 'ai-finder' 
-                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
-                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
-                  }
+                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
+                  ${activeSection === 'ai-finder' ? 'active' : ''}
                 `}
               >
                 🤖 Gift Finder
@@ -781,11 +775,8 @@ const Header = () => {
                   setActiveSection('about');
                 }}
                 className={`
-                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
-                  ${activeSection === 'about' || location.pathname === '/about' 
-                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
-                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
-                  }
+                  brand-mobile-nav-item font-medium py-3 px-4 rounded-lg text-left border-none cursor-pointer w-full
+                  ${activeSection === 'about' || location.pathname === '/about' ? 'active' : ''}
                 `}
               >
                 ℹ️ About Us
