@@ -333,15 +333,11 @@ export const EnhancedCheckoutPage = () => {
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="bg-white border-2 border-gray-200 p-6 font-mono text-sm">
           
-          {/* Enhanced Shop Logo and Branding - Universal version */}
+          {/* Enhanced Shop Logo and Branding - Horizontal Layout Like Header */}
           <div className="text-center mb-8 border-b-2 border-dashed border-gray-300 pb-6">
-            {/* Full Business Logo */}
-            <div className="w-32 h-32 mx-auto mb-4 flex items-center justify-center">
-              <BusinessLogo size="w-28 h-28" />
-            </div>
-            
-            {/* Business Name with Full Design */}
-            <div className="mb-4">
+            {/* Logo + Business Name Side by Side (Like Header) */}
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <BusinessLogo size="w-16 h-16" />
               <BusinessName />
             </div>
             
