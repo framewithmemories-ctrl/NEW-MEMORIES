@@ -728,7 +728,7 @@ const Header = () => {
               {/* Enhanced Hierarchical Mobile Categories */}
               {navigationStructure.map((category, index) => (
                 <div key={category.key} className="border-l-2 border-rose-100 ml-2 pl-3">
-                  <div className="flex items-center space-x-2 py-2 px-2 font-medium text-gray-800 text-sm hover:bg-rose-50 rounded transition-all duration-200">
+                  <div className="mobile-category-header flex items-center space-x-2 py-2 px-2 font-medium text-gray-800 text-sm rounded transition-all duration-200">
                     <span>{category.icon}</span>
                     <span>{category.name}</span>
                   </div>
@@ -740,7 +740,7 @@ const Header = () => {
                           handleNavigation('#shop', true);
                           setActiveSection('shop');
                         }}
-                        className="block text-xs text-gray-600 hover:text-rose-600 py-2 px-3 hover:bg-rose-50 rounded-md transition-all duration-200 text-left bg-transparent border-none cursor-pointer w-full"
+                        className="mega-menu-item block text-xs py-2 px-3 rounded-md text-left bg-transparent border-none cursor-pointer w-full"
                       >
                         {sub}
                       </button>
