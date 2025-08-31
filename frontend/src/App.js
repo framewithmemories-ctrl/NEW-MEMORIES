@@ -1289,10 +1289,16 @@ const Home = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-50">
         <div className="text-center space-y-6">
-          <BusinessLogo size="w-24 h-24" />
+          <div className="flex items-center justify-center space-x-3">
+            <BusinessLogo size="w-16 h-16" />
+            <div className="text-left">
+              <BusinessName />
+              <p className="text-sm text-gray-600 italic">Frame with Love • Crafted with Care</p>
+            </div>
+          </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Memories...</h2>
-            <p className="text-gray-600">Your photo frame shop is loading</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Your Photo Memories...</h2>
+            <p className="text-gray-600">Preparing beautiful frames and gifts</p>
           </div>
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500"></div>
