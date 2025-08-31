@@ -175,47 +175,9 @@ const navigationStructure = [
   }
 ];
 
-// Hierarchical Navigation Component - Desktop
-const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSection }) => {
+// Simple Navigation Component - Desktop
+const HierarchicalNavigation = ({ handleNavigation }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const location = useLocation();
-  
-  // Enhanced navigation item component with brand colors
-  const NavItem = ({ name, section, hasDropdown = false, onClick }) => {
-    const isActive = activeSection === section && !(section === 'shop' && location.pathname === '/');
-    
-    return (
-      <div 
-        className="relative group"
-        onMouseEnter={() => hasDropdown && setActiveDropdown(section)}
-        onMouseLeave={() => hasDropdown && setActiveDropdown(null)}
-      >
-        <button 
-          onClick={() => {
-            onClick();
-            setActiveSection(section);
-          }}
-          className={`
-            font-medium relative border-none cursor-pointer flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-200
-            ${isActive 
-              ? 'text-red-800 bg-red-50' 
-              : 'text-gray-700 hover:text-red-800 hover:bg-red-50'
-            }
-          `}
-        >
-          <span>{name}</span>
-          {hasDropdown && (
-            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
-              activeDropdown === section ? 'rotate-180' : ''
-            }`} />
-          )}
-          {isActive && (
-            <span className="absolute -bottom-1 left-3 right-3 h-0.5 bg-red-800"></span>
-          )}
-        </button>
-      </div>
-    );
-  };
   
   return (
     <nav className="hidden lg:flex space-x-2">
