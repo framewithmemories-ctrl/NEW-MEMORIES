@@ -19,49 +19,81 @@ body {
   min-height: 100vh;
 }
 
-/* FINAL MENU HOVER FIX - WHITE TEXT, ROSE BACKGROUND, NO BLACK */
+/* UNIVERSAL HOVER EFFECT - CONSISTENT WITH TESTIMONIALS STYLE */
 
-/* Default navigation styles */
+/* Base transition for all interactive elements */
+button,
+a,
+.card,
+.hover-item,
+nav button,
+nav a,
+.badge,
+.rounded-lg,
+.rounded-md {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* UNIVERSAL HOVER EFFECT - Same as testimonials */
+button:hover,
+a:hover,
+nav button:hover,
+nav a:hover,
+.hover-item:hover,
+.badge:hover,
+.card:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; /* xl shadow */
+  transform: scale(1.05) !important; /* Slight scale up */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Navigation specific hover - maintains brand colors with scale effect */
 header nav button,
 header nav a {
   color: #374151 !important; /* Gray text default */
   background-color: transparent !important;
   border: none !important;
-  transition: all 0.2s ease !important;
+  border-radius: 0.5rem !important; /* Rounded corners */
+  padding: 0.5rem 0.75rem !important;
 }
 
-/* CRITICAL HOVER FIX - WHITE TEXT, ROSE BACKGROUND */
 header nav button:hover,
 header nav a:hover {
-  color: #ffffff !important; /* WHITE TEXT */
-  background-color: #e11d48 !important; /* ROSE BACKGROUND */
+  color: #e11d48 !important; /* Rose text */
+  background-color: #fef2f2 !important; /* Light rose background */
+  box-shadow: 0 25px 50px -12px rgba(225, 29, 72, 0.25) !important; /* Rose shadow */
+  transform: scale(1.05) !important; /* Scale effect */
 }
 
-/* Ensure nested elements inside navigation also get white text */
+/* Ensure nested elements inherit hover colors */
 header nav button:hover *,
 header nav a:hover * {
-  color: #ffffff !important; /* WHITE TEXT for all nested elements */
+  color: #e11d48 !important; /* Rose color for icons/text */
 }
 
-/* Override any Tailwind classes that might cause black backgrounds */
+/* Badge hover effects - same scale and shadow */
+.bg-rose-100:hover,
+.bg-green-100:hover,
+.bg-blue-100:hover,
+.animate-pulse:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  transform: scale(1.05) !important;
+  color: #374151 !important; /* Keep original text color, no black */
+}
+
+/* Card hover effects - matching testimonials exactly */
+.border-2:hover,
+.bg-white:hover,
+.shadow-lg:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  transform: scale(1.05) !important;
+}
+
+/* Override any black hover effects */
 .hover\:bg-black:hover,
-.hover\:bg-gray-900:hover,
 .hover\:text-black:hover {
-  background-color: #e11d48 !important; /* Rose background instead of black */
-  color: #ffffff !important; /* White text */
-}
-
-/* Specific class overrides for menu buttons */
-nav .text-gray-700:hover,
-nav .hover\:text-rose-600:hover {
-  color: #ffffff !important; /* White text */
-  background-color: #e11d48 !important; /* Rose background */
-}
-
-/* Ensure Shop dropdown arrow also gets white color */
-header nav button:hover svg,
-header nav a:hover svg {
-  color: #ffffff !important; /* White SVG icons */
+  background-color: #fef2f2 !important; /* Light rose instead of black */
+  color: #e11d48 !important; /* Rose text instead of black */
 }
 
 /* Custom scrollbar with rose theme */
