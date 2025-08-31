@@ -390,7 +390,7 @@ export const EnhancedCheckoutPage = () => {
                 </div>
                 <div>
                   <Label htmlFor="alternatePhone">
-                    Alternate Phone {formData.paymentMethod === 'cod' && '*'}
+                    Alternate Phone {codEnabled && '*'}
                   </Label>
                   <Input
                     id="alternatePhone"
@@ -398,9 +398,9 @@ export const EnhancedCheckoutPage = () => {
                     value={formData.alternatePhone}
                     onChange={(e) => setFormData(prev => ({...prev, alternatePhone: e.target.value}))}
                     placeholder="+91 xxxxx xxxxx"
-                    required={formData.paymentMethod === 'cod'}
+                    required={codEnabled}
                   />
-                  {formData.paymentMethod === 'cod' && (
+                  {codEnabled && (
                     <p className="text-xs text-orange-600 mt-1">
                       Mandatory for Cash on Delivery orders
                     </p>
