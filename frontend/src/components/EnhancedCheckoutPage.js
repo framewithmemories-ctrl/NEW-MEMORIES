@@ -210,7 +210,7 @@ export const EnhancedCheckoutPage = () => {
           walletDiscount: getWalletDiscount(),
           final: getFinalTotal()
         },
-        paymentMethod: formData.paymentMethod,
+        paymentMethod: codEnabled ? 'cod' : formData.paymentMethod,
         deliveryType: formData.deliveryType,
         createdAt: new Date().toISOString()
       };
