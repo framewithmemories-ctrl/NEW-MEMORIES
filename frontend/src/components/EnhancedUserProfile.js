@@ -3,42 +3,39 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Separator } from "./ui/separator";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
 import { toast } from "sonner";
-import axios from 'axios';
+import axios from "axios";
 import { 
   User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  ShoppingCart, 
+  Calendar, 
   Heart, 
-  Settings,
-  LogOut,
+  Settings, 
+  Shield, 
+  Download, 
+  Trash2,
+  Plus,
   Edit,
   Save,
   X,
-  Camera,
-  Image as ImageIcon,
-  Wallet,
+  Check,
+  AlertTriangle,
+  Mail,
+  MessageSquare,
+  Phone,
   Gift,
-  Star,
-  Plus,
-  Download,
-  Trash2,
-  Eye,
   Clock,
-  Award,
-  CreditCard,
-  History
+  Lock,
+  Eye,
+  EyeOff
 } from "lucide-react";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
 export const EnhancedUserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
