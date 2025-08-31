@@ -28,6 +28,30 @@ import {
   Minus
 } from "lucide-react";
 
+// Business Logo Component for Checkout
+const BusinessLogo = ({ size = "w-12 h-12" }) => {
+  return (
+    <div className={`${size} relative group cursor-pointer`}>
+      <img 
+        src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/6aq8xona_LOGO.png"
+        alt="Memories Logo"
+        className={`${size} object-contain rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105`}
+      />
+    </div>
+  );
+};
+
+// Business Name Component for Checkout  
+const BusinessName = () => {
+  return (
+    <img 
+      src="https://customer-assets.emergentagent.com/job_frameify-store/artifacts/t3qf6xi2_NAME.png"
+      alt="Memories - Frame with Love and Crafted with Care"
+      className="h-10 object-contain"
+    />
+  );
+};
+
 export const EnhancedCheckoutPage = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
