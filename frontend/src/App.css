@@ -148,6 +148,24 @@ img[src] {
   font-weight: 600 !important;
 }
 
+/* Mega Menu Dropdown Items */
+.mega-menu-item {
+  color: #6b7280 !important; /* gray-500 */
+  transition: all 0.2s ease !important;
+}
+
+.mega-menu-item:hover {
+  color: #be123c !important; /* Deep maroon/red */
+  background-color: #fef2f2 !important; /* Light red background */
+  transform: translateX(4px) !important;
+}
+
+/* Mobile Category Headers */
+.mobile-category-header:hover {
+  background-color: #fef2f2 !important;
+  color: #be123c !important;
+}
+
 /* Override any conflicting styles */
 nav button:hover {
   color: #be123c !important;
@@ -157,6 +175,20 @@ nav button:hover {
 
 nav button.active {
   color: #be123c !important;
+  background-color: #fef2f2 !important;
+}
+
+/* Ensure no black colors in navigation */
+nav button,
+nav a,
+.nav-item {
+  color: #374151 !important; /* Default gray */
+}
+
+nav button:hover,
+nav a:hover,
+.nav-item:hover {
+  color: #be123c !important; /* Brand deep maroon */
   background-color: #fef2f2 !important;
 }
 
