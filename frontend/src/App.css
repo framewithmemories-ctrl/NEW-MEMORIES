@@ -19,7 +19,7 @@ body {
   min-height: 100vh;
 }
 
-/* COMPREHENSIVE HOVER FIX - NO BLACK TEXT ANYWHERE */
+/* TARGETED HOVER FIX - NO BLACK TEXT ON SPECIFIC ELEMENTS */
 
 /* Navigation hover fix */
 header nav button,
@@ -36,52 +36,48 @@ header nav a:hover,
   background-color: #fef2f2 !important; /* Red-50 background */
 }
 
-/* UNIVERSAL HOVER FIX - Apply to ALL elements */
-* {
-  color: inherit !important;
+/* Top bar elements (Since 2020, Free Delivery, etc.) */
+.bg-rose-100:hover,
+.bg-green-100:hover,
+.bg-blue-100:hover {
+  color: #e11d48 !important; /* Rose-600 hover instead of black */
 }
 
-*:hover {
-  color: #e11d48 !important; /* Rose-600 for all hover states */
-}
-
-/* Specific fixes for common problematic elements */
-button:hover,
-a:hover,
-span:hover,
-div:hover,
-p:hover,
-h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover {
-  color: #e11d48 !important; /* Rose-600 instead of black */
-}
-
-/* Badge and text elements hover fix */
+/* Badge elements hover fix */
+.animate-pulse:hover,
 .badge:hover,
-.text-gray-300:hover,
-.text-gray-400:hover,
-.text-gray-500:hover,
-.text-gray-600:hover,
-.text-gray-700:hover {
+.rounded-md:hover {
   color: #e11d48 !important; /* Rose-600 hover */
 }
 
-/* Footer elements hover fix */
+/* Text elements that turn black on hover */
+.text-rose-800:hover,
+.text-green-800:hover,
+.text-blue-800:hover,
+.text-gray-700:hover,
+.text-gray-600:hover,
+.text-gray-500:hover {
+  color: #e11d48 !important; /* Rose-600 hover */
+}
+
+/* Footer and link elements */
+footer a:hover,
+footer button:hover,
 footer *:hover {
   color: #e11d48 !important; /* Rose-600 hover */
 }
 
-/* Prevent any black hover effects */
+/* Prevent specific black hover classes */
 .hover\:text-black:hover,
 .hover\:text-gray-900:hover {
   color: #e11d48 !important; /* Override black hover */
 }
 
-/* Trusted customers text and similar elements */
-.text-sm:hover,
-.text-xs:hover,
-.font-medium:hover,
-.font-semibold:hover {
-  color: #e11d48 !important; /* Rose-600 hover */
+/* Common interactive elements */
+button:hover span,
+a:hover span,
+div:hover span {
+  color: inherit !important; /* Inherit parent hover color */
 }
 
 /* Custom scrollbar with rose theme */
