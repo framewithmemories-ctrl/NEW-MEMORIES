@@ -629,7 +629,11 @@ const Header = () => {
           
           {/* Center - Navigation */}
           <div className="flex-1 flex justify-center">
-            <HierarchicalNavigation handleNavigation={handleNavigation} />
+            <HierarchicalNavigation 
+              handleNavigation={handleNavigation} 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+            />
           </div>
           
           {/* Right side - All action buttons */}
