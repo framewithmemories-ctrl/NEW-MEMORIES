@@ -231,7 +231,7 @@ const HierarchicalNavigation = ({ handleNavigation, activeSection, setActiveSect
         
         {/* Enhanced Mega Menu Dropdown */}
         {activeDropdown === 'shop' && (
-          <div className="absolute top-full left-0 mt-2 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50 animate-in fade-in-0 zoom-in-95 duration-200">
+          <div className="absolute top-full left-0 mt-2 w-screen max-w-4xl bg-white shadow-xl border border-gray-200 rounded-lg z-50">
             <div className="grid grid-cols-3 gap-6 p-6">
               {navigationStructure.map((category, index) => (
                 <div key={category.key} className="space-y-3">
