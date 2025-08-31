@@ -1161,23 +1161,41 @@ const TestimonialsSection = () => {
               <div className="text-2xl font-bold text-gray-900">4.9★ on Google Reviews</div>
             </div>
             <p className="text-gray-600 mb-6">Join 263+ happy customers who rated us 5 stars!</p>
-            <div className="space-x-4">
-              <Button 
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => window.open('https://www.google.com/maps/place/Memories+-+Photo+Frames+%26+Customized+Gift+Shop/@11.0755,76.9983,17z/data=!4m8!3m7!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!8m2!3d11.0755!4d76.9983!9m1!1b1!16s%2Fg%2F11s2y8k8qw?hl=en#lrd=0x3ba859410e43c55f:0xd0f1eaeacbc9bf40,1', '_blank')}
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Read All Reviews
-              </Button>
-              <Button 
-                variant="outline"
-                className="border-green-200 text-green-700 hover:bg-green-50"
-                onClick={() => window.open('https://www.google.com/maps/place/Memories+-+Photo+Frames+%26+Customized+Gift+Shop/@11.0755,76.9983,17z/data=!3m1!5s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!4m16!1m7!3m6!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!2sMemories+-+Photo+Frames+%26+Customized+Gift+Shop!8m2!3d11.0755!4d76.9983!16s%2Fg%2F11s2y8k8qw!3m7!1s0x3ba859410e43c55f:0xd0f1eaeacbc9bf40!2sMemories+-+Photo+Frames+%26+Customized+Gift+Shop!8m2!3d11.0755!4d76.9983!10e5!16s%2Fg%2F11s2y8k8qw?hl=en#lrd=0x3ba859410e43c55f:0xd0f1eaeacbc9bf40,3', '_blank')}
-              >
-                <Star className="w-4 h-4 mr-2" />
-                Write a Review
-              </Button>
-            </div>
+// Enhanced Google Reviews Integration with Fallback
+const handleGoogleReviews = (action) => {
+  const primaryUrls = {
+    read: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,1',
+    write: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,3'
+  };
+  
+  const fallbackUrl = 'https://maps.app.goo.gl/dAKqZ7AjvDzH1rM89';
+  
+  // Try primary URL first
+  const primaryUrl = primaryUrls[action];
+  const newWindow = window.open(primaryUrl, '_blank', 'noopener,noreferrer');
+  
+  // Implement fallback mechanism
+  if (!newWindow) {
+    // If popup blocked or failed, try fallback
+    console.log('Primary URL failed, using fallback');
+    window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  
+  // Check if window loaded properly after a delay
+  setTimeout(() => {
+    try {
+      // If window is still loading or has issues, redirect to fallback
+      if (newWindow.closed || newWindow.location.href === 'about:blank') {
+        newWindow.close();
+        window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
+      }
+    } catch (error) {
+      // Cross-origin restrictions prevent access, assume it loaded properly
+      console.log('Google Reviews opened successfully');
+    }
+  }, 3000);
+};
           </div>
         </div>
       </div>
