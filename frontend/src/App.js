@@ -1197,41 +1197,24 @@ const TestimonialsSection = () => {
               <div className="text-2xl font-bold text-gray-900">4.9★ on Google Reviews</div>
             </div>
             <p className="text-gray-600 mb-6">Join 263+ happy customers who rated us 5 stars!</p>
-// Enhanced Google Reviews Integration with Fallback
-const handleGoogleReviews = (action) => {
-  const primaryUrls = {
-    read: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,1',
-    write: 'https://www.google.com/search?q=Memories+Frames+%26+Gift+Shop+Reviews#lrd=0x3ba8f7bdd51bd4f5:0xaabae459237db24c,3'
-  };
-  
-  const fallbackUrl = 'https://maps.app.goo.gl/dAKqZ7AjvDzH1rM89';
-  
-  // Try primary URL first
-  const primaryUrl = primaryUrls[action];
-  const newWindow = window.open(primaryUrl, '_blank', 'noopener,noreferrer');
-  
-  // Implement fallback mechanism
-  if (!newWindow) {
-    // If popup blocked or failed, try fallback
-    console.log('Primary URL failed, using fallback');
-    window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
-    return;
-  }
-  
-  // Check if window loaded properly after a delay
-  setTimeout(() => {
-    try {
-      // If window is still loading or has issues, redirect to fallback
-      if (newWindow.closed || newWindow.location.href === 'about:blank') {
-        newWindow.close();
-        window.open(fallbackUrl, '_blank', 'noopener,noreferrer');
-      }
-    } catch (error) {
-      // Cross-origin restrictions prevent access, assume it loaded properly
-      console.log('Google Reviews opened successfully');
-    }
-  }, 3000);
-};
+            
+            <div className="space-y-3">
+              <Button 
+                onClick={() => handleGoogleReviews('read')}
+                variant="outline" 
+                className="w-full border-blue-200 text-blue-700 hover:bg-blue-50"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Read All Reviews
+              </Button>
+              <Button 
+                onClick={() => handleGoogleReviews('write')}
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+              >
+                <Star className="w-4 h-4 mr-2" />
+                Write a Review
+              </Button>
+            </div>
           </div>
         </div>
       </div>
