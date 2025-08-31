@@ -668,17 +668,27 @@ const Header = () => {
               <SearchComponent />
             </div>
             <nav className="flex flex-col space-y-2">
+              {/* Enhanced Mobile Navigation Item Component */}
               <button 
-                onClick={() => handleNavigation('/', true)}
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
+                onClick={() => {
+                  handleNavigation('/', true);
+                  setActiveSection('home');
+                }}
+                className={`
+                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
+                  ${activeSection === 'home' || location.pathname === '/' 
+                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
+                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
+                  }
+                `}
               >
                 🏠 Home
               </button>
               
-              {/* Hierarchical Mobile Categories */}
+              {/* Enhanced Hierarchical Mobile Categories */}
               {navigationStructure.map((category, index) => (
                 <div key={category.key} className="border-l-2 border-rose-100 ml-2 pl-3">
-                  <div className="flex items-center space-x-2 py-2 px-2 font-medium text-gray-800 text-sm">
+                  <div className="flex items-center space-x-2 py-2 px-2 font-medium text-gray-800 text-sm hover:bg-rose-50 rounded transition-all duration-200">
                     <span>{category.icon}</span>
                     <span>{category.name}</span>
                   </div>
@@ -686,8 +696,11 @@ const Header = () => {
                     {category.subcategories.map((sub, subIndex) => (
                       <button
                         key={subIndex}
-                        onClick={() => handleNavigation('#shop', true)}
-                        className="block text-xs text-gray-600 hover:text-rose-600 py-1 px-2 hover:bg-rose-50 rounded transition-all text-left bg-transparent border-none cursor-pointer w-full"
+                        onClick={() => {
+                          handleNavigation('#shop', true);
+                          setActiveSection('shop');
+                        }}
+                        className="block text-xs text-gray-600 hover:text-rose-600 py-2 px-3 hover:bg-rose-50 rounded-md transition-all duration-200 text-left bg-transparent border-none cursor-pointer w-full"
                       >
                         {sub}
                       </button>
@@ -697,20 +710,47 @@ const Header = () => {
               ))}
               
               <button 
-                onClick={() => handleNavigation('#customizer', true)}
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
+                onClick={() => {
+                  handleNavigation('#customizer', true);
+                  setActiveSection('customizer');
+                }}
+                className={`
+                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
+                  ${activeSection === 'customizer' 
+                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
+                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
+                  }
+                `}
               >
                 🎨 Customize
               </button>
               <button 
-                onClick={() => handleNavigation('#ai-finder', true)}
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
+                onClick={() => {
+                  handleNavigation('#ai-finder', true);
+                  setActiveSection('ai-finder');
+                }}
+                className={`
+                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
+                  ${activeSection === 'ai-finder' 
+                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
+                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
+                  }
+                `}
               >
                 🤖 Gift Finder
               </button>
               <button 
-                onClick={() => handleNavigation('/about', true)}
-                className="text-gray-700 hover:text-rose-600 font-medium py-2 px-4 hover:bg-rose-50 rounded-lg transition-all text-left bg-transparent border-none cursor-pointer w-full"
+                onClick={() => {
+                  handleNavigation('/about', true);
+                  setActiveSection('about');
+                }}
+                className={`
+                  font-medium py-3 px-4 rounded-lg transition-all duration-300 text-left bg-transparent border-none cursor-pointer w-full
+                  ${activeSection === 'about' || location.pathname === '/about' 
+                    ? 'text-rose-600 bg-rose-100 shadow-sm border-l-4 border-rose-500' 
+                    : 'text-gray-700 hover:text-rose-600 hover:bg-rose-50'
+                  }
+                `}
               >
                 ℹ️ About Us
               </button>
