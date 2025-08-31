@@ -809,7 +809,7 @@ const UserProfileButton = () => {
           break;
           
         case 'privacy':
-          contentDiv.innerHTML = \`
+          contentDiv.innerHTML = `
             <div class="space-y-6">
               <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">Privacy & Data Management</h3>
@@ -820,11 +820,11 @@ const UserProfileButton = () => {
                     <h4 class="font-medium mb-3">Privacy Consent</h4>
                     <div class="space-y-3">
                       <label class="flex items-start space-x-3">
-                        <input type="checkbox" \${userData.privacy_consent?.marketing_consent ? 'checked' : ''} class="mt-1">
+                        <input type="checkbox" ${userData.privacy_consent?.marketing_consent ? 'checked' : ''} class="mt-1">
                         <span class="text-sm">I agree to receive marketing communications and promotional offers</span>
                       </label>
                       <label class="flex items-start space-x-3">
-                        <input type="checkbox" \${userData.privacy_consent?.reminder_consent ? 'checked' : ''} class="mt-1">
+                        <input type="checkbox" ${userData.privacy_consent?.reminder_consent ? 'checked' : ''} class="mt-1">
                         <span class="text-sm">I agree to receive reminders for important dates I add</span>
                       </label>
                     </div>
@@ -860,7 +860,7 @@ const UserProfileButton = () => {
                 </div>
               </div>
             </div>
-          \`;
+          `;
           break;
       }
     };
