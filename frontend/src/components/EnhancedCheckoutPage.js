@@ -311,15 +311,15 @@ export const EnhancedCheckoutPage = () => {
           
           {/* Enhanced Shop Logo and Branding - Universal version */}
           <div className="text-center mb-8 border-b-2 border-dashed border-gray-300 pb-6">
-            {/* Logo */}
-            <div className="w-24 h-24 mx-auto mb-4">
-              <div className="w-full h-full bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-3xl shadow-lg">
-                M
-              </div>
+            {/* Full Business Logo */}
+            <div className="w-32 h-32 mx-auto mb-4 flex items-center justify-center">
+              <BusinessLogo size="w-28 h-28" />
             </div>
             
-            {/* Business Name */}
-            <div className="font-bold text-2xl tracking-widest mb-2 text-gray-900">MEMORIES</div>
+            {/* Business Name with Full Design */}
+            <div className="mb-4">
+              <BusinessName />
+            </div>
             
             {/* Business Type */}
             <div className="text-sm text-gray-700 font-medium mb-2">Photo Frames & Custom Gift Shop</div>
