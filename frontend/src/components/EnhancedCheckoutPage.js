@@ -271,7 +271,7 @@ export const EnhancedCheckoutPage = () => {
       
       // Navigate back to home after success
       setTimeout(() => {
-        window.location.href = '/';
+        navigate('/');
       }, 2000);
       
     } catch (error) {
