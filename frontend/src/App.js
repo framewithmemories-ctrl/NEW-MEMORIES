@@ -694,36 +694,36 @@ const UserProfileButton = () => {
       
       switch(tabName) {
         case 'profile':
-          contentDiv.innerHTML = \`
+          contentDiv.innerHTML = `
             <div class="space-y-6">
               <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">Personal Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" value="\${userData.name || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                    <input type="text" value="${userData.name || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" value="\${userData.email || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                    <input type="email" value="${userData.email || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                    <input type="tel" value="\${userData.phone || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                    <input type="tel" value="${userData.phone || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                    <input type="date" value="\${userData.date_of_birth || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                    <input type="date" value="${userData.date_of_birth || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
                   </div>
                 </div>
                 <div class="mt-4">
                   <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                  <textarea rows="2" class="w-full border border-gray-300 rounded-md px-3 py-2">\${userData.address || ''}</textarea>
+                  <textarea rows="2" class="w-full border border-gray-300 rounded-md px-3 py-2">${userData.address || ''}</textarea>
                 </div>
                 <button class="mt-4 bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600">Save Changes</button>
               </div>
             </div>
-          \`;
+          `;
           break;
           
         case 'dates':
