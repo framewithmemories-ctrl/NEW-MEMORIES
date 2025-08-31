@@ -374,62 +374,23 @@ export const ProductGrid = ({ products }) => {
     { name: 'Print Shop', icon: <Sparkles className="w-4 h-4" /> }
   ];
   
+  // Combine all product catalogs
   const enhancedProducts = [
     ...products,
+    ...expandedProductCatalog,
+    ...expandedProductCatalogPart2,
+    ...expandedProductCatalogPart3,
+    // Keep existing enhanced products for compatibility
     {
       id: 'frame-wooden-classic',
       name: 'Classic Wooden Frame',
       description: 'Handcrafted wooden frame perfect for cherished memories',
-      category: 'frames',
+      category: 'photo-frames',
       base_price: 899,
       image_url: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=400&h=300',
       sizes: [{ name: '8x10', price_add: 0 }, { name: '12x16', price_add: 300 }],
       materials: [{ name: 'Oak', price_add: 0 }, { name: 'Mahogany', price_add: 200 }],
       colors: [{ name: 'Natural', price_add: 0 }, { name: 'Dark Brown', price_add: 0 }]
-    },
-    {
-      id: 'frame-acrylic-premium',
-      name: 'Premium Acrylic Frame',
-      description: 'Modern acrylic frame with crystal-clear finish',
-      category: 'frames',
-      base_price: 1299,
-      image_url: 'https://images.unsplash.com/photo-1465161191540-aac346fcbaff?auto=format&fit=crop&w=400&h=300',
-      sizes: [{ name: '8x10', price_add: 0 }, { name: '12x16', price_add: 400 }],
-      materials: [{ name: 'Clear Acrylic', price_add: 0 }],
-      colors: [{ name: 'Clear', price_add: 0 }]
-    },
-    {
-      id: 'mug-custom-photo',
-      name: 'Custom Photo Mug',
-      description: 'Personalized ceramic mug with your favorite photo',
-      category: 'mugs',
-      base_price: 349,
-      image_url: 'https://images.unsplash.com/photo-1505841468529-d99f8d82ef8f?auto=format&fit=crop&w=400&h=300',
-      sizes: [{ name: '11oz', price_add: 0 }, { name: '15oz', price_add: 50 }],
-      materials: [{ name: 'Ceramic', price_add: 0 }],
-      colors: [{ name: 'White', price_add: 0 }, { name: 'Black', price_add: 25 }]
-    },
-    {
-      id: 'tshirt-custom',
-      name: 'Custom Printed T-Shirt',
-      description: 'Premium quality cotton t-shirt with sublimation printing',
-      category: 't-shirts',
-      base_price: 299,
-      sizes: [{ name: 'S', price_add: 0 }, { name: 'M', price_add: 0 }, { name: 'L', price_add: 50 }, { name: 'XL', price_add: 100 }],
-      materials: [{ name: 'Cotton', price_add: 0 }, { name: 'Cotton Blend', price_add: 50 }],
-      colors: [{ name: 'White', price_add: 0 }, { name: 'Black', price_add: 0 }, { name: 'Navy', price_add: 0 }],
-      image_url: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=400&h=300'
-    },
-    {
-      id: 'corporate-gifts',
-      name: 'Corporate Gift Set',
-      description: 'Professional corporate gifting solutions with custom branding',
-      category: 'corporate',
-      base_price: 999,
-      sizes: [{ name: 'Standard Pack', price_add: 0 }, { name: 'Premium Pack', price_add: 500 }],
-      materials: [{ name: 'Basic Package', price_add: 0 }, { name: 'Deluxe Package', price_add: 300 }],
-      colors: [{ name: 'Corporate Blue', price_add: 0 }, { name: 'Professional Black', price_add: 0 }],
-      image_url: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=400&h=300'
     }
   ];
 
