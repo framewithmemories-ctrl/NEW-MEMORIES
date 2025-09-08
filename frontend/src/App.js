@@ -659,7 +659,27 @@ const UserProfileButton = () => {
     `;
     document.body.appendChild(profileModal);
     
-    // Add tab switching functionality
+    // Add ESC and click outside functionality
+    const handleEscClose = (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('react-profile-modal');
+        if (modal) {
+          modal.remove();
+          document.removeEventListener('keydown', handleEscClose);
+        }
+      }
+    };
+    document.addEventListener('keydown', handleEscClose);
+    
+    const modal = document.getElementById('react-profile-modal');
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+          document.removeEventListener('keydown', handleEscClose);
+        }
+      });
+    }
     window.showTab = function(tabName) {
       // Update tab styles
       document.querySelectorAll('.profile-tab').forEach(tab => {
