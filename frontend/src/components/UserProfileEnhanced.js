@@ -11,6 +11,7 @@ import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { toast } from "sonner";
 import axios from "axios";
+import CloudinaryPhotoUpload from "./CloudinaryPhotoUpload";
 import { 
   User, 
   Calendar, 
@@ -32,7 +33,9 @@ import {
   Clock,
   Lock,
   Eye,
-  EyeOff
+  EyeOff,
+  Camera,
+  Image as ImageIcon
 } from "lucide-react";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
