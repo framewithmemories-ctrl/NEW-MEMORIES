@@ -639,7 +639,7 @@ const UserProfileButton = () => {
     toast.success('Successfully logged out');
   };
   
-  const showEnhancedProfileManager = () => {
+  const showReactProfileModal = () => {
     // Show the comprehensive profile manager with all Phase 1 features
     const profileDialog = document.createElement('div');
     profileDialog.innerHTML = `
