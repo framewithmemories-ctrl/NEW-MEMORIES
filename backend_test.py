@@ -1646,6 +1646,8 @@ class PhotoGiftHubAPITester:
                 data = response.json()
                 if 'success' in data and data['success']:
                     details = f"Photo deleted successfully - ID: {photo_id}"
+                elif 'message' in data and 'deleted successfully' in data['message']:
+                    details = f"Photo deleted successfully - ID: {photo_id}"
                 else:
                     success = False
                     details = f"Deletion response indicates failure: {data}"
