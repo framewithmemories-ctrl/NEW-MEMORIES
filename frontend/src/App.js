@@ -1006,7 +1006,7 @@ const UserProfileButton = () => {
                   className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
                   onClick={() => {
                     setShowDropdown(false);
-                    // Show the actual React component instead of the legacy HTML modal
+                    // Show the working React profile modal
                     showReactProfileModal();
                   }}
                 >
