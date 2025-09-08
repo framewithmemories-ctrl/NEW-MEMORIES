@@ -2280,10 +2280,10 @@ class PhotoGiftHubAPITester:
 def main():
     tester = PhotoGiftHubAPITester()
     
-    # Run checkout-focused tests as requested
-    print("🎯 Running Checkout & Order Processing Focused Tests")
+    # Run integration tests for Cloudinary and Email as requested
+    print("🔗 Running Cloudinary & Email Integration Tests")
     print("=" * 60)
-    success = tester.run_checkout_focused_tests()
+    success = tester.run_integration_tests()
     
     return 0 if success else 1
 
