@@ -425,6 +425,57 @@ export const UserProfileEnhanced = () => {
           </Card>
         </TabsContent>
 
+        {/* Photos Tab - NEW CLOUDINARY INTEGRATION */}
+        <TabsContent value="photos">
+          <div className="space-y-6">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">📸 My Photos</h2>
+              <p className="text-gray-600">Upload and manage your photos securely with Cloudinary</p>
+            </div>
+            
+            <CloudinaryPhotoUpload 
+              userId={userId}
+              showGallery={true}
+              onUploadSuccess={(data) => {
+                console.log('Photo uploaded successfully:', data);
+                toast.success('Photo ready for use in your custom frames! 🎉');
+              }}
+            />
+            
+            {/* Features Highlight */}
+            <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+              <CardContent className="pt-4">
+                <div className="text-center space-y-3">
+                  <div className="flex justify-center space-x-4">
+                    <div className="text-center">
+                      <div className="bg-blue-500 rounded-full p-3 mx-auto mb-2 w-12 h-12 flex items-center justify-center">
+                        <ImageIcon className="w-6 h-6 text-white" />
+                      </div>
+                      <p className="text-sm font-medium">Secure Storage</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="bg-purple-500 rounded-full p-3 mx-auto mb-2 w-12 h-12 flex items-center justify-center">
+                        <Lock className="w-6 h-6 text-white" />
+                      </div>
+                      <p className="text-sm font-medium">Private Access</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="bg-green-500 rounded-full p-3 mx-auto mb-2 w-12 h-12 flex items-center justify-center">
+                        <Check className="w-6 h-6 text-white" />
+                      </div>
+                      <p className="text-sm font-medium">Auto Optimization</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    Your photos are stored securely with Cloudinary, automatically optimized for web and print, 
+                    and only accessible to you with signed URLs.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
         {/* Important Dates Tab */}
         <TabsContent value="dates">
           <Card>
