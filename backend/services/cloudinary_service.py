@@ -12,9 +12,20 @@ logger = logging.getLogger(__name__)
 class CloudinaryService:
     def __init__(self):
         """Initialize Cloudinary service with environment configuration"""
+        # Use environment variable first, fallback to hardcoded for testing
+        cloudinary_url = os.getenv('CLOUDINARY_URL', 'cloudinary://156525119115833:asHKc2dnS_Ys2AHqwNCkEkH2nBM@dgniboqvx')
+        
         cloudinary.config(
-            cloudinary_url="cloudinary://156525119115833:asHKc2dnS_Ys2AHqwNCkEkH2nBM@dgniboqvx"
+            cloudinary_url=cloudinary_url
         )
+        
+        # Also set individual config values for better compatibility
+        cloudinary.config(
+            cloud_name="dgniboqvx",
+            api_key="156525119115833", 
+            api_secret="asHKc2dnS_Ys2AHqwNCkEkH2nBM"
+        )
+        
         self.cloud_name = "dgniboqvx"
         self.auto_delete_days = 30  # Auto-delete photos after 30 days unless saved
         
