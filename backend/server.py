@@ -798,10 +798,7 @@ async def save_user_photo(user_id: str, photo: SavedPhotoCreate):
     await db.user_photos.insert_one(photo_obj.dict())
     return photo_obj
 
-@api_router.get("/users/{user_id}/photos")
-async def get_user_photos(user_id: str):
-    photos = await db.user_photos.find({"user_id": user_id}).to_list(100)
-    return [SavedPhoto(**photo) for photo in photos]
+# Old photo endpoint removed - replaced by Cloudinary integration
 
 @api_router.delete("/users/{user_id}/photos/{photo_id}")
 async def delete_user_photo(user_id: str, photo_id: str):
