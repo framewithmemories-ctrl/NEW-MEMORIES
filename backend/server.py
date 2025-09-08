@@ -15,6 +15,10 @@ import base64
 import io
 from PIL import Image
 
+# Import our new services
+from services.cloudinary_service import cloudinary_service
+from services.email_service import email_service
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
