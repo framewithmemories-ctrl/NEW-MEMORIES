@@ -640,45 +640,24 @@ const UserProfileButton = () => {
   };
   
   const showReactProfileModal = () => {
-    // Show the comprehensive profile manager with all Phase 1 features
-    const profileDialog = document.createElement('div');
-    profileDialog.innerHTML = `
-      <div id="profile-manager-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    // Create a proper React modal for the enhanced profile
+    const profileModal = document.createElement('div');
+    profileModal.innerHTML = `
+      <div id="react-profile-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg max-w-6xl max-h-[95vh] overflow-hidden m-4 relative">
-          <button onclick="document.getElementById('profile-manager-modal').remove()" class="absolute top-4 right-4 z-10 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold shadow-md">
+          <button onclick="document.getElementById('react-profile-modal').remove()" class="absolute top-4 right-4 z-10 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold shadow-md">
             ✕
           </button>
-          <div class="p-6 overflow-auto max-h-[95vh]">
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-gray-900 mb-2">Enhanced Profile Manager</h1>
-              <p class="text-gray-600">Manage all your profile features and preferences</p>
+          <div id="react-profile-content" class="p-6 overflow-auto max-h-[95vh]">
+            <div class="text-center py-8">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-600 mx-auto mb-4"></div>
+              <p class="text-gray-600">Loading Enhanced Profile...</p>
             </div>
-            
-            <!-- Tab Navigation -->
-            <div class="border-b border-gray-200 mb-6">
-              <nav class="-mb-px flex space-x-8">
-                <button onclick="showTab('profile')" id="tab-profile" class="profile-tab py-2 px-1 border-b-2 border-rose-500 font-medium text-sm text-rose-600">
-                  👤 Profile
-                </button>
-                <button onclick="showTab('dates')" id="tab-dates" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
-                  📅 Important Dates
-                </button>
-                <button onclick="showTab('preferences')" id="tab-preferences" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
-                  ⚙️ Preferences
-                </button>
-                <button onclick="showTab('privacy')" id="tab-privacy" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
-                  🔒 Privacy & Data
-                </button>
-              </nav>
-            </div>
-            
-            <!-- Tab Content -->
-            <div id="tab-content"></div>
           </div>
         </div>
       </div>
     `;
-    document.body.appendChild(profileDialog);
+    document.body.appendChild(profileModal);
     
     // Add tab switching functionality
     window.showTab = function(tabName) {
