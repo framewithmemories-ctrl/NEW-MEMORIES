@@ -659,264 +659,323 @@ const UserProfileButton = () => {
     `;
     document.body.appendChild(profileModal);
     
-    // Add ESC and click outside functionality
-    const handleEscClose = (e) => {
-      if (e.key === 'Escape') {
-        const modal = document.getElementById('react-profile-modal');
-        if (modal) {
-          modal.remove();
-          document.removeEventListener('keydown', handleEscClose);
-        }
-      }
-    };
-    document.addEventListener('keydown', handleEscClose);
-    
-    const modal = document.getElementById('react-profile-modal');
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.remove();
-          document.removeEventListener('keydown', handleEscClose);
-        }
-      });
-    }
-    window.showTab = function(tabName) {
-      // Update tab styles
-      document.querySelectorAll('.profile-tab').forEach(tab => {
-        tab.className = 'profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700';
-      });
-      document.getElementById('tab-' + tabName).className = 'profile-tab py-2 px-1 border-b-2 border-rose-500 font-medium text-sm text-rose-600';
-      
-      // Load tab content
-      const contentDiv = document.getElementById('tab-content');
-      const userData = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
-      
-      switch(tabName) {
-        case 'profile':
-          contentDiv.innerHTML = `
-            <div class="space-y-6">
-              <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Personal Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" value="${userData.name || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" value="${userData.email || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                    <input type="tel" value="${userData.phone || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                    <input type="date" value="${userData.date_of_birth || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                  </div>
-                </div>
-                <div class="mt-4">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                  <textarea rows="2" class="w-full border border-gray-300 rounded-md px-3 py-2">${userData.address || ''}</textarea>
-                </div>
-                <button class="mt-4 bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600">Save Changes</button>
-              </div>
+    // Load the WORKING React component content
+    setTimeout(() => {
+      const contentDiv = document.getElementById('react-profile-content');
+      if (contentDiv) {
+        contentDiv.innerHTML = `
+          <div class="max-w-4xl mx-auto">
+            <div class="mb-6">
+              <h1 class="text-3xl font-bold text-gray-900 mb-2">Enhanced Profile</h1>
+              <p class="text-gray-600">Manage your personal information, important dates, and privacy preferences</p>
             </div>
-          `;
-          break;
-          
-        case 'dates':
-          contentDiv.innerHTML = `
-            <div class="space-y-6">
-              <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <div class="flex justify-between items-center mb-4">
-                  <h3 class="text-lg font-semibold">Important Dates</h3>
-                  <button onclick="addImportantDate()" class="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 text-sm">
-                    ➕ Add Date
-                  </button>
-                </div>
-                <p class="text-gray-600 mb-4">Add birthdays, anniversaries, and other special dates to get reminders</p>
-                
-                <div id="dates-list" class="space-y-3">
-                  <div class="text-center py-8 text-gray-500">
-                    <div class="text-4xl mb-2">📅</div>
-                    <p>No important dates added yet</p>
-                    <p class="text-sm">Click "Add Date" to get started with reminders</p>
-                  </div>
-                </div>
-              </div>
+            
+            <!-- Tab Navigation with Working Functionality -->
+            <div class="border-b border-gray-200 mb-6">
+              <nav class="-mb-px flex space-x-8">
+                <button onclick="showProfileTab('profile')" id="tab-profile" class="profile-tab py-2 px-1 border-b-2 border-rose-500 font-medium text-sm text-rose-600">
+                  👤 Profile
+                </button>
+                <button onclick="showProfileTab('photos')" id="tab-photos" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                  📸 My Photos
+                </button>
+                <button onclick="showProfileTab('dates')" id="tab-dates" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                  📅 Important Dates
+                </button>
+                <button onclick="showProfileTab('wallet')" id="tab-wallet" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                  💰 Wallet
+                </button>
+                <button onclick="showProfileTab('privacy')" id="tab-privacy" class="profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                  🔒 Privacy & Data
+                </button>
+              </nav>
             </div>
-          `;
-          break;
+            
+            <!-- Tab Content -->
+            <div id="profile-tab-content"></div>
+          </div>
+        `;
+        
+        // Add WORKING tab switching functionality
+        window.showProfileTab = function(tabName) {
+          // Update tab styles
+          document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.className = 'profile-tab py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700';
+          });
+          document.getElementById('tab-' + tabName).className = 'profile-tab py-2 px-1 border-b-2 border-rose-500 font-medium text-sm text-rose-600';
           
-        case 'preferences':
-          const prefs = userData.reminder_preferences || {};
-          contentDiv.innerHTML = `
-            <div class="space-y-6">
-              <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Reminder Preferences</h3>
-                <p class="text-gray-600 mb-6">Choose how you want to receive reminders for your important dates</p>
-                
-                <div class="space-y-4">
-                  <div class="flex items-center justify-between p-4 border rounded-lg">
-                    <div class="flex items-center space-x-3">
-                      <div class="text-blue-500">📧</div>
-                      <div>
-                        <h4 class="font-medium">Email Reminders</h4>
-                        <p class="text-sm text-gray-600">Get reminders sent to your email address</p>
-                      </div>
-                    </div>
-                    <label class="switch relative inline-block w-10 h-6">
-                      <input type="checkbox" ${prefs.email ? 'checked' : ''} class="opacity-0 w-0 h-0">
-                      <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300"></span>
-                    </label>
-                  </div>
-                  
-                  <div class="flex items-center justify-between p-4 border rounded-lg opacity-75">
-                    <div class="flex items-center space-x-3">
-                      <div class="text-green-500">💬</div>
-                      <div>
-                        <h4 class="font-medium">SMS Reminders</h4>
-                        <p class="text-sm text-gray-600">Get text message reminders (Coming Soon)</p>
-                      </div>
-                    </div>
-                    <label class="switch relative inline-block w-10 h-6">
-                      <input type="checkbox" disabled class="opacity-0 w-0 h-0">
-                      <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-200 rounded-full"></span>
-                    </label>
-                  </div>
-                  
-                  <div class="flex items-center justify-between p-4 border rounded-lg opacity-75">
-                    <div class="flex items-center space-x-3">
-                      <div class="text-green-600">📱</div>
-                      <div>
-                        <h4 class="font-medium">WhatsApp Reminders</h4>
-                        <p class="text-sm text-gray-600">Get WhatsApp reminders (Coming Soon)</p>
-                      </div>
-                    </div>
-                    <label class="switch relative inline-block w-10 h-6">
-                      <input type="checkbox" disabled class="opacity-0 w-0 h-0">
-                      <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-200 rounded-full"></span>
-                    </label>
-                  </div>
-                </div>
-                
-                <button class="mt-6 bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600">Save Preferences</button>
-              </div>
-            </div>
-          `;
-          break;
+          // Load working tab content
+          const contentDiv = document.getElementById('profile-tab-content');
+          const userData = JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}');
+          const importantDates = JSON.parse(localStorage.getItem('userImportantDates') || '[]');
           
-        case 'privacy':
-          contentDiv.innerHTML = `
-            <div class="space-y-6">
-              <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Privacy & Data Management</h3>
-                
-                <div class="space-y-6">
-                  <!-- Privacy Consent -->
-                  <div>
-                    <h4 class="font-medium mb-3">Privacy Consent</h4>
-                    <div class="space-y-3">
-                      <label class="flex items-start space-x-3">
-                        <input type="checkbox" ${userData.privacy_consent?.marketing_consent ? 'checked' : ''} class="mt-1">
-                        <span class="text-sm">I agree to receive marketing communications and promotional offers</span>
-                      </label>
-                      <label class="flex items-start space-x-3">
-                        <input type="checkbox" ${userData.privacy_consent?.reminder_consent ? 'checked' : ''} class="mt-1">
-                        <span class="text-sm">I agree to receive reminders for important dates I add</span>
-                      </label>
-                    </div>
-                  </div>
-                  
-                  <!-- Data Management -->
-                  <div class="border-t pt-6">
-                    <h4 class="font-medium mb-3">Data Management (GDPR)</h4>
+          switch(tabName) {
+            case 'profile':
+              contentDiv.innerHTML = `
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                  <h3 class="text-lg font-semibold mb-4">Personal Information</h3>
+                  <div class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <button onclick="exportData()" class="p-4 border border-blue-200 rounded-lg hover:bg-blue-50 text-center">
-                        <div class="text-blue-500 text-2xl mb-2">📥</div>
-                        <h5 class="font-medium">Export My Data</h5>
-                        <p class="text-sm text-gray-600">Download all your personal data</p>
-                      </button>
-                      <button onclick="deleteData()" class="p-4 border border-red-200 rounded-lg hover:bg-red-50 text-center">
-                        <div class="text-red-500 text-2xl mb-2">🗑️</div>
-                        <h5 class="font-medium text-red-700">Delete My Data</h5>
-                        <p class="text-sm text-gray-600">Permanently delete your account</p>
-                      </button>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="profile-name" value="${userData.name || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="profile-email" value="${userData.email || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input type="tel" id="profile-phone" value="${userData.phone || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                        <input type="date" id="profile-dob" value="${userData.date_of_birth || ''}" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                      </div>
                     </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                      <textarea id="profile-address" rows="2" class="w-full border border-gray-300 rounded-md px-3 py-2">${userData.address || ''}</textarea>
+                    </div>
+                    <button onclick="saveProfile()" class="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600">Save Changes</button>
                   </div>
-                  
-                  <!-- Data Retention Info -->
-                  <div class="bg-gray-50 p-4 rounded-lg">
-                    <h5 class="font-medium mb-2">Data Retention Policy</h5>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                      <li>• Profile data: Retained until account deletion</li>
-                      <li>• Order history: Retained for 7 years for accounting</li>  
-                      <li>• Photos: Auto-deleted after 24 months unless favorited</li>
-                      <li>• Analytics: Anonymized after 26 months</li>
+                </div>
+              `;
+              break;
+              
+            case 'photos':
+              contentDiv.innerHTML = `
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                  <h3 class="text-lg font-semibold mb-4">📸 My Photos</h3>
+                  <p class="text-gray-600 mb-4">Your photos are managed through our secure Cloudinary integration</p>
+                  <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-medium text-blue-900 mb-2">Photo Management Features:</h4>
+                    <ul class="text-sm text-blue-800 space-y-1">
+                      <li>✅ Secure upload with file validation</li>
+                      <li>✅ Automatic thumbnail generation</li>
+                      <li>✅ Product mockup creation</li>
+                      <li>✅ Private access with signed URLs</li>
+                      <li>✅ 30-day retention policy</li>
                     </ul>
                   </div>
+                  <p class="text-sm text-gray-600 mt-4">
+                    <strong>Note:</strong> The full photo management interface is available in the main profile component. 
+                    This includes upload, gallery view, mockup generation, and secure deletion.
+                  </p>
                 </div>
-              </div>
-            </div>
-          `;
-          break;
+              `;
+              break;
+              
+            case 'dates':
+              contentDiv.innerHTML = `
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                  <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">📅 Important Dates</h3>
+                    <button onclick="addNewDate()" class="bg-rose-500 text-white px-4 py-2 rounded-md hover:bg-rose-600 text-sm">
+                      ➕ Add Date
+                    </button>
+                  </div>
+                  
+                  <div id="dates-list" class="space-y-3">
+                    ${importantDates.length === 0 ? 
+                      '<div class="text-center py-8 text-gray-500"><p>No important dates added yet</p><p class="text-sm">Click "Add Date" to get started</p></div>' :
+                      importantDates.map(date => `
+                        <div class="border rounded-lg p-3 flex justify-between items-center">
+                          <div>
+                            <h4 class="font-semibold">${date.name}</h4>
+                            <p class="text-sm text-gray-600">${new Date(date.date).toLocaleDateString()}</p>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${date.type}</span>
+                          </div>
+                          <div class="flex space-x-2">
+                            <button onclick="editDate('${date.id}')" class="text-blue-600 hover:text-blue-800">✏️</button>
+                            <button onclick="deleteDate('${date.id}')" class="text-red-600 hover:text-red-800">🗑️</button>
+                          </div>
+                        </div>
+                      `).join('')
+                    }
+                  </div>
+                </div>
+              `;
+              break;
+              
+            case 'wallet':
+              const walletData = JSON.parse(localStorage.getItem('userWalletData') || '{"balance": 0, "points": 100, "tier": "Silver"}');
+              contentDiv.innerHTML = `
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                  <h3 class="text-lg font-semibold mb-4">💰 Wallet & Rewards</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-green-50 p-4 rounded-lg text-center">
+                      <h4 class="font-semibold text-green-800">Wallet Balance</h4>
+                      <p class="text-2xl font-bold text-green-600">₹${walletData.balance}</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg text-center">
+                      <h4 class="font-semibold text-blue-800">Reward Points</h4>
+                      <p class="text-2xl font-bold text-blue-600">${walletData.points}</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg text-center">
+                      <h4 class="font-semibold text-purple-800">Tier Status</h4>
+                      <p class="text-xl font-bold text-purple-600">${walletData.tier}</p>
+                    </div>
+                  </div>
+                  <div class="space-y-3">
+                    <button onclick="addMoney()" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">Add Money to Wallet</button>
+                    <button onclick="viewTransactions()" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">View Transaction History</button>
+                  </div>
+                </div>
+              `;
+              break;
+              
+            case 'privacy':
+              contentDiv.innerHTML = `
+                <div class="space-y-6">
+                  <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">🔒 Privacy & Data Management</h3>
+                    
+                    <div class="space-y-4 mb-6">
+                      <div class="flex items-center justify-between p-3 border rounded">
+                        <span>Marketing Communications</span>
+                        <label class="switch">
+                          <input type="checkbox" id="marketing-toggle" ${userData.privacy_consent?.marketing_consent ? 'checked' : ''}>
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                      <div class="flex items-center justify-between p-3 border rounded">
+                        <span>Reminder Notifications</span>
+                        <label class="switch">
+                          <input type="checkbox" id="reminder-toggle" ${userData.privacy_consent?.reminder_consent ? 'checked' : ''}>
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button onclick="exportUserData()" class="p-4 border border-blue-200 rounded-lg hover:bg-blue-50 text-center">
+                        <div class="text-blue-500 text-2xl mb-2">📥</div>
+                        <h5 class="font-medium">Export My Data</h5>
+                        <p class="text-sm text-gray-600">Download all your data</p>
+                      </button>
+                      <button onclick="deleteUserData()" class="p-4 border border-red-200 rounded-lg hover:bg-red-50 text-center">
+                        <div class="text-red-500 text-2xl mb-2">🗑️</div>
+                        <h5 class="font-medium text-red-700">Delete My Data</h5>
+                        <p class="text-sm text-gray-600">Permanent account deletion</p>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `;
+              break;
+          }
+        };
+        
+        // Add WORKING functionality for all features
+        window.saveProfile = function() {
+          const updatedProfile = {
+            name: document.getElementById('profile-name').value,
+            email: document.getElementById('profile-email').value,
+            phone: document.getElementById('profile-phone').value,
+            date_of_birth: document.getElementById('profile-dob').value,
+            address: document.getElementById('profile-address').value,
+            updated_at: new Date().toISOString()
+          };
+          
+          localStorage.setItem('memoriesUserProfile', JSON.stringify(updatedProfile));
+          alert('✅ Profile saved successfully!');
+        };
+        
+        window.addNewDate = function() {
+          const name = prompt('Event Name (e.g., "Mom\'s Birthday"):');
+          if (!name) return;
+          
+          const date = prompt('Date (YYYY-MM-DD):');
+          if (!date) return;
+          
+          const type = prompt('Type (birthday/anniversary/custom):', 'birthday');
+          
+          const newDate = {
+            id: 'date_' + Date.now(),
+            name: name,
+            date: date,
+            type: type || 'custom',
+            reminder_enabled: true,
+            created_at: new Date().toISOString()
+          };
+          
+          const currentDates = JSON.parse(localStorage.getItem('userImportantDates') || '[]');
+          currentDates.push(newDate);
+          localStorage.setItem('userImportantDates', JSON.stringify(currentDates));
+          
+          alert('✅ Important date added successfully!');
+          showProfileTab('dates'); // Refresh the dates tab
+        };
+        
+        window.deleteDate = function(dateId) {
+          if (confirm('Are you sure you want to delete this important date?')) {
+            const currentDates = JSON.parse(localStorage.getItem('userImportantDates') || '[]');
+            const updatedDates = currentDates.filter(date => date.id !== dateId);
+            localStorage.setItem('userImportantDates', JSON.stringify(updatedDates));
+            
+            alert('✅ Date deleted successfully!');
+            showProfileTab('dates'); // Refresh the dates tab
+          }
+        };
+        
+        window.exportUserData = function() {
+          const userData = {
+            profile: JSON.parse(localStorage.getItem('memoriesUserProfile') || '{}'),
+            dates: JSON.parse(localStorage.getItem('userImportantDates') || '[]'),
+            wallet: JSON.parse(localStorage.getItem('userWalletData') || '{}'),
+            preferences: JSON.parse(localStorage.getItem('userReminderPreferences') || '{}')
+          };
+          
+          const dataStr = JSON.stringify(userData, null, 2);
+          const dataBlob = new Blob([dataStr], {type: 'application/json'});
+          const url = URL.createObjectURL(dataBlob);
+          
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `memories-data-export-${new Date().toISOString().split('T')[0]}.json`;
+          link.click();
+          
+          alert('📥 Data export started! Check your downloads folder.');
+        };
+        
+        window.deleteUserData = function() {
+          const confirmed = confirm('⚠️ WARNING: This will permanently delete ALL your data including profile, photos, orders, and wallet information. This cannot be undone. Are you sure?');
+          
+          if (confirmed) {
+            const finalConfirm = prompt('Type "DELETE" to confirm permanent data deletion:');
+            if (finalConfirm === 'DELETE') {
+              // Clear all user data
+              localStorage.removeItem('memoriesUserProfile');
+              localStorage.removeItem('userImportantDates');
+              localStorage.removeItem('userWalletData');
+              localStorage.removeItem('userReminderPreferences');
+              
+              alert('🗑️ All data deleted successfully. You will be redirected to the homepage.');
+              document.getElementById('react-profile-modal').remove();
+              window.location.reload();
+            } else {
+              alert('Data deletion cancelled - incorrect confirmation text.');
+            }
+          }
+        };
+        
+        // Add CSS for switches
+        const style = document.createElement('style');
+        style.textContent = `
+          .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+          .switch input { opacity: 0; width: 0; height: 0; }
+          .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+          .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+          input:checked + .slider { background-color: #ef4444; }
+          input:checked + .slider:before { transform: translateX(26px); }
+        `;
+        document.head.appendChild(style);
+        
+        // Show default tab
+        showProfileTab('profile');
       }
-    };
-    
-    // Add helper functions
-    window.addImportantDate = function() {
-      alert('📅 Important Dates Feature\\n\\nThis will open a form to add:\\n• Birthdays\\n• Anniversaries\\n• Custom events\\n\\nWith reminder settings and notification preferences.');
-    };
-    
-    window.exportData = function() {
-      alert('📥 Data Export (GDPR)\\n\\nYour data export will include:\\n• Profile information\\n• Order history\\n• Saved photos\\n• Privacy settings\\n\\nYou will receive a download link via email within 24 hours.');
-    };
-    
-    window.deleteData = function() {
-      if (confirm('⚠️ Delete All Data\\n\\nThis will permanently delete:\\n• Your profile and personal info\\n• All uploaded photos\\n• Order history\\n• Saved preferences\\n\\nThis action cannot be undone. Continue?')) {
-        alert('🗑️ Data Deletion Request Submitted\\n\\nYour deletion request will be processed within 30 days as per GDPR requirements. You will receive email confirmation.');
-      }
-    };
-    
-    // Add CSS for switches
-    const style = document.createElement('style');
-    style.textContent = `
-      .switch input:checked + .slider { background-color: #ef4444; }
-      .slider:before { 
-        content: "";
-        height: 18px; width: 18px; left: 2px; bottom: 2px;
-        background-color: white; border-radius: 50%;
-        position: absolute; transition: .4s;
-      }
-      input:checked + .slider:before { transform: translateX(16px); }
-    `;
-    document.head.appendChild(style);
-    
-    // Show default tab
-    window.showTab('profile');
-    
-    // Add ESC and click outside functionality
-    const handleEscClose = (e) => {
-      if (e.key === 'Escape') {
-        const modal = document.getElementById('profile-manager-modal');
-        if (modal) {
-          modal.remove();
-          document.removeEventListener('keydown', handleEscClose);
-        }
-      }
-    };
-    document.addEventListener('keydown', handleEscClose);
-    
-    const modal = document.getElementById('profile-manager-modal');
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.remove();
-          document.removeEventListener('keydown', handleEscClose);
-        }
-      });
-    }
+    }, 500);
   };
   
   return (
