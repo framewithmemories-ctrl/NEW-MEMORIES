@@ -980,6 +980,295 @@ async def pay_with_wallet(user_id: str, amount: float, order_id: str):
         "transaction_id": transaction.id
     }
 
+# ===== NEW CLOUDINARY PHOTO UPLOAD ENDPOINTS =====
+
+@api_router.post("/users/{user_id}/photos/upload")
+async def upload_user_photo(
+    user_id: str,
+    file: UploadFile = File(...),
+    order_id: Optional[str] = Form(None)
+):
+    """
+    Upload photo to user's secure Cloudinary folder
+    """
+    try:
+        # Validate file type
+        if not file.content_type.startswith('image/'):
+            raise HTTPException(status_code=400, detail="Only image files are allowed")
+        
+        # Validate file size (5MB limit)
+        contents = await file.read()
+        if len(contents) > 5 * 1024 * 1024:  # 5MB
+            raise HTTPException(status_code=400, detail="File size must be less than 5MB")
+        
+        # Upload to Cloudinary
+        result = await cloudinary_service.upload_user_photo(
+            user_id=user_id,
+            file_data=contents,
+            filename=file.filename,
+            order_id=order_id
+        )
+        
+        if not result["success"]:
+            raise HTTPException(status_code=500, detail=result.get("message", "Upload failed"))
+        
+        # Store photo metadata in database
+        photo_doc = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "order_id": order_id,
+            "public_id": result["public_id"],
+            "secure_url": result["secure_url"],
+            "folder": result["folder"],
+            "thumbnails": result["thumbnails"],
+            "metadata": result["metadata"],
+            "created_at": datetime.now(timezone.utc),
+            "is_active": True
+        }
+        
+        await db.user_photos.insert_one(photo_doc)
+        
+        return {
+            "success": True,
+            "photo_id": photo_doc["id"],
+            "public_id": result["public_id"],
+            "thumbnails": result["thumbnails"],
+            "message": "Photo uploaded successfully!"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Photo upload error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload photo")
+
+@api_router.get("/users/{user_id}/photos")
+async def get_user_photos(user_id: str):
+    """
+    Get all photos for a specific user with signed URLs
+    """
+    try:
+        # Get photos from Cloudinary
+        photos = await cloudinary_service.get_user_photos(user_id, limit=100)
+        
+        # Get additional metadata from database
+        db_photos = await db.user_photos.find(
+            {"user_id": user_id, "is_active": True}
+        ).to_list(100)
+        
+        # Combine Cloudinary data with database metadata
+        enriched_photos = []
+        for photo in photos:
+            # Find matching database record
+            db_photo = next((p for p in db_photos if p["public_id"] == photo["public_id"]), None)
+            
+            enriched_photos.append({
+                **photo,
+                "photo_id": db_photo.get("id") if db_photo else None,
+                "order_id": db_photo.get("order_id") if db_photo else None,
+                "created_at": db_photo.get("created_at") if db_photo else photo.get("created_at")
+            })
+        
+        return {
+            "success": True,
+            "photos": enriched_photos,
+            "total_count": len(enriched_photos)
+        }
+        
+    except Exception as e:
+        print(f"Get photos error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve photos")
+
+@api_router.delete("/users/{user_id}/photos/{photo_id}")
+async def delete_user_photo(user_id: str, photo_id: str):
+    """
+    Delete a user's photo from both Cloudinary and database
+    """
+    try:
+        # Get photo metadata from database
+        photo_doc = await db.user_photos.find_one({"id": photo_id, "user_id": user_id})
+        if not photo_doc:
+            raise HTTPException(status_code=404, detail="Photo not found")
+        
+        # Delete from Cloudinary
+        success = await cloudinary_service.delete_user_photo(
+            photo_doc["public_id"], 
+            user_id
+        )
+        
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to delete photo from storage")
+        
+        # Mark as deleted in database (soft delete)
+        await db.user_photos.update_one(
+            {"id": photo_id, "user_id": user_id},
+            {"$set": {"is_active": False, "deleted_at": datetime.now(timezone.utc)}}
+        )
+        
+        return {
+            "success": True,
+            "message": "Photo deleted successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Delete photo error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete photo")
+
+@api_router.post("/users/{user_id}/photos/{photo_id}/mockup")
+async def generate_photo_mockup(
+    user_id: str, 
+    photo_id: str, 
+    frame_template: str = Form(...)
+):
+    """
+    Generate product mockup using user's photo and selected frame
+    """
+    try:
+        # Get photo metadata
+        photo_doc = await db.user_photos.find_one({"id": photo_id, "user_id": user_id})
+        if not photo_doc:
+            raise HTTPException(status_code=404, detail="Photo not found")
+        
+        # Generate mockup
+        mockup_url = await cloudinary_service.generate_product_mockup(
+            photo_doc["public_id"],
+            frame_template,
+            user_id
+        )
+        
+        if not mockup_url:
+            raise HTTPException(status_code=500, detail="Failed to generate mockup")
+        
+        return {
+            "success": True,
+            "mockup_url": mockup_url,
+            "frame_template": frame_template
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Mockup generation error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate mockup")
+
+# ===== EMAIL NOTIFICATION ENDPOINTS =====
+
+@api_router.post("/orders/{order_id}/send-confirmation")
+async def send_order_confirmation_email(order_id: str):
+    """
+    Send order confirmation email to customer
+    """
+    try:
+        # Get order details
+        order = await db.orders.find_one({"id": order_id})
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        # Get user details
+        user = await db.users.find_one({"id": order["user_id"]})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Prepare email data
+        email_data = {
+            "customer_name": user["name"],
+            "customer_email": user["email"],
+            "order_id": order["id"],
+            "order_date": order["created_at"].strftime("%B %d, %Y"),
+            "total_amount": order["total_amount"],
+            "payment_method": order.get("payment_method", "Cash on Delivery"),
+            "delivery_date": (order["created_at"] + timedelta(days=5)).strftime("%B %d, %Y"),
+            "delivery_address": user.get("address", "Address not provided"),
+            "items": order.get("items", [])
+        }
+        
+        # Send email
+        success = await email_service.send_order_confirmation(email_data)
+        
+        if success:
+            # Update order with email sent status
+            await db.orders.update_one(
+                {"id": order_id},
+                {"$set": {"confirmation_email_sent": True, "email_sent_at": datetime.now(timezone.utc)}}
+            )
+            
+            return {
+                "success": True,
+                "message": "Order confirmation email sent successfully"
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to send email")
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Email sending error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send confirmation email")
+
+@api_router.post("/users/{user_id}/send-welcome")
+async def send_welcome_email(user_id: str):
+    """
+    Send welcome email to new user
+    """
+    try:
+        # Get user details
+        user = await db.users.find_one({"id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Prepare email data
+        email_data = {
+            "user_name": user["name"],
+            "email": user["email"]
+        }
+        
+        # Send welcome email
+        success = await email_service.send_welcome_email(email_data)
+        
+        if success:
+            # Mark user as welcome email sent
+            await db.users.update_one(
+                {"id": user_id},
+                {"$set": {"welcome_email_sent": True, "welcome_email_date": datetime.now(timezone.utc)}}
+            )
+            
+            return {
+                "success": True,
+                "message": "Welcome email sent successfully"
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to send welcome email")
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Welcome email error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send welcome email")
+
+@api_router.post("/admin/send-notification")
+async def send_admin_notification(notification_data: dict):
+    """
+    Send notification to admin (new orders, alerts, etc.)
+    """
+    try:
+        success = await email_service.send_admin_notification(notification_data)
+        
+        if success:
+            return {
+                "success": True,
+                "message": "Admin notification sent successfully"
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to send admin notification")
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Admin notification error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send admin notification")
+
 # Profile Enhancement Endpoints
 @api_router.put("/users/{user_id}/profile")
 async def update_user_profile(user_id: str, profile_data: dict):
