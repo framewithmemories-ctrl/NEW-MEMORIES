@@ -304,10 +304,14 @@ export const UserProfileEnhanced = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="profile" className="flex items-center space-x-2">
             <User className="w-4 h-4" />
             <span>Profile</span>
+          </TabsTrigger>
+          <TabsTrigger value="photos" className="flex items-center space-x-2">
+            <Camera className="w-4 h-4" />
+            <span>My Photos</span>
           </TabsTrigger>
           <TabsTrigger value="dates" className="flex items-center space-x-2">
             <Calendar className="w-4 h-4" />
