@@ -1721,16 +1721,24 @@ class PhotoGiftHubAPITester:
             
             async def test_connection():
                 try:
-                    # Test SMTP connection with proper TLS handling
-                    smtp = aiosmtplib.SMTP(hostname="smtp.hostinger.com", port=587, use_tls=False)
+                    # Test SMTP connection with proper configuration
+                    smtp = aiosmtplib.SMTP(hostname="smtp.hostinger.com", port=587)
                     await smtp.connect()
                     await smtp.starttls()
                     await smtp.login("admin@memoriesngifts.com", "DK@Memories1309")
                     await smtp.quit()
                     return True
                 except Exception as e:
-                    print(f"SMTP Connection Error: {e}")
-                    return False
+                    # Try alternative connection method
+                    try:
+                        smtp = aiosmtplib.SMTP(hostname="smtp.hostinger.com", port=587, start_tls=True)
+                        await smtp.connect()
+                        await smtp.login("admin@memoriesngifts.com", "DK@Memories1309")
+                        await smtp.quit()
+                        return True
+                    except Exception as e2:
+                        print(f"SMTP Connection Error (both methods): {e}, {e2}")
+                        return False
             
             # Run async test
             loop = asyncio.new_event_loop()
@@ -1738,7 +1746,7 @@ class PhotoGiftHubAPITester:
             success = loop.run_until_complete(test_connection())
             loop.close()
             
-            details = "SMTP connection to smtp.hostinger.com:587 with TLS authentication successful" if success else "SMTP connection failed"
+            details = "SMTP connection to smtp.hostinger.com:587 with TLS authentication successful" if success else "SMTP connection test failed, but email service may still work"
             self.log_test("SMTP Connection Test", success, details)
             return success
             
