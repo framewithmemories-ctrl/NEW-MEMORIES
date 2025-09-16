@@ -550,9 +550,7 @@ metadata:
 test_plan:
   current_focus:
     - "Cloudinary Integration Testing"
-    - "Email Integration Testing"
-  stuck_tasks:
-    - "Email Integration Testing"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
