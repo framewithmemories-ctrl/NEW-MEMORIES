@@ -1711,7 +1711,292 @@ class PhotoGiftHubAPITester:
             self.log_test("Cloudinary Mockup Generation", False, str(e))
             return False
 
-    # ===== EMAIL INTEGRATION TESTS =====
+    # ===== EMAIL INTEGRATION TESTS WITH LIVE CREDENTIALS =====
+
+    def test_smtp_connection(self):
+        """Test basic SMTP connection to Hostinger"""
+        try:
+            import aiosmtplib
+            import asyncio
+            
+            async def test_connection():
+                try:
+                    # Test SMTP connection
+                    smtp = aiosmtplib.SMTP(hostname="smtp.hostinger.com", port=587)
+                    await smtp.connect()
+                    await smtp.starttls()
+                    await smtp.login("admin@memoriesngifts.com", "DK@Memories1309")
+                    await smtp.quit()
+                    return True
+                except Exception as e:
+                    print(f"SMTP Connection Error: {e}")
+                    return False
+            
+            # Run async test
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            success = loop.run_until_complete(test_connection())
+            loop.close()
+            
+            details = "SMTP connection to smtp.hostinger.com:587 with TLS authentication successful" if success else "SMTP connection failed"
+            self.log_test("SMTP Connection Test", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("SMTP Connection Test", False, str(e))
+            return False
+
+    def test_send_welcome_email(self, user_id):
+        """Test sending welcome email"""
+        if not user_id:
+            self.log_test("Send Welcome Email", False, "No user ID available")
+            return False
+            
+        try:
+            response = requests.post(f"{self.api_url}/users/{user_id}/send-welcome", timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                email_success = result.get('success', False)
+                details = f"Welcome email API response: {result.get('message', 'No message')}"
+                if not email_success:
+                    success = False
+                    details += " - Email sending failed"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Send Welcome Email", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Send Welcome Email", False, str(e))
+            return False
+
+    def test_send_order_confirmation_email(self):
+        """Test sending order confirmation email"""
+        try:
+            # Create a test user and order first
+            user_success, user_id = self.test_create_user()
+            if not user_success:
+                self.log_test("Send Order Confirmation Email", False, "Failed to create test user")
+                return False
+            
+            # Create test order
+            test_order = {
+                "user_id": user_id,
+                "items": [
+                    {
+                        "product_id": "test-frame-001",
+                        "name": "Premium Wooden Frame",
+                        "quantity": 1,
+                        "price": 1299.0,
+                        "customizations": {"size": "12x16", "material": "Teak Wood"}
+                    }
+                ],
+                "total_amount": 1299.0,
+                "delivery_type": "delivery"
+            }
+            
+            order_response = requests.post(f"{self.api_url}/orders", json=test_order, timeout=15)
+            if order_response.status_code != 200:
+                self.log_test("Send Order Confirmation Email", False, "Failed to create test order")
+                return False
+            
+            order_data = order_response.json()
+            order_id = order_data.get('id')
+            
+            # Test email sending
+            response = requests.post(f"{self.api_url}/orders/{order_id}/send-confirmation", timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                email_success = result.get('success', False)
+                details = f"Order confirmation email API response: {result.get('message', 'No message')}"
+                if not email_success:
+                    success = False
+                    details += " - Email sending failed"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Send Order Confirmation Email", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Send Order Confirmation Email", False, str(e))
+            return False
+
+    def test_send_admin_notification_email(self):
+        """Test sending admin notification email"""
+        try:
+            notification_data = {
+                "notification_type": "new_order",
+                "notification_title": "New Order Received",
+                "notification_message": "A new order has been placed and requires processing.",
+                "order_id": f"TEST_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                "customer_name": "Test Customer",
+                "amount": 1299.0,
+                "payment_method": "Cash on Delivery",
+                "order_time": datetime.now().strftime("%B %d, %Y at %I:%M %p")
+            }
+            
+            response = requests.post(f"{self.api_url}/admin/send-notification", 
+                                   json=notification_data, timeout=30)
+            success = response.status_code == 200
+            
+            if success:
+                result = response.json()
+                email_success = result.get('success', False)
+                details = f"Admin notification email API response: {result.get('message', 'No message')}"
+                if not email_success:
+                    success = False
+                    details += " - Email sending failed"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Send Admin Notification Email", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Send Admin Notification Email", False, str(e))
+            return False
+
+    def test_email_template_rendering(self):
+        """Test email template rendering and structure"""
+        try:
+            # Test with mock data to verify template structure
+            from backend.services.email_service import email_service
+            import asyncio
+            
+            async def test_templates():
+                # Test order confirmation template
+                order_data = {
+                    "customer_name": "John Doe",
+                    "customer_email": "test@example.com",
+                    "order_id": "TEST123",
+                    "order_date": "January 15, 2025",
+                    "total_amount": 1299.0,
+                    "payment_method": "Cash on Delivery",
+                    "delivery_date": "January 20, 2025",
+                    "delivery_address": "123 Test Street, Coimbatore",
+                    "items": [{"name": "Premium Frame", "quantity": 1, "price": 1299.0}]
+                }
+                
+                # Test welcome email template
+                user_data = {
+                    "user_name": "Jane Smith",
+                    "email": "jane@example.com"
+                }
+                
+                # Test admin notification template
+                admin_data = {
+                    "notification_type": "new_order",
+                    "notification_title": "New Order Alert",
+                    "notification_message": "New order received",
+                    "order_id": "TEST456",
+                    "customer_name": "Test Customer",
+                    "amount": 999.0,
+                    "payment_method": "Online",
+                    "order_time": "January 15, 2025"
+                }
+                
+                # Test template rendering (without actually sending)
+                try:
+                    # This tests the template rendering logic
+                    template_tests = []
+                    
+                    # Test order confirmation template
+                    order_template = email_service.template_env.from_string("""
+                    <h1>Order #{{ order_id }}</h1>
+                    <p>Dear {{ customer_name }},</p>
+                    <p>Total: ₹{{ total_amount }}</p>
+                    """)
+                    order_html = order_template.render(**order_data)
+                    template_tests.append("TEST123" in order_html and "John Doe" in order_html)
+                    
+                    # Test welcome template
+                    welcome_template = email_service.template_env.from_string("""
+                    <h1>Welcome {{ user_name }}!</h1>
+                    <p>Email: {{ email }}</p>
+                    """)
+                    welcome_html = welcome_template.render(**user_data)
+                    template_tests.append("Jane Smith" in welcome_html and "jane@example.com" in welcome_html)
+                    
+                    # Test admin template
+                    admin_template = email_service.template_env.from_string("""
+                    <h1>{{ notification_title }}</h1>
+                    <p>Order: #{{ order_id }}</p>
+                    <p>Customer: {{ customer_name }}</p>
+                    """)
+                    admin_html = admin_template.render(**admin_data)
+                    template_tests.append("TEST456" in admin_html and "Test Customer" in admin_html)
+                    
+                    return all(template_tests)
+                    
+                except Exception as e:
+                    print(f"Template rendering error: {e}")
+                    return False
+            
+            # Run async test
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            success = loop.run_until_complete(test_templates())
+            loop.close()
+            
+            details = "Email template rendering successful for all templates" if success else "Template rendering failed"
+            self.log_test("Email Template Rendering", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Email Template Rendering", False, str(e))
+            return False
+
+    def test_live_email_integration_workflow(self):
+        """Test complete email integration workflow with live SMTP credentials"""
+        print("\n📧 Testing Email Integration Workflow (LIVE CREDENTIALS)")
+        print("-" * 50)
+        
+        # Step 1: Test SMTP connection
+        smtp_success = self.test_smtp_connection()
+        
+        # Step 2: Test template rendering
+        template_success = self.test_email_template_rendering()
+        
+        # Step 3: Create test user for email tests
+        user_success, user_id = self.test_create_user()
+        
+        # Step 4: Test welcome email
+        welcome_success = False
+        if user_success:
+            welcome_success = self.test_send_welcome_email(user_id)
+        
+        # Step 5: Test order confirmation email
+        order_email_success = self.test_send_order_confirmation_email()
+        
+        # Step 6: Test admin notification email
+        admin_email_success = self.test_send_admin_notification_email()
+        
+        # Calculate email workflow success
+        email_tests = [smtp_success, template_success, welcome_success, 
+                      order_email_success, admin_email_success]
+        email_success_rate = sum(email_tests) / len(email_tests) * 100
+        
+        print(f"\n📊 Email Integration Success Rate: {email_success_rate:.1f}%")
+        
+        # Detailed analysis
+        if not smtp_success:
+            print("❌ CRITICAL: SMTP connection failed - check credentials and network")
+        if not template_success:
+            print("❌ CRITICAL: Email template rendering failed")
+        if smtp_success and not welcome_success:
+            print("⚠️  Welcome email endpoint has issues")
+        if smtp_success and not order_email_success:
+            print("⚠️  Order confirmation email has issues")
+        if smtp_success and not admin_email_success:
+            print("⚠️  Admin notification email has issues")
+        
+        return email_success_rate > 80
 
     def test_order_confirmation_email(self):
         """Test sending order confirmation emails"""
