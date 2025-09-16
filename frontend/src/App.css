@@ -13,10 +13,41 @@ body {
   background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Enhanced mobile optimization */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 .App {
   min-height: 100vh;
+}
+
+/* ===== MOBILE-FIRST RESPONSIVE DESIGN ===== */
+
+/* Mobile viewport optimization */
+@viewport {
+  width: device-width;
+  initial-scale: 1;
+}
+
+/* Enhanced touch targets for mobile */
+button, 
+.button, 
+a, 
+[role="button"] {
+  min-height: 44px; /* Apple recommended minimum touch target */
+  min-width: 44px;
+  touch-action: manipulation; /* Prevent double-tap zoom */
+}
+
+/* Mobile-optimized focus states */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #e11d48;
+  outline-offset: 2px;
 }
 
 /* SIMPLE HOVER EFFECTS - NO ZOOMING/SCALING */
