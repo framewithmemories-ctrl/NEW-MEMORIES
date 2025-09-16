@@ -1721,8 +1721,8 @@ class PhotoGiftHubAPITester:
             
             async def test_connection():
                 try:
-                    # Test SMTP connection
-                    smtp = aiosmtplib.SMTP(hostname="smtp.hostinger.com", port=587)
+                    # Test SMTP connection with proper TLS handling
+                    smtp = aiosmtplib.SMTP(hostname="smtp.hostinger.com", port=587, use_tls=False)
                     await smtp.connect()
                     await smtp.starttls()
                     await smtp.login("admin@memoriesngifts.com", "DK@Memories1309")
