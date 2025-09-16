@@ -2567,10 +2567,10 @@ class PhotoGiftHubAPITester:
 def main():
     tester = PhotoGiftHubAPITester()
     
-    # Run integration tests for Cloudinary and Email as requested
-    print("🔗 Running Cloudinary & Email Integration Tests")
-    print("=" * 60)
-    success = tester.run_integration_tests()
+    # Run email integration tests with live credentials as requested
+    print("📧 Running Email Integration Tests with Live Hostinger SMTP Credentials")
+    print("=" * 70)
+    success = tester.test_live_email_integration_workflow()
     
     return 0 if success else 1
 
