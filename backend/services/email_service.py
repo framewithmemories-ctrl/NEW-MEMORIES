@@ -6,6 +6,12 @@ from datetime import datetime
 import os
 import logging
 from typing import Optional, Dict, Any, List
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent.parent
+load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
 
