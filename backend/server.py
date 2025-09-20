@@ -1602,7 +1602,11 @@ async def verify_admin_session(token: str):
             raise HTTPException(status_code=401, detail="Invalid session")
         
         # Check if session expired
-        if datetime.now(timezone.utc) > session["expires_at"]:
+        expires_at = session["expires_at"]
+        if isinstance(expires_at, datetime) and expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        
+        if datetime.now(timezone.utc) > expires_at:
             await db.admin_sessions.delete_one({"token": token})
             raise HTTPException(status_code=401, detail="Session expired")
         
