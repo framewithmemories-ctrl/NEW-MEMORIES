@@ -63,11 +63,26 @@ export const OrderManagement = () => {
     try {
       setLoading(true);
       
-      // In production, this would be a real API call
-      // For demo, we'll use comprehensive mock data
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Get admin session token
+      const adminSession = localStorage.getItem('adminSession');
+      if (!adminSession) {
+        throw new Error('No admin session found');
+      }
       
-      const mockOrders = [
+      const session = JSON.parse(adminSession);
+      
+      // Call real backend API
+      const response = await axios.get(`${backendUrl}/api/admin/orders`, {
+        headers: {
+          'Authorization': `Bearer ${session.token}`
+        }
+      });
+      
+      if (response.data.success) {
+        setOrders(response.data.orders);
+      } else {
+        // Fallback to mock data if API fails
+        const mockOrders = [
         {
           id: 'ORD_2024_001',
           customerName: 'Priya Sharma',
