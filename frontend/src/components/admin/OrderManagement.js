@@ -480,7 +480,15 @@ export const OrderManagement = () => {
       </Card>
 
       {/* Order Details Dialog */}
-      <Dialog open={showOrderDialog} onOpenChange={setShowOrderDialog}>
+      <Dialog 
+        open={showOrderDialog} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowOrderDialog(false);
+            setSelectedOrder(null);
+          }
+        }}
+      >
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto">
           <DialogHeader>
             <DialogTitle>Order Details - #{selectedOrder?.id}</DialogTitle>
