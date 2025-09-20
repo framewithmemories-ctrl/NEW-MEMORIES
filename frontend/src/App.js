@@ -2336,6 +2336,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<RouteWrapper><AboutUsPage /></RouteWrapper>} />
             <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/admin" element={<RouteWrapper><AdminDashboard /></RouteWrapper>} />
           </Routes>
         </BrowserRouter>
       </div>
