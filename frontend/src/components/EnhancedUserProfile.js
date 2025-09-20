@@ -51,6 +51,7 @@ export const EnhancedUserProfile = () => {
     preferences: ''
   });
   const [savedPhotos, setSavedPhotos] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [savedDesigns, setSavedDesigns] = useState([]);
   const [walletData, setWalletData] = useState({
     balance: 0,
