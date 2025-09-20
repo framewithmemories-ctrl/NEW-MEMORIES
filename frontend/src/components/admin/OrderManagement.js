@@ -426,7 +426,9 @@ export const OrderManagement = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           setSelectedOrder(order);
                           setShowOrderDialog(true);
                         }}
