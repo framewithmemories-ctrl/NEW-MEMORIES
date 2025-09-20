@@ -1273,18 +1273,34 @@ const AboutUsPopup = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    // Don't show popup on admin routes or checkout
-    const isAdminRoute = window.location.pathname.startsWith('/admin');
-    const isCheckoutRoute = window.location.pathname.startsWith('/checkout');
-    
-    if (isAdminRoute || isCheckoutRoute) {
-      return; // Exit early, don't show popup on admin/checkout
+    // Enhanced popup control with frequency management
+    function shouldShowMarketingPopup() {
+      // Block in admin routes
+      if (window.location.pathname.startsWith('/admin') || 
+          window.location.pathname.startsWith('/checkout') ||
+          document.body.classList.contains('admin')) {
+        return false;
+      }
+      
+      // Frequency control with TTL
+      const seen = localStorage.getItem('offer_popup_seen_v2');
+      if (seen) {
+        try {
+          const data = JSON.parse(seen);
+          if (Date.now() < data.expires) return false;
+        } catch (e) {
+          // Invalid data, proceed to show
+        }
+      }
+      return true;
     }
 
-    const hasVisited = localStorage.getItem('memoriesVisited');
-    if (!hasVisited) {
-      setTimeout(() => setShowPopup(true), 2000); // Show after 2 seconds
-      localStorage.setItem('memoriesVisited', 'true');
+    if (shouldShowMarketingPopup()) {
+      setTimeout(() => setShowPopup(true), 2000);
+      // Set 24-hour expiration
+      localStorage.setItem('offer_popup_seen_v2', JSON.stringify({ 
+        expires: Date.now() + 24*60*60*1000 
+      }));
     }
   }, []);
 
