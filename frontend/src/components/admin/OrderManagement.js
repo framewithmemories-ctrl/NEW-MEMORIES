@@ -460,7 +460,7 @@ export const OrderManagement = () => {
                         {order.items.length} item(s)
                       </p>
                       <p className="text-gray-600 truncate">
-                        {order.items.map(item => item.name).join(', ')}
+                        {(order.items || []).map(item => item.name).join(', ')}
                       </p>
                       {order.trackingNumber && (
                         <p className="text-gray-600">
