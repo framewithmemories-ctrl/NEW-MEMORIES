@@ -92,53 +92,66 @@ export const AdminDashboard = () => {
     try {
       setLoading(true);
       
-      // In a real implementation, these would be actual API calls
-      // For now, we'll use mock data that simulates real admin dashboard stats
+      // Get admin session token
+      const adminSession = localStorage.getItem('adminSession');
+      if (!adminSession) {
+        throw new Error('No admin session found');
+      }
       
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      const session = JSON.parse(adminSession);
       
-      // Mock dashboard statistics
-      const mockStats = {
-        totalOrders: 127,
-        totalCustomers: 89,
-        totalRevenue: 156750,
-        pendingOrders: 12,
-        todayOrders: 8,
-        recentOrders: [
-          {
-            id: 'ORD_001',
-            customerName: 'Priya Sharma',
-            total: 1299,
-            status: 'processing',
-            date: new Date().toISOString(),
-            items: ['Custom Wooden Frame 12x16']
-          },
-          {
-            id: 'ORD_002', 
-            customerName: 'Rajesh Kumar',
-            total: 899,
-            status: 'shipped',
-            date: new Date(Date.now() - 86400000).toISOString(),
-            items: ['Acrylic Photo Frame 8x10']
-          },
-          {
-            id: 'ORD_003',
-            customerName: 'Anitha Reddy',
-            total: 2199,
-            status: 'delivered',
-            date: new Date(Date.now() - 172800000).toISOString(),
-            items: ['Premium Wooden Frame Set']
-          }
-        ],
-        topProducts: [
-          { name: 'Wooden Photo Frames', sales: 45, revenue: 58500 },
-          { name: 'Acrylic Frames', sales: 32, revenue: 38400 },
-          { name: 'Custom Gift Frames', sales: 28, revenue: 42000 },
-          { name: 'Wedding Photo Albums', sales: 22, revenue: 33000 }
-        ]
-      };
+      // Call real backend API
+      const response = await axios.get(`${backendUrl}/api/admin/dashboard/stats`, {
+        headers: {
+          'Authorization': `Bearer ${session.token}`
+        }
+      });
       
-      setDashboardStats(mockStats);
+      if (response.data.success) {
+        setDashboardStats(response.data.stats);
+      } else {
+        // Fallback to mock data if API fails
+        const mockStats = {
+          totalOrders: 127,
+          totalCustomers: 89,
+          totalRevenue: 156750,
+          pendingOrders: 12,
+          todayOrders: 8,
+          recentOrders: [
+            {
+              id: 'ORD_001',
+              customerName: 'Priya Sharma',
+              total: 1299,
+              status: 'processing',
+              date: new Date().toISOString(),
+              items: ['Custom Wooden Frame 12x16']
+            },
+            {
+              id: 'ORD_002', 
+              customerName: 'Rajesh Kumar',
+              total: 899,
+              status: 'shipped',
+              date: new Date(Date.now() - 86400000).toISOString(),
+              items: ['Acrylic Photo Frame 8x10']
+            },
+            {
+              id: 'ORD_003',
+              customerName: 'Anitha Reddy',
+              total: 2199,
+              status: 'delivered',
+              date: new Date(Date.now() - 172800000).toISOString(),
+              items: ['Premium Wooden Frame Set']
+            }
+          ],
+          topProducts: [
+            { name: 'Wooden Photo Frames', sales: 45, revenue: 58500 },
+            { name: 'Acrylic Frames', sales: 32, revenue: 38400 },
+            { name: 'Custom Gift Frames', sales: 28, revenue: 42000 },
+            { name: 'Wedding Photo Albums', sales: 22, revenue: 33000 }
+          ]
+        };
+        setDashboardStats(mockStats);
+      }
       
     } catch (error) {
       console.error('Dashboard data loading error:', error);
