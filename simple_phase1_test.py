@@ -5,7 +5,7 @@ import uuid
 
 def test_phase1_profile_enhancements():
     """Simple test for Phase 1 profile enhancement APIs"""
-    base_url = "https://customframe-shop.preview.emergentagent.com/api"
+    base_url = "https://photo-shop-dash.preview.emergentagent.com/api"
     test_user_id = "user_123"
     
     print("🚀 PHASE 1 PROFILE ENHANCEMENT TESTING")
