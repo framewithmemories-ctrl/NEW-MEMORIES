@@ -224,30 +224,51 @@ export const OrderManagement = () => {
     try {
       setUpdatingOrder(true);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Get admin session token
+      const adminSession = localStorage.getItem('adminSession');
+      if (!adminSession) {
+        throw new Error('No admin session found');
+      }
       
-      // Update local state
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === orderId 
-            ? { 
-                ...order, 
-                status: newStatus, 
-                notes: notes || order.notes,
-                updatedAt: new Date().toISOString()
-              }
-            : order
-        )
+      const session = JSON.parse(adminSession);
+      
+      // Call real backend API
+      const response = await axios.put(
+        `${backendUrl}/api/admin/orders/${orderId}/status`,
+        { status: newStatus, notes: notes },
+        {
+          headers: {
+            'Authorization': `Bearer ${session.token}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
       
-      toast.success(`Order ${orderId} status updated to ${newStatus}`);
-      
-      // Send notification to customer (simulate)
-      if (newStatus === 'shipped') {
-        toast.success('📧 Shipping notification sent to customer');
-      } else if (newStatus === 'delivered') {
-        toast.success('📧 Delivery confirmation sent to customer');
+      if (response.data.success) {
+        // Update local state
+        setOrders(prevOrders => 
+          prevOrders.map(order => 
+            order.id === orderId 
+              ? { 
+                  ...order, 
+                  status: newStatus, 
+                  notes: notes || order.notes,
+                  updatedAt: new Date().toISOString()
+                }
+              : order
+          )
+        );
+        
+        toast.success(`Order ${orderId} status updated to ${newStatus}`);
+        
+        // Send notification to customer (simulate)
+        if (newStatus === 'shipped') {
+          toast.success('📧 Shipping notification sent to customer');
+        } else if (newStatus === 'delivered') {
+          toast.success('📧 Delivery confirmation sent to customer');
+        }
+      } else {
+        throw new Error(response.data.message || 'Failed to update order status');
       }
       
     } catch (error) {
