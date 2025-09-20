@@ -89,7 +89,7 @@ header nav a:hover {
 /* Ensure nested elements inherit hover colors */
 header nav button:hover *,
 header nav a:hover * {
-  color: #e11d48 !important; /* Rose color for icons/text */
+  color: var(--color-primary) !important; /* Primary pink color for icons/text */
 }
 
 /* Simple badge hover - just slight highlight */
