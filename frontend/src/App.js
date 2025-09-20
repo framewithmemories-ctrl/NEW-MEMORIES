@@ -1335,7 +1335,11 @@ const AboutUsPopup = () => {
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => setShowPopup(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowPopup(false);
+                }}
                 className="w-full"
               >
                 Continue Browsing
