@@ -590,7 +590,7 @@ export const OrderManagement = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {selectedOrder.items.map((item, index) => (
+                    {(selectedOrder.items || []).map((item, index) => (
                       <div key={index} className="flex justify-between items-start p-3 border rounded">
                         <div>
                           <h4 className="font-semibold">{item.name}</h4>
