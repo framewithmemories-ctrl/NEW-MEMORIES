@@ -366,7 +366,7 @@ export const AdminDashboard = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        {dashboardStats.recentOrders.map((order) => (
+                        {(dashboardStats.recentOrders || []).map((order) => (
                           <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
                             <div className="flex-1">
                               <div className="flex items-center space-x-3">
