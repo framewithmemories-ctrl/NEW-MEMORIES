@@ -1295,13 +1295,24 @@ const AboutUsPopup = () => {
       return true;
     }
 
-    if (shouldShowMarketingPopup()) {
-      setTimeout(() => setShowPopup(true), 2000);
-      // Set 24-hour expiration
-      localStorage.setItem('offer_popup_seen_v2', JSON.stringify({ 
-        expires: Date.now() + 24*60*60*1000 
-      }));
+    // Initialize modal with guard against double initialization
+    window.__modalInit = window.__modalInit || {};
+    
+    function initModalOnce(selector, initFn) {
+      if (window.__modalInit[selector]) return;
+      window.__modalInit[selector] = true;
+      initFn();
     }
+
+    initModalOnce('#offerPopup', () => {
+      if (shouldShowMarketingPopup()) {
+        setTimeout(() => setShowPopup(true), 2000);
+        // Set 24-hour expiration
+        localStorage.setItem('offer_popup_seen_v2', JSON.stringify({ 
+          expires: Date.now() + 24*60*60*1000 
+        }));
+      }
+    });
   }, []);
 
   return (
