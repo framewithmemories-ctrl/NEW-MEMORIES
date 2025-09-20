@@ -258,7 +258,11 @@ export const ProductManagement = () => {
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Button onClick={() => setShowCreateDialog(true)}>
+          <Button onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowCreateDialog(true);
+          }}>
             <Plus className="w-4 h-4 mr-2" />
             Add Product
           </Button>
