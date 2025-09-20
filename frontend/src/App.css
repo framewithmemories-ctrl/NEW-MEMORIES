@@ -249,8 +249,8 @@ img[src] {
 }
 
 .mega-menu-item:hover {
-  color: #be123c !important; /* Deep maroon/red */
-  background-color: #fef2f2 !important; /* Light red background */
+  color: var(--color-primary) !important; /* Primary pink */
+  background-color: #fef2f2 !important; /* Light rose background */
   transform: translateX(4px) !important;
 }
 
