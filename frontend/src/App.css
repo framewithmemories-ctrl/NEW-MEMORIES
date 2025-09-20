@@ -190,7 +190,7 @@ img[src] {
 }
 
 .brand-nav-item.active {
-  color: #be123c !important; /* Deep maroon/red */
+  color: var(--color-primary) !important; /* Primary pink */
   background-color: #fef2f2 !important;
   box-shadow: 0 2px 4px rgba(190, 18, 60, 0.1) !important;
 }
