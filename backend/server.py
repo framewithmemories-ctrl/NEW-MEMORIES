@@ -1699,10 +1699,24 @@ async def update_order_status(order_id: str, status_data: dict):
         # Get updated order
         updated_order = await db.orders.find_one({"id": order_id})
         
+        # Convert to dict and remove MongoDB ObjectId
+        if updated_order:
+            order_dict = dict(updated_order)
+            if "_id" in order_dict:
+                del order_dict["_id"]
+            
+            # Convert datetime objects to ISO strings
+            if "created_at" in order_dict and isinstance(order_dict["created_at"], datetime):
+                order_dict["created_at"] = order_dict["created_at"].isoformat()
+            if "updated_at" in order_dict and isinstance(order_dict["updated_at"], datetime):
+                order_dict["updated_at"] = order_dict["updated_at"].isoformat()
+        else:
+            order_dict = None
+        
         return {
             "success": True,
             "message": f"Order status updated to {new_status}",
-            "order": updated_order
+            "order": order_dict
         }
         
     except HTTPException:
