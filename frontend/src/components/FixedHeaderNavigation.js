@@ -138,7 +138,7 @@ export const FixedHeaderNavigation = ({
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="hidden sm:flex bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                className="hidden sm:flex bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white"
                 onClick={() => window.open('tel:+918148040148', '_self')}
               >
                 <Phone className="w-4 h-4 mr-2" />
