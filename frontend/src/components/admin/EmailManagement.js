@@ -364,7 +364,11 @@ The Memories Team`
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Button onClick={() => setShowComposeDialog(true)}>
+          <Button onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowComposeDialog(true);
+          }}>
             <Plus className="w-4 h-4 mr-2" />
             Compose Email
           </Button>
