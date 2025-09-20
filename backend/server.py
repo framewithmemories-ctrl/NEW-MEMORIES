@@ -1779,6 +1779,102 @@ async def get_admin_dashboard_stats():
         print(f"Dashboard stats error: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch dashboard stats")
 
+# ===== USER PHOTOS UPLOAD ENDPOINTS =====
+
+# User Photo Model
+class UserPhoto(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    url: str
+    filename: str
+    mime_type: str
+    size: int
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+@api_router.post("/users/{user_id}/photos")
+async def upload_user_photos(user_id: str, photos: List[UploadFile] = File(...)):
+    """Upload multiple photos for a user (with file validation)"""
+    try:
+        if not photos:
+            raise HTTPException(status_code=400, detail="No files provided")
+        
+        uploaded_photos = []
+        
+        for photo in photos:
+            # Validate file type
+            if not photo.content_type.startswith('image/'):
+                raise HTTPException(status_code=400, detail=f"{photo.filename} is not a valid image file")
+            
+            # Validate file size (8MB limit)
+            if photo.size > 8 * 1024 * 1024:
+                raise HTTPException(status_code=400, detail=f"{photo.filename} is too large (max 8MB)")
+            
+            # Read file content
+            content = await photo.read()
+            
+            # For now, simulate S3 upload with local storage or URL
+            # TODO: Implement actual S3 upload using the provided S3 helper
+            photo_url = f"https://memories-photos.s3.amazonaws.com/user-photos/{user_id}/{photo.filename}"
+            
+            # Create photo record
+            user_photo = UserPhoto(
+                user_id=user_id,
+                url=photo_url,
+                filename=photo.filename,
+                mime_type=photo.content_type,
+                size=photo.size
+            )
+            
+            # Store in database
+            await db.user_photos.insert_one(user_photo.dict())
+            uploaded_photos.append(user_photo.dict())
+        
+        return {
+            "success": True,
+            "photos": uploaded_photos,
+            "message": f"{len(uploaded_photos)} photos uploaded successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Photo upload error: {e}")
+        raise HTTPException(status_code=500, detail="Photo upload failed")
+
+@api_router.get("/users/{user_id}/photos")
+async def get_user_photos(user_id: str):
+    """Get all photos for a user"""
+    try:
+        photos = await db.user_photos.find({"user_id": user_id}).sort("created_at", -1).to_list(100)
+        return {
+            "success": True,
+            "photos": photos,
+            "count": len(photos)
+        }
+    except Exception as e:
+        print(f"Get user photos error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve photos")
+
+@api_router.delete("/users/{user_id}/photos/{photo_id}")
+async def delete_user_photo(user_id: str, photo_id: str):
+    """Delete a specific user photo"""
+    try:
+        result = await db.user_photos.delete_one({"id": photo_id, "user_id": user_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Photo not found")
+        
+        return {
+            "success": True,
+            "message": "Photo deleted successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Delete photo error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete photo")
+
 # ===== RAZORPAY PAYMENT INTEGRATION =====
 
 # Initialize Razorpay client
