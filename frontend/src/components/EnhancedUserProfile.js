@@ -32,7 +32,8 @@ import {
   Clock,
   Lock,
   Eye,
-  EyeOff
+  EyeOff,
+  Image as ImageIcon
 } from "lucide-react";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
