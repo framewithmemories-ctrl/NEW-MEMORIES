@@ -34,6 +34,33 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Admin Models
+class Admin(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    password_hash: str
+    name: str
+    role: str = "admin"
+    permissions: List[str] = ["orders", "customers", "products", "analytics", "settings"]
+    last_login: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    is_active: bool = True
+
+class AdminCreate(BaseModel):
+    email: str
+    password: str
+    name: str
+
+class AdminLogin(BaseModel):
+    email: str
+    password: str
+
+class AdminSession(BaseModel):
+    admin_id: str
+    token: str
+    expires_at: datetime
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 # Models
 class Review(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
