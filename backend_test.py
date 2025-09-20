@@ -3077,10 +3077,10 @@ class PhotoGiftHubAPITester:
 def main():
     tester = PhotoGiftHubAPITester()
     
-    # Run email integration tests with live credentials as requested
-    print("📧 Running Email Integration Tests with Live Hostinger SMTP Credentials")
+    # Run admin panel tests as requested
+    print("🔐 Running Admin Panel Backend Tests")
     print("=" * 70)
-    success = tester.test_live_email_integration_workflow()
+    success = tester.run_admin_panel_tests()
     
     return 0 if success else 1
 
