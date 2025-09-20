@@ -340,8 +340,8 @@ export const EnhancedCheckoutPage = () => {
     setTimeout(() => window.scrollTo(0, 0), 100);
     
     return (
-      <div className="max-w-md mx-auto px-4 py-8" style={{ marginTop: '0px', paddingTop: '20px' }}>
-        <div className="bg-white border-2 border-gray-200 p-6 font-mono text-sm">
+      <div className="max-w-md mx-auto px-4 py-8 printable" style={{ marginTop: '0px', paddingTop: '20px' }}>
+        <div className="bg-white border-2 border-gray-200 p-6 font-mono text-sm printable">
           
           {/* Enhanced Shop Logo and Branding - Always Visible for Print */}
           <div className="text-center mb-8 border-b-2 border-dashed border-gray-300 pb-6">
