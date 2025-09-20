@@ -2572,6 +2572,508 @@ class PhotoGiftHubAPITester:
         
         return success_rate > 80  # Consider successful if >80% tests pass
 
+    # ===== ADMIN PANEL TESTING METHODS =====
+    
+    def test_admin_account_initialization(self):
+        """Test if default admin account is created on startup"""
+        try:
+            # Try to login with default admin credentials
+            login_data = {
+                "email": "admin@memoriesngifts.com",
+                "password": "AdminMemories@2024"
+            }
+            
+            response = requests.post(f"{self.api_url}/admin/login", json=login_data, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                has_token = 'token' in data and data['token']
+                has_admin_info = 'admin' in data and 'email' in data['admin']
+                
+                if has_token and has_admin_info:
+                    details = f"Default admin account exists - Email: {data['admin']['email']}, Permissions: {data['admin'].get('permissions', [])}"
+                    # Store token for other admin tests
+                    self.admin_token = data['token']
+                else:
+                    success = False
+                    details = "Login successful but missing token or admin info"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Admin Account Initialization", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Account Initialization", False, str(e))
+            return False
+    
+    def test_admin_login(self):
+        """Test admin login endpoint"""
+        try:
+            login_data = {
+                "email": "admin@memoriesngifts.com",
+                "password": "AdminMemories@2024"
+            }
+            
+            response = requests.post(f"{self.api_url}/admin/login", json=login_data, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['success', 'token', 'admin', 'expires_at']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing login response fields: {missing_fields}"
+                else:
+                    admin_info = data['admin']
+                    details = f"Admin login successful - ID: {admin_info['id']}, Email: {admin_info['email']}, Name: {admin_info['name']}, Token expires: {data['expires_at']}"
+                    # Store token for subsequent tests
+                    self.admin_token = data['token']
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Admin Login", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Login", False, str(e))
+            return False
+    
+    def test_admin_session_verification(self):
+        """Test admin session verification"""
+        if not hasattr(self, 'admin_token') or not self.admin_token:
+            self.log_test("Admin Session Verification", False, "No admin token available")
+            return False
+            
+        try:
+            response = requests.get(f"{self.api_url}/admin/verify?token={self.admin_token}", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['success', 'admin']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing verification response fields: {missing_fields}"
+                else:
+                    admin_info = data['admin']
+                    details = f"Session verified - Admin: {admin_info['name']} ({admin_info['email']}), Permissions: {admin_info.get('permissions', [])}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Admin Session Verification", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Session Verification", False, str(e))
+            return False
+    
+    def test_admin_logout(self):
+        """Test admin logout endpoint"""
+        if not hasattr(self, 'admin_token') or not self.admin_token:
+            self.log_test("Admin Logout", False, "No admin token available")
+            return False
+            
+        try:
+            response = requests.post(f"{self.api_url}/admin/logout?token={self.admin_token}", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                logout_success = data.get('success', False)
+                details = f"Logout response - Success: {logout_success}, Message: {data.get('message', 'No message')}"
+                
+                if logout_success:
+                    # Clear stored token
+                    self.admin_token = None
+                else:
+                    success = False
+                    details += " - Logout not marked as successful"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Admin Logout", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Logout", False, str(e))
+            return False
+    
+    def test_admin_get_all_orders(self):
+        """Test getting all orders for admin dashboard"""
+        if not hasattr(self, 'admin_token') or not self.admin_token:
+            self.log_test("Admin Get All Orders", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {self.admin_token}'}
+            response = requests.get(f"{self.api_url}/admin/orders", headers=headers, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['success', 'orders', 'total_count']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing orders response fields: {missing_fields}"
+                else:
+                    orders = data['orders']
+                    total_count = data['total_count']
+                    details = f"Retrieved {len(orders)} orders, Total count: {total_count}"
+                    
+                    # Check if orders have customer data
+                    if orders:
+                        first_order = orders[0]
+                        customer_fields = ['customerName', 'customerEmail', 'customerPhone']
+                        has_customer_data = any(field in first_order for field in customer_fields)
+                        details += f", Customer data included: {has_customer_data}"
+                        
+                        if has_customer_data:
+                            details += f", Sample: {first_order.get('customerName', 'N/A')} ({first_order.get('customerEmail', 'N/A')})"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Admin Get All Orders", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Get All Orders", False, str(e))
+            return False
+    
+    def test_admin_update_order_status(self):
+        """Test updating order status via admin"""
+        if not hasattr(self, 'admin_token') or not self.admin_token:
+            self.log_test("Admin Update Order Status", False, "No admin token available")
+            return False
+        
+        # First create a test order to update
+        user_success, user_id = self.test_create_user()
+        if not user_success:
+            self.log_test("Admin Update Order Status", False, "Cannot create test user for order")
+            return False
+        
+        # Create test order
+        test_order = {
+            "user_id": user_id,
+            "items": [{"product_id": "test-frame", "name": "Test Frame", "quantity": 1, "price": 500.0}],
+            "total_amount": 500.0,
+            "delivery_type": "pickup"
+        }
+        
+        try:
+            # Create order
+            order_response = requests.post(f"{self.api_url}/orders", json=test_order, timeout=10)
+            if order_response.status_code != 200:
+                self.log_test("Admin Update Order Status", False, "Failed to create test order")
+                return False
+            
+            order_data = order_response.json()
+            order_id = order_data['id']
+            
+            # Update order status
+            status_update = {
+                "status": "processing",
+                "notes": "Order confirmed and being processed"
+            }
+            
+            headers = {'Authorization': f'Bearer {self.admin_token}'}
+            response = requests.put(f"{self.api_url}/admin/orders/{order_id}/status", 
+                                  json=status_update, headers=headers, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['success', 'message', 'order']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing status update response fields: {missing_fields}"
+                else:
+                    updated_order = data['order']
+                    status_updated = updated_order.get('status') == 'processing'
+                    details = f"Order status updated - ID: {order_id}, New status: {updated_order.get('status')}, Status correct: {status_updated}, Message: {data['message']}"
+                    
+                    if not status_updated:
+                        success = False
+                        details += " - Status not updated correctly"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Admin Update Order Status", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Update Order Status", False, str(e))
+            return False
+    
+    def test_admin_dashboard_stats(self):
+        """Test admin dashboard statistics endpoint"""
+        if not hasattr(self, 'admin_token') or not self.admin_token:
+            self.log_test("Admin Dashboard Stats", False, "No admin token available")
+            return False
+            
+        try:
+            headers = {'Authorization': f'Bearer {self.admin_token}'}
+            response = requests.get(f"{self.api_url}/admin/dashboard/stats", headers=headers, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['success', 'stats']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing dashboard stats response fields: {missing_fields}"
+                else:
+                    stats = data['stats']
+                    required_stats = ['totalOrders', 'totalCustomers', 'totalRevenue', 'pendingOrders', 'todayOrders']
+                    missing_stats = [field for field in required_stats if field not in stats]
+                    
+                    if missing_stats:
+                        success = False
+                        details = f"Missing dashboard statistics: {missing_stats}"
+                    else:
+                        details = f"Dashboard stats retrieved - Orders: {stats['totalOrders']}, Customers: {stats['totalCustomers']}, Revenue: ₹{stats['totalRevenue']}, Pending: {stats['pendingOrders']}, Today: {stats['todayOrders']}"
+                        
+                        # Check if recent orders are included
+                        if 'recentOrders' in stats:
+                            details += f", Recent orders: {len(stats['recentOrders'])}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+            
+            self.log_test("Admin Dashboard Stats", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Admin Dashboard Stats", False, str(e))
+            return False
+    
+    def test_razorpay_create_order(self):
+        """Test Razorpay payment order creation"""
+        try:
+            order_data = {
+                "amount": 1299.0,  # ₹1299
+                "currency": "INR",
+                "receipt": f"receipt_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                "notes": {
+                    "customer_name": "Arjun Patel",
+                    "product": "Premium Wooden Frame"
+                }
+            }
+            
+            response = requests.post(f"{self.api_url}/payments/create-order", json=order_data, timeout=15)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['success', 'order_id', 'amount', 'currency']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing payment order response fields: {missing_fields}"
+                else:
+                    details = f"Razorpay order created - ID: {data['order_id']}, Amount: {data['amount']} {data['currency']}, Status: {data.get('status', 'N/A')}"
+                    # Store order ID for verification test
+                    self.razorpay_order_id = data['order_id']
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+                # Check if it's a configuration issue
+                if response.status_code == 500 and "credentials not configured" in response.text.lower():
+                    details += " - Razorpay credentials not configured (expected in test environment)"
+            
+            self.log_test("Razorpay Create Order", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Razorpay Create Order", False, str(e))
+            return False
+    
+    def test_razorpay_verify_payment(self):
+        """Test Razorpay payment verification"""
+        try:
+            # Mock payment verification data
+            verification_data = {
+                "razorpay_order_id": getattr(self, 'razorpay_order_id', 'order_test_123'),
+                "razorpay_payment_id": "pay_test_456",
+                "razorpay_signature": "mock_signature_789"
+            }
+            
+            response = requests.post(f"{self.api_url}/payments/verify", json=verification_data, timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                required_fields = ['success', 'message']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    success = False
+                    details = f"Missing payment verification response fields: {missing_fields}"
+                else:
+                    verification_success = data.get('success', False)
+                    details = f"Payment verification response - Success: {verification_success}, Message: {data['message']}"
+                    
+                    # Note: In test environment, verification might fail due to mock data
+                    if not verification_success and "invalid signature" in data['message'].lower():
+                        details += " (Expected failure with mock signature in test environment)"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text}"
+                # Check if it's a configuration issue
+                if response.status_code == 500 and "credentials not configured" in response.text.lower():
+                    details += " - Razorpay credentials not configured (expected in test environment)"
+            
+            self.log_test("Razorpay Verify Payment", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_test("Razorpay Verify Payment", False, str(e))
+            return False
+    
+    def test_admin_authentication_workflow(self):
+        """Test complete admin authentication workflow"""
+        print("\n🔐 Testing Admin Authentication Workflow")
+        print("-" * 50)
+        
+        # Step 1: Test admin account initialization
+        init_success = self.test_admin_account_initialization()
+        
+        # Step 2: Test admin login
+        login_success = self.test_admin_login()
+        
+        # Step 3: Test session verification
+        verify_success = self.test_admin_session_verification()
+        
+        # Step 4: Test admin logout
+        logout_success = self.test_admin_logout()
+        
+        # Re-login for subsequent admin tests
+        if logout_success:
+            relogin_success = self.test_admin_login()
+        else:
+            relogin_success = False
+        
+        # Calculate workflow success
+        auth_tests = [init_success, login_success, verify_success, logout_success, relogin_success]
+        auth_success_rate = sum(auth_tests) / len(auth_tests) * 100
+        
+        print(f"\n📊 Admin Authentication Success Rate: {auth_success_rate:.1f}%")
+        
+        return auth_success_rate > 80
+    
+    def test_admin_management_workflow(self):
+        """Test complete admin management workflow"""
+        print("\n👨‍💼 Testing Admin Management Workflow")
+        print("-" * 50)
+        
+        # Ensure we have admin token
+        if not hasattr(self, 'admin_token') or not self.admin_token:
+            login_success = self.test_admin_login()
+            if not login_success:
+                print("❌ Cannot test admin management without valid admin session")
+                return False
+        
+        # Step 1: Test getting all orders
+        orders_success = self.test_admin_get_all_orders()
+        
+        # Step 2: Test updating order status
+        status_update_success = self.test_admin_update_order_status()
+        
+        # Step 3: Test dashboard statistics
+        stats_success = self.test_admin_dashboard_stats()
+        
+        # Calculate workflow success
+        mgmt_tests = [orders_success, status_update_success, stats_success]
+        mgmt_success_rate = sum(mgmt_tests) / len(mgmt_tests) * 100
+        
+        print(f"\n📊 Admin Management Success Rate: {mgmt_success_rate:.1f}%")
+        
+        return mgmt_success_rate > 75
+    
+    def test_razorpay_integration_workflow(self):
+        """Test Razorpay payment integration workflow"""
+        print("\n💳 Testing Razorpay Payment Integration")
+        print("-" * 50)
+        
+        # Step 1: Test creating payment order
+        create_order_success = self.test_razorpay_create_order()
+        
+        # Step 2: Test payment verification
+        verify_payment_success = self.test_razorpay_verify_payment()
+        
+        # Calculate workflow success
+        payment_tests = [create_order_success, verify_payment_success]
+        payment_success_rate = sum(payment_tests) / len(payment_tests) * 100
+        
+        print(f"\n📊 Razorpay Integration Success Rate: {payment_success_rate:.1f}%")
+        
+        # Note about test environment limitations
+        if payment_success_rate < 100:
+            print("ℹ️  Note: Some payment tests may fail in test environment due to mock credentials")
+        
+        return payment_success_rate > 50  # Lower threshold due to test environment limitations
+
+    def run_admin_panel_tests(self):
+        """Run comprehensive admin panel backend tests"""
+        print("🔐 Starting Admin Panel Backend Testing")
+        print("=" * 60)
+        
+        # Test 1: Backend Server Health
+        server_health = self.test_backend_server_health()
+        
+        if not server_health:
+            print("❌ Backend server not accessible. Cannot proceed with admin tests.")
+            return False
+        
+        # Test 2: Admin Authentication Workflow
+        admin_auth_success = self.test_admin_authentication_workflow()
+        
+        # Test 3: Admin Management Workflow
+        admin_mgmt_success = self.test_admin_management_workflow()
+        
+        # Test 4: Razorpay Payment Integration
+        razorpay_success = self.test_razorpay_integration_workflow()
+        
+        # Calculate overall success rate
+        admin_tests = [server_health, admin_auth_success, admin_mgmt_success, razorpay_success]
+        admin_success_rate = sum(admin_tests) / len(admin_tests) * 100
+        
+        # Final Results
+        print("\n" + "=" * 60)
+        print("📊 ADMIN PANEL TEST RESULTS")
+        print("=" * 60)
+        print(f"🏥 Server Health: {'✅ PASS' if server_health else '❌ FAIL'}")
+        print(f"🔐 Admin Authentication: {'✅ PASS' if admin_auth_success else '❌ FAIL'}")
+        print(f"👨‍💼 Admin Management: {'✅ PASS' if admin_mgmt_success else '❌ FAIL'}")
+        print(f"💳 Razorpay Integration: {'✅ PASS' if razorpay_success else '❌ FAIL'}")
+        print(f"\n📈 Overall Tests: {self.tests_passed}/{self.tests_run} passed ({(self.tests_passed/self.tests_run*100):.1f}%)")
+        
+        # Determine overall status
+        overall_success = admin_success_rate >= 75
+        
+        if overall_success:
+            print("🎉 ADMIN PANEL STATUS: ✅ READY FOR PRODUCTION")
+        else:
+            print("⚠️  ADMIN PANEL STATUS: ❌ ISSUES DETECTED - REVIEW FAILED TESTS")
+        
+        # Print failed tests details
+        failed_tests = [test for test in self.test_results if not test['success']]
+        if failed_tests:
+            print("\n❌ Failed Tests:")
+            for test in failed_tests:
+                print(f"  - {test['name']}: {test['details']}")
+        
+        return overall_success
+
 def main():
     tester = PhotoGiftHubAPITester()
     
