@@ -455,13 +455,30 @@ export const EnhancedUserProfile = () => {
               <TabsContent value="photos" className="space-y-6 mt-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">Saved Photos ({savedPhotos.length})</h3>
-                  <Button
-                    onClick={() => document.getElementById('customizer')?.scrollIntoView({behavior: 'smooth'})}
-                    className="bg-blue-500 hover:bg-blue-600"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Upload New Photo
-                  </Button>
+                  <div className="flex space-x-2">
+                    <input
+                      type="file"
+                      id="photo-upload"
+                      multiple
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      onClick={() => document.getElementById('photo-upload')?.click()}
+                      disabled={isUploading}
+                      className="bg-blue-500 hover:bg-blue-600"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      {isUploading ? 'Uploading...' : 'Upload Photos'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => document.getElementById('customizer')?.scrollIntoView({behavior: 'smooth'})}
+                    >
+                      Use Customizer
+                    </Button>
+                  </div>
                 </div>
                 
                 {savedPhotos.length > 0 ? (
