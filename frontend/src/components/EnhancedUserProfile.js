@@ -237,7 +237,57 @@ export const EnhancedUserProfile = () => {
     const updatedPhotos = savedPhotos.filter(photo => photo.id !== photoId);
     setSavedPhotos(updatedPhotos);
     localStorage.setItem('memoriesPhotos', JSON.stringify(updatedPhotos));
-    toast.success('Photo deleted');
+    toast.success('Photo deleted successfully');
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setIsUploading(true);
+    
+    try {
+      for (const file of files) {
+        // Validate file
+        if (!file.type.startsWith('image/')) {
+          toast.error(`${file.name} is not a valid image file`);
+          continue;
+        }
+        
+        if (file.size > 8 * 1024 * 1024) { // 8MB limit
+          toast.error(`${file.name} is too large (max 8MB)`);
+          continue;
+        }
+
+        // Create preview URL
+        const url = URL.createObjectURL(file);
+        
+        // Create photo object
+        const photo = {
+          id: Date.now() + Math.random(),
+          name: file.name,
+          url: url,
+          size: (file.size / (1024 * 1024)).toFixed(2),
+          uploadedAt: new Date().toISOString(),
+          file: file // Store file for potential upload to server
+        };
+
+        // Add to saved photos
+        const updatedPhotos = [...savedPhotos, photo];
+        setSavedPhotos(updatedPhotos);
+        localStorage.setItem('memoriesPhotos', JSON.stringify(updatedPhotos.map(p => ({
+          ...p,
+          file: undefined // Don't store file object in localStorage
+        }))));
+      }
+      
+      toast.success(`${files.length} photo(s) uploaded successfully`);
+    } catch (error) {
+      console.error('Photo upload error:', error);
+      toast.error('Failed to upload photos');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const deleteDesign = (designId) => {
