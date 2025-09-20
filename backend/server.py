@@ -14,6 +14,9 @@ from emergentintegrations.llm.chat import LlmChat, UserMessage
 import base64
 import io
 from PIL import Image
+import hashlib
+import secrets
+import razorpay
 
 # Import our new services
 from services.cloudinary_service import cloudinary_service
