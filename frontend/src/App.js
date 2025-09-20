@@ -1273,6 +1273,14 @@ const AboutUsPopup = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
+    // Don't show popup on admin routes or checkout
+    const isAdminRoute = window.location.pathname.startsWith('/admin');
+    const isCheckoutRoute = window.location.pathname.startsWith('/checkout');
+    
+    if (isAdminRoute || isCheckoutRoute) {
+      return; // Exit early, don't show popup on admin/checkout
+    }
+
     const hasVisited = localStorage.getItem('memoriesVisited');
     if (!hasVisited) {
       setTimeout(() => setShowPopup(true), 2000); // Show after 2 seconds
