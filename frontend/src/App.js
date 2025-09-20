@@ -1289,7 +1289,14 @@ const AboutUsPopup = () => {
   }, []);
 
   return (
-    <Dialog open={showPopup} onOpenChange={setShowPopup}>
+    <Dialog 
+      open={showPopup} 
+      onOpenChange={(open) => {
+        if (!open) {
+          setShowPopup(false);
+        }
+      }}
+    >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
