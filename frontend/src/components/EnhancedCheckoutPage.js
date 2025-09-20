@@ -667,15 +667,69 @@ export const EnhancedCheckoutPage = () => {
               )}
 
               {formData.deliveryType === 'delivery' && (
-                <div>
-                  <Label htmlFor="address">Delivery Address *</Label>
-                  <Textarea
-                    id="address"
-                    value={formData.address}
-                    onChange={(e) => setFormData(prev => ({...prev, address: e.target.value}))}
-                    placeholder="Enter your complete address"
-                    required
-                  />
+                <div className="space-y-4">
+                  <Label>Delivery Address *</Label>
+                  
+                  {/* Address Choice Radio Buttons */}
+                  <RadioGroup value={addressChoice} onValueChange={setAddressChoice} className="flex space-x-6">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="saved" id="saved-address" />
+                      <Label htmlFor="saved-address">Use saved address</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="new" id="new-address" />
+                      <Label htmlFor="new-address">Enter new address</Label>
+                    </div>
+                  </RadioGroup>
+
+                  {/* Saved Address Block */}
+                  {addressChoice === 'saved' && (
+                    <div id="saved-address-block" className="space-y-3">
+                      <select 
+                        id="saved-addresses"
+                        className="w-full p-3 border border-gray-300 rounded-md"
+                        value={formData.address}
+                        onChange={(e) => setFormData(prev => ({...prev, address: e.target.value}))}
+                        required
+                      >
+                        <option value="">Select a saved address</option>
+                        {savedAddresses.length > 0 ? savedAddresses.map((addr, index) => (
+                          <option key={index} value={addr.full_address}>
+                            {addr.label || `Address ${index + 1}`}: {addr.full_address}
+                          </option>
+                        )) : (
+                          <option value={formData.address || `${userProfile?.city || ''}, ${userProfile?.state || ''}`}>
+                            Default: {formData.address || `${userProfile?.city || 'Coimbatore'}, Tamil Nadu`}
+                          </option>
+                        )}
+                      </select>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="save-as-default" />
+                        <Label htmlFor="save-as-default" className="text-sm">Save as default address</Label>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* New Address Block */}
+                  {addressChoice === 'new' && (
+                    <div id="new-address-block" className="space-y-3">
+                      <Textarea
+                        name="address_line1"
+                        value={formData.address}
+                        onChange={(e) => setFormData(prev => ({...prev, address: e.target.value}))}
+                        placeholder="Enter your complete address"
+                        required
+                      />
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id="save-new" 
+                          checked={saveNewAddress}
+                          onCheckedChange={setSaveNewAddress}
+                        />
+                        <Label htmlFor="save-new" className="text-sm">Save to my addresses</Label>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
