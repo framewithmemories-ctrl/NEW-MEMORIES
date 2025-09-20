@@ -496,7 +496,15 @@ export const CustomerManagement = () => {
       </Card>
 
       {/* Customer Details Dialog */}
-      <Dialog open={showCustomerDialog} onOpenChange={setShowCustomerDialog}>
+      <Dialog 
+        open={showCustomerDialog} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowCustomerDialog(false);
+            setSelectedCustomer(null);
+          }
+        }}
+      >
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto">
           <DialogHeader>
             <DialogTitle>Customer Profile - {selectedCustomer?.name}</DialogTitle>
