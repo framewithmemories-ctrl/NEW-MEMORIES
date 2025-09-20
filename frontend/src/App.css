@@ -9,21 +9,78 @@
   --space-md: 16px;
 }
 
-/* Emergency modal-stabilizer: remove animations and allow clicks */
-.modal, .popup, .offer-popup, .modal-backdrop {
-  animation: none !important;
-  transition: opacity 0.15s ease !important;
-  transform: none !important;
+/* Enhanced modal animations and behavior */
+.modal, .popup, .offer-popup {
   pointer-events: auto !important;
+  z-index: 1050 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: scale(1) !important;
+  opacity: 1 !important;
 }
+
+.modal[data-state="open"], 
+.popup[data-state="open"], 
+.offer-popup[data-state="open"] {
+  animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.modal[data-state="closed"], 
+.popup[data-state="closed"], 
+.offer-popup[data-state="closed"] {
+  animation: modalFadeOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
 .modal-backdrop { 
-  pointer-events: auto; 
-  z-index: 1040;
-  opacity: 0.6;
+  pointer-events: auto !important; 
+  z-index: 1040 !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  transition: opacity 0.3s ease !important;
 }
-.modal, .popup, .offer-popup { 
-  z-index: 1050 !important; 
-  pointer-events: auto !important;
+
+/* Modal animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+}
+
+/* Loading indicators for modals */
+.modal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-loading::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Comprehensive hover rules - pink theme */
