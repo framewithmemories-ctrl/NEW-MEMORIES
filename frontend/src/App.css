@@ -26,22 +26,34 @@
   pointer-events: auto !important;
 }
 
-/* Global hover rules - pink theme */
-a:hover,
-button:hover,
+/* Comprehensive hover rules - pink theme */
+/* Navigation and header elements - text color only */
+header nav a:hover,
+header nav button:hover,
 .nav a:hover,
-.btn:hover,
-.card:hover,
-.product-card .call-now:hover {
-  color: #fff;
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  transition: background-color 0.18s ease, color 0.18s ease;
+nav a:hover,
+a.nav-link:hover {
+  color: var(--color-primary) !important;
+  background-color: rgba(255, 51, 102, 0.1) !important;
+  transition: all 0.18s ease !important;
 }
 
-/* Link-only hover (text color change) */
-a, .nav a { color: inherit; }
-a:hover, .nav a:hover { color: var(--color-primary); }
+/* Buttons - background color change */
+button:hover,
+.btn:hover,
+.call-now:hover,
+.product-card .call-now:hover {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: #fff !important;
+  transition: all 0.18s ease !important;
+}
+
+/* General links - text color only */
+a:hover {
+  color: var(--color-primary) !important;
+  transition: color 0.18s ease !important;
+}
 
 /* Header layout - tighten spacing and prevent wrapping */
 .header .nav {
