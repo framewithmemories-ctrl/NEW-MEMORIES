@@ -268,8 +268,8 @@ nav button * {
 
 nav button:hover,
 nav button:hover * {
-  color: #991b1b !important; /* red-800 hover */
-  background-color: #fef2f2 !important; /* red-50 background */
+  color: var(--color-primary) !important; /* Primary pink hover */
+  background-color: #fef2f2 !important; /* Light rose background */
 }
 
 .nav-hover-fix:hover {
