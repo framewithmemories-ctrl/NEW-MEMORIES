@@ -1747,8 +1747,21 @@ async def get_admin_dashboard_stats():
         # Get customers count
         total_customers = await db.users.count_documents({})
         
-        # Recent orders (top 5)
-        recent_orders = sorted(all_orders, key=lambda x: x["created_at"], reverse=True)[:5]
+        # Recent orders (top 5) - clean up for JSON serialization
+        recent_orders_raw = sorted(all_orders, key=lambda x: x["created_at"], reverse=True)[:5]
+        recent_orders = []
+        for order in recent_orders_raw:
+            order_dict = dict(order)
+            if "_id" in order_dict:
+                del order_dict["_id"]
+            
+            # Convert datetime objects to ISO strings
+            if "created_at" in order_dict and isinstance(order_dict["created_at"], datetime):
+                order_dict["created_at"] = order_dict["created_at"].isoformat()
+            if "updated_at" in order_dict and isinstance(order_dict["updated_at"], datetime):
+                order_dict["updated_at"] = order_dict["updated_at"].isoformat()
+            
+            recent_orders.append(order_dict)
         
         return {
             "success": True,
