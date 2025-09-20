@@ -670,7 +670,7 @@ export const ProductGrid = ({ products }) => {
                       Customize
                     </Button>
                     <SmartCallButton 
-                      className="border-green-200 text-green-700 hover:bg-green-50 text-xs"
+                      className="bg-rose-500 text-white hover:bg-rose-600 border-0 text-xs"
                     >
                       <PhoneCall className="w-3 h-3 mr-1" />
                       Call Now
