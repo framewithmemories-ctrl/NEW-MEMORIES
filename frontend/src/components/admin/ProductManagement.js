@@ -465,7 +465,15 @@ export const ProductManagement = () => {
       </Card>
 
       {/* Product Details Dialog */}
-      <Dialog open={showProductDialog} onOpenChange={setShowProductDialog}>
+      <Dialog 
+        open={showProductDialog} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowProductDialog(false);
+            setSelectedProduct(null);
+          }
+        }}
+      >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Product Details - {selectedProduct?.name}</DialogTitle>
