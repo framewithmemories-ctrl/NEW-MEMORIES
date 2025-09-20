@@ -72,6 +72,9 @@ export const EnhancedCheckoutPage = () => {
   const [userWallet, setUserWallet] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [useWalletBalance, setUseWalletBalance] = useState(false);
+  const [addressChoice, setAddressChoice] = useState('saved');
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [saveNewAddress, setSaveNewAddress] = useState(false);
   const [showLiveUpdates, setShowLiveUpdates] = useState(true);
 
   // Fix order summary page loading from header
