@@ -25,37 +25,43 @@ export const AdminLogin = ({ onLogin }) => {
     setIsLogging(true);
 
     try {
-      // Simulate authentication delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Validate credentials
-      if (
-        credentials.email === ADMIN_CREDENTIALS.email &&
-        credentials.password === ADMIN_CREDENTIALS.password
-      ) {
-        // Store admin session
-        localStorage.setItem('adminSession', JSON.stringify({
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      
+      // Call backend admin login API
+      const response = await fetch(`${backendUrl}/api/admin/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           email: credentials.email,
+          password: credentials.password
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Store admin session with token
+        localStorage.setItem('adminSession', JSON.stringify({
+          token: data.token,
+          admin: data.admin,
           loginTime: new Date().toISOString(),
-          permissions: ['orders', 'customers', 'products', 'analytics', 'settings']
+          expiresAt: data.expires_at
         }));
 
         toast.success('🎉 Welcome to Memories Admin Panel!');
         
         // Call parent login handler
         if (onLogin) {
-          onLogin({
-            email: credentials.email,
-            name: 'Admin User',
-            permissions: ['orders', 'customers', 'products', 'analytics', 'settings']
-          });
+          onLogin(data.admin);
         }
       } else {
-        toast.error('Invalid credentials. Please check your email and password.');
+        toast.error(data.detail || 'Invalid credentials. Please check your email and password.');
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error('Login failed. Please try again.');
+      toast.error('Login failed. Please check your connection and try again.');
     } finally {
       setIsLogging(false);
     }
