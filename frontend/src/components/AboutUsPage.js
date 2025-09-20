@@ -374,7 +374,7 @@ export const AboutUsPage = () => {
                   <span className="font-semibold text-white text-lg">+91 81480 40148</span>
                 </p>
                 <p className="text-gray-400 text-sm mb-4">Available for calls & WhatsApp</p>
-                <SmartCallButton className="mt-2 bg-green-600 hover:bg-green-700">
+                <SmartCallButton className="mt-2 bg-rose-500 hover:bg-rose-600">
                   <Phone className="w-4 h-4 mr-2" />
                   Call Now
                 </SmartCallButton>
