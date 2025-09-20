@@ -1711,7 +1711,7 @@ async def get_admin_dashboard_stats():
         today = datetime.now(timezone.utc).date()
         today_orders = [
             o for o in all_orders 
-            if o["created_at"].date() == today if isinstance(o["created_at"], datetime) else False
+            if isinstance(o["created_at"], datetime) and o["created_at"].date() == today
         ]
         
         # Get customers count
