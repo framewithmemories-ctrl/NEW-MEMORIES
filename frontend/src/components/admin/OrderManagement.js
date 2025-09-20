@@ -187,9 +187,10 @@ export const OrderManagement = () => {
           ],
           notes: 'Customer wants to reorder with different specifications'
         }
-      ];
-      
-      setOrders(mockOrders);
+        ];
+        
+        setOrders(mockOrders);
+      }
       
     } catch (error) {
       console.error('Orders loading error:', error);
