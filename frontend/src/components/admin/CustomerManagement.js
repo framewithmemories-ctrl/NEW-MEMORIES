@@ -438,7 +438,9 @@ export const CustomerManagement = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         setSelectedCustomer(customer);
                         setShowCustomerDialog(true);
                       }}
