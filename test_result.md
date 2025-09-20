@@ -573,7 +573,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Cloudinary Integration Testing"
+    - "Admin Authentication System"
+    - "Admin Panel Frontend Components"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
