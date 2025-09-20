@@ -22,6 +22,7 @@ import { HeroSection, AboutUsSection, ProductGrid } from "./components/MainCompo
 import { AboutUsPage } from "./components/AboutUsPage";
 import { EnhancedCheckoutPage } from "./components/EnhancedCheckoutPage";
 import { ReviewSystemEnhanced } from "./components/ReviewSystemEnhanced";
+import { AdminDashboard } from "./components/admin/AdminDashboard";
 import { 
   Upload, 
   Sparkles, 
