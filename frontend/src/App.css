@@ -9,6 +9,23 @@
   --space-md: 16px;
 }
 
+/* Emergency modal-stabilizer: remove animations and allow clicks */
+.modal, .popup, .offer-popup, .modal-backdrop {
+  animation: none !important;
+  transition: opacity 0.15s ease !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+.modal-backdrop { 
+  pointer-events: auto; 
+  z-index: 1040;
+  opacity: 0.6;
+}
+.modal, .popup, .offer-popup { 
+  z-index: 1050 !important; 
+  pointer-events: auto !important;
+}
+
 * {
   margin: 0;
   padding: 0;
