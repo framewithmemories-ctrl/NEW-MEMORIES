@@ -378,7 +378,7 @@ export const AdminDashboard = () => {
                                   {order.status}
                                 </Badge>
                               </div>
-                              <p className="text-sm text-gray-500 mt-1">{order.items.join(', ')}</p>
+                              <p className="text-sm text-gray-500 mt-1">{(order.items || []).join(', ')}</p>
                             </div>
                             <div className="text-right">
                               <p className="font-semibold text-gray-900">{formatCurrency(order.total)}</p>
