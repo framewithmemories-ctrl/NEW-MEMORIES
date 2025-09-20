@@ -577,7 +577,14 @@ The Memories Team`
       </Tabs>
 
       {/* Compose Email Dialog */}
-      <Dialog open={showComposeDialog} onOpenChange={setShowComposeDialog}>
+      <Dialog 
+        open={showComposeDialog} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowComposeDialog(false);
+          }
+        }}
+      >
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Compose Email</DialogTitle>
