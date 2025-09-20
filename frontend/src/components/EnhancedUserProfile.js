@@ -248,18 +248,32 @@ export const EnhancedUserProfile = () => {
     setIsUploading(true);
     
     try {
+      // Validate and process files
+      const validFiles = [];
       for (const file of files) {
-        // Validate file
+        // Validate file type
         if (!file.type.startsWith('image/')) {
           toast.error(`${file.name} is not a valid image file`);
           continue;
         }
         
-        if (file.size > 8 * 1024 * 1024) { // 8MB limit
+        // Validate file size (8MB limit)
+        if (file.size > 8 * 1024 * 1024) {
           toast.error(`${file.name} is too large (max 8MB)`);
           continue;
         }
 
+        validFiles.push(file);
+      }
+
+      if (validFiles.length === 0) {
+        setIsUploading(false);
+        return;
+      }
+
+      // Option 1: Client-side storage with preview (current implementation)
+      const uploadedPhotos = [];
+      for (const file of validFiles) {
         // Create preview URL
         const url = URL.createObjectURL(file);
         
@@ -270,19 +284,49 @@ export const EnhancedUserProfile = () => {
           url: url,
           size: (file.size / (1024 * 1024)).toFixed(2),
           uploadedAt: new Date().toISOString(),
-          file: file // Store file for potential upload to server
+          mime_type: file.type,
+          file: file // Store file for potential server upload
         };
 
-        // Add to saved photos
-        const updatedPhotos = [...savedPhotos, photo];
-        setSavedPhotos(updatedPhotos);
-        localStorage.setItem('memoriesPhotos', JSON.stringify(updatedPhotos.map(p => ({
-          ...p,
-          file: undefined // Don't store file object in localStorage
-        }))));
+        uploadedPhotos.push(photo);
       }
+
+      // TODO: Server upload implementation
+      // Uncomment when backend is ready:
+      /*
+      const userId = user?.id;
+      const token = localStorage.getItem('authToken');
       
-      toast.success(`${files.length} photo(s) uploaded successfully`);
+      if (userId && token) {
+        const formData = new FormData();
+        validFiles.forEach(f => formData.append('photos[]', f));
+        
+        const response = await fetch(`${backendUrl}/api/users/${userId}/photos`, {
+          method: 'POST',
+          headers: { 
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setSuccessPhotos(data.photos);
+        } else {
+          throw new Error('Server upload failed');
+        }
+      }
+      */
+
+      // Add to saved photos (client-side for now)
+      const updatedPhotos = [...savedPhotos, ...uploadedPhotos];
+      setSavedPhotos(updatedPhotos);
+      localStorage.setItem('memoriesPhotos', JSON.stringify(updatedPhotos.map(p => ({
+        ...p,
+        file: undefined // Don't store file object in localStorage
+      }))));
+      
+      toast.success(`${validFiles.length} photo(s) uploaded successfully`);
     } catch (error) {
       console.error('Photo upload error:', error);
       toast.error('Failed to upload photos');
