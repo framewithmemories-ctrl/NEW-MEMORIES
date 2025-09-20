@@ -441,7 +441,9 @@ export const ProductManagement = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             setSelectedProduct(product);
                             // Edit functionality would go here
                           }}
