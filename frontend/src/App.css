@@ -257,7 +257,7 @@ img[src] {
 /* Mobile Category Headers */
 .mobile-category-header:hover {
   background-color: #fef2f2 !important;
-  color: #be123c !important;
+  color: var(--color-primary) !important;
 }
 
 /* Complete navigation hover fix */
