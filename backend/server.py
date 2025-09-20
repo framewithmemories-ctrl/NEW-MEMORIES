@@ -1513,6 +1513,333 @@ async def get_export_requests(user_id: str):
     
     return [DataExportRequest(**req) for req in requests]
 
+# ===== ADMIN AUTHENTICATION ENDPOINTS =====
+
+def hash_password(password: str) -> str:
+    """Hash password using SHA-256 with salt"""
+    salt = secrets.token_hex(16)
+    pwd_hash = hashlib.sha256((password + salt).encode()).hexdigest()
+    return f"{salt}:{pwd_hash}"
+
+def verify_password(password: str, hashed: str) -> bool:
+    """Verify password against hash"""
+    try:
+        salt, pwd_hash = hashed.split(':')
+        return hashlib.sha256((password + salt).encode()).hexdigest() == pwd_hash
+    except ValueError:
+        return False
+
+def generate_admin_token() -> str:
+    """Generate secure admin session token"""
+    return secrets.token_urlsafe(32)
+
+@api_router.post("/admin/login")
+async def admin_login(login_data: AdminLogin):
+    """Admin login endpoint"""
+    try:
+        # Find admin by email
+        admin = await db.admins.find_one({"email": login_data.email, "is_active": True})
+        if not admin:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        
+        # Verify password
+        if not verify_password(login_data.password, admin["password_hash"]):
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        
+        # Generate session token
+        token = generate_admin_token()
+        expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
+        
+        # Create session
+        session = AdminSession(
+            admin_id=admin["id"],
+            token=token,
+            expires_at=expires_at
+        )
+        await db.admin_sessions.insert_one(session.dict())
+        
+        # Update last login
+        await db.admins.update_one(
+            {"id": admin["id"]},
+            {"$set": {"last_login": datetime.now(timezone.utc)}}
+        )
+        
+        return {
+            "success": True,
+            "token": token,
+            "admin": {
+                "id": admin["id"],
+                "email": admin["email"],
+                "name": admin["name"],
+                "permissions": admin.get("permissions", [])
+            },
+            "expires_at": expires_at.isoformat()
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Admin login error: {e}")
+        raise HTTPException(status_code=500, detail="Login failed")
+
+@api_router.post("/admin/logout")
+async def admin_logout(token: str):
+    """Admin logout endpoint"""
+    try:
+        # Remove session
+        await db.admin_sessions.delete_one({"token": token})
+        return {"success": True, "message": "Logged out successfully"}
+    except Exception as e:
+        print(f"Admin logout error: {e}")
+        raise HTTPException(status_code=500, detail="Logout failed")
+
+@api_router.get("/admin/verify")
+async def verify_admin_session(token: str):
+    """Verify admin session token"""
+    try:
+        session = await db.admin_sessions.find_one({"token": token})
+        if not session:
+            raise HTTPException(status_code=401, detail="Invalid session")
+        
+        # Check if session expired
+        if datetime.now(timezone.utc) > session["expires_at"]:
+            await db.admin_sessions.delete_one({"token": token})
+            raise HTTPException(status_code=401, detail="Session expired")
+        
+        # Get admin details
+        admin = await db.admins.find_one({"id": session["admin_id"], "is_active": True})
+        if not admin:
+            raise HTTPException(status_code=401, detail="Admin not found")
+        
+        return {
+            "success": True,
+            "admin": {
+                "id": admin["id"],
+                "email": admin["email"],
+                "name": admin["name"],
+                "permissions": admin.get("permissions", [])
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Session verification error: {e}")
+        raise HTTPException(status_code=500, detail="Verification failed")
+
+# ===== ADMIN ORDER MANAGEMENT ENDPOINTS =====
+
+@api_router.get("/admin/orders")
+async def get_all_orders():
+    """Get all orders for admin dashboard"""
+    try:
+        orders = await db.orders.find().sort("created_at", -1).to_list(100)
+        
+        # Enhance with customer data
+        enhanced_orders = []
+        for order in orders:
+            user = await db.users.find_one({"id": order["user_id"]})
+            enhanced_order = {
+                **order,
+                "customerName": user.get("name", "Unknown") if user else "Unknown",
+                "customerEmail": user.get("email", "N/A") if user else "N/A", 
+                "customerPhone": user.get("phone", "N/A") if user else "N/A",
+                "deliveryAddress": user.get("address", "N/A") if user else "N/A"
+            }
+            enhanced_orders.append(enhanced_order)
+        
+        return {
+            "success": True,
+            "orders": enhanced_orders,
+            "total_count": len(enhanced_orders)
+        }
+        
+    except Exception as e:
+        print(f"Get admin orders error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch orders")
+
+@api_router.put("/admin/orders/{order_id}/status")
+async def update_order_status(order_id: str, status_data: dict):
+    """Update order status"""
+    try:
+        new_status = status_data.get("status")
+        notes = status_data.get("notes", "")
+        
+        # Update order
+        result = await db.orders.update_one(
+            {"id": order_id},
+            {
+                "$set": {
+                    "status": new_status,
+                    "admin_notes": notes,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        # Get updated order
+        updated_order = await db.orders.find_one({"id": order_id})
+        
+        return {
+            "success": True,
+            "message": f"Order status updated to {new_status}",
+            "order": updated_order
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Update order status error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update order status")
+
+@api_router.get("/admin/dashboard/stats")
+async def get_admin_dashboard_stats():
+    """Get dashboard statistics for admin"""
+    try:
+        # Get orders data
+        all_orders = await db.orders.find().to_list(1000)
+        total_orders = len(all_orders)
+        
+        # Calculate stats
+        pending_orders = len([o for o in all_orders if o.get("status") == "pending"])
+        total_revenue = sum(o.get("total_amount", 0) for o in all_orders if o.get("status") != "cancelled")
+        
+        # Today's orders
+        today = datetime.now(timezone.utc).date()
+        today_orders = [
+            o for o in all_orders 
+            if o["created_at"].date() == today if isinstance(o["created_at"], datetime) else False
+        ]
+        
+        # Get customers count
+        total_customers = await db.users.count_documents({})
+        
+        # Recent orders (top 5)
+        recent_orders = sorted(all_orders, key=lambda x: x["created_at"], reverse=True)[:5]
+        
+        return {
+            "success": True,
+            "stats": {
+                "totalOrders": total_orders,
+                "totalCustomers": total_customers,
+                "totalRevenue": total_revenue,
+                "pendingOrders": pending_orders,
+                "todayOrders": len(today_orders),
+                "recentOrders": recent_orders
+            }
+        }
+        
+    except Exception as e:
+        print(f"Dashboard stats error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch dashboard stats")
+
+# ===== RAZORPAY PAYMENT INTEGRATION =====
+
+# Initialize Razorpay client
+def get_razorpay_client():
+    """Get Razorpay client instance"""
+    key_id = os.environ.get('RAZORPAY_KEY_ID')
+    key_secret = os.environ.get('RAZORPAY_KEY_SECRET')
+    
+    if not key_id or not key_secret:
+        raise HTTPException(status_code=500, detail="Razorpay credentials not configured")
+    
+    return razorpay.Client(auth=(key_id, key_secret))
+
+@api_router.post("/payments/create-order")
+async def create_razorpay_order(order_data: dict):
+    """Create Razorpay order for payment"""
+    try:
+        client = get_razorpay_client()
+        
+        # Create Razorpay order
+        razorpay_order = client.order.create({
+            "amount": int(order_data["amount"] * 100),  # Convert to paise
+            "currency": "INR",
+            "payment_capture": 1
+        })
+        
+        # Store payment order in database
+        payment_order = {
+            "id": str(uuid.uuid4()),
+            "razorpay_order_id": razorpay_order["id"],
+            "user_id": order_data.get("user_id"),
+            "amount": order_data["amount"],
+            "status": "created",
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.payment_orders.insert_one(payment_order)
+        
+        return {
+            "success": True,
+            "order_id": razorpay_order["id"],
+            "amount": razorpay_order["amount"],
+            "currency": razorpay_order["currency"],
+            "key_id": os.environ.get('RAZORPAY_KEY_ID')
+        }
+        
+    except Exception as e:
+        print(f"Create Razorpay order error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create payment order")
+
+@api_router.post("/payments/verify")
+async def verify_razorpay_payment(payment_data: dict):
+    """Verify Razorpay payment"""
+    try:
+        client = get_razorpay_client()
+        
+        # Verify payment signature
+        params_dict = {
+            'razorpay_order_id': payment_data['razorpay_order_id'],
+            'razorpay_payment_id': payment_data['razorpay_payment_id'],
+            'razorpay_signature': payment_data['razorpay_signature']
+        }
+        
+        client.utility.verify_payment_signature(params_dict)
+        
+        # Update payment status
+        await db.payment_orders.update_one(
+            {"razorpay_order_id": payment_data['razorpay_order_id']},
+            {
+                "$set": {
+                    "status": "completed",
+                    "razorpay_payment_id": payment_data['razorpay_payment_id'],
+                    "completed_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        return {
+            "success": True,
+            "message": "Payment verified successfully"
+        }
+        
+    except Exception as e:
+        print(f"Payment verification error: {e}")
+        raise HTTPException(status_code=400, detail="Payment verification failed")
+
+# Initialize default admin account
+async def initialize_admin():
+    """Create default admin account if it doesn't exist"""
+    try:
+        existing_admin = await db.admins.find_one({"email": "admin@memoriesngifts.com"})
+        if not existing_admin:
+            admin = Admin(
+                email="admin@memoriesngifts.com",
+                password_hash=hash_password("AdminMemories@2024"),
+                name="Admin User"
+            )
+            await db.admins.insert_one(admin.dict())
+            print("✅ Default admin account created")
+        else:
+            print("✅ Admin account already exists")
+    except Exception as e:
+        print(f"Admin initialization error: {e}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
