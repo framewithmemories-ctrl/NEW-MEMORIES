@@ -26,6 +26,23 @@
   pointer-events: auto !important;
 }
 
+/* Global hover rules - pink theme */
+a:hover,
+button:hover,
+.nav a:hover,
+.btn:hover,
+.card:hover,
+.product-card .call-now:hover {
+  color: #fff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+/* Link-only hover (text color change) */
+a, .nav a { color: inherit; }
+a:hover, .nav a:hover { color: var(--color-primary); }
+
 * {
   margin: 0;
   padding: 0;
