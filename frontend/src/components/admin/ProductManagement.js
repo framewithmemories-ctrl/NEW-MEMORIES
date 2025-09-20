@@ -563,7 +563,14 @@ export const ProductManagement = () => {
       </Dialog>
 
       {/* Create Product Dialog */}
-      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+      <Dialog 
+        open={showCreateDialog} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowCreateDialog(false);
+          }
+        }}
+      >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Add New Product</DialogTitle>
