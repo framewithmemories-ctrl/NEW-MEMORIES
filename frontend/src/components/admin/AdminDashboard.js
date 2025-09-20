@@ -404,7 +404,7 @@ export const AdminDashboard = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        {dashboardStats.topProducts.map((product, index) => (
+                        {(dashboardStats.topProducts || []).map((product, index) => (
                           <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                             <div className="flex items-center space-x-3">
                               <div className="bg-rose-100 rounded-full w-8 h-8 flex items-center justify-center">
