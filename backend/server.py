@@ -1643,8 +1643,20 @@ async def get_all_orders():
         enhanced_orders = []
         for order in orders:
             user = await db.users.find_one({"id": order["user_id"]})
+            
+            # Convert order to dict and remove MongoDB ObjectId
+            order_dict = dict(order)
+            if "_id" in order_dict:
+                del order_dict["_id"]
+            
+            # Convert datetime objects to ISO strings
+            if "created_at" in order_dict and isinstance(order_dict["created_at"], datetime):
+                order_dict["created_at"] = order_dict["created_at"].isoformat()
+            if "updated_at" in order_dict and isinstance(order_dict["updated_at"], datetime):
+                order_dict["updated_at"] = order_dict["updated_at"].isoformat()
+            
             enhanced_order = {
-                **order,
+                **order_dict,
                 "customerName": user.get("name", "Unknown") if user else "Unknown",
                 "customerEmail": user.get("email", "N/A") if user else "N/A", 
                 "customerPhone": user.get("phone", "N/A") if user else "N/A",
