@@ -1323,7 +1323,9 @@ const AboutUsPopup = () => {
             <p className="text-gray-600 mb-4">Located at Keeranatham Road, Coimbatore</p>
             <div className="space-y-2">
               <Button 
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   document.getElementById('customizer')?.scrollIntoView({behavior: 'smooth'});
                   setShowPopup(false);
                 }}
