@@ -545,13 +545,63 @@ header button * {
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Print styles */
+/* Enhanced Print styles - Fix for issue #5 */
 @media print {
+  /* Page setup */
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  
+  /* Hide site chrome and navigation */
+  header, 
+  .site-header, 
+  .site-footer, 
+  nav, 
+  .navigation,
+  .no-print,
+  .mobile-nav-button,
+  footer,
+  .footer,
+  [role="banner"],
+  [role="navigation"],
+  .offer-popup,
+  .modal-backdrop {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Ensure only printable content is visible */
+  .printable {
+    display: block !important;
+    visibility: visible !important;
+    page-break-inside: avoid;
+  }
+  
+  /* Remove fixed positioning that causes repetition */
+  .fixed, 
+  .position-fixed,
+  .sticky,
+  .position-sticky {
+    position: static !important;
+  }
+  
+  /* Prevent page breaks inside important content */
+  .summary-row,
+  .checkout-item,
+  .order-summary,
+  .receipt-item {
+    page-break-inside: avoid;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Brand container for print */
   .brand-container {
     display: flex !important;
     align-items: center !important;
     gap: 0.75rem !important;
     margin-bottom: 1rem !important;
+    page-break-after: avoid;
   }
   
   .brand-logo {
@@ -576,6 +626,53 @@ header button * {
     font-size: 0.75rem !important;
     color: #4b5563 !important;
     margin-top: 0.5rem !important;
+  }
+  
+  /* Print-specific content styling */
+  body {
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    color: black !important;
+    background: white !important;
+  }
+  
+  /* Ensure text is readable in print */
+  h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+    page-break-after: avoid;
+  }
+  
+  /* Remove background images and colors for print */
+  * {
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  /* Print-friendly table styling */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+  
+  th, td {
+    border: 1pt solid #ccc !important;
+    padding: 4pt !important;
+    text-align: left !important;
+  }
+  
+  /* Ensure links are visible in print */
+  a:link, a:visited {
+    color: black !important;
+    text-decoration: underline !important;
+  }
+  
+  /* Hide action buttons that don't make sense in print */
+  button:not(.print-show),
+  .btn:not(.print-show),
+  input[type="button"]:not(.print-show),
+  input[type="submit"]:not(.print-show) {
+    display: none !important;
   }
 }
 
