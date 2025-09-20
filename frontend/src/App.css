@@ -43,6 +43,33 @@ button:hover,
 a, .nav a { color: inherit; }
 a:hover, .nav a:hover { color: var(--color-primary); }
 
+/* Header layout - tighten spacing and prevent wrapping */
+.header .nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 12px;
+}
+
+.header .nav a {
+  white-space: nowrap;
+  padding: 10px 8px;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* Reduce logo max width to avoid menu wrap */
+.header .logo img { 
+  max-width: 160px; 
+  height: auto; 
+}
+
+/* Responsive: collapse earlier to prevent wrapping */
+@media (max-width: 1100px) {
+  .header .nav { display: none; }
+  .header .hamburger { display: block; }
+}
+
 * {
   margin: 0;
   padding: 0;
