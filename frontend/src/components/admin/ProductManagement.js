@@ -235,7 +235,15 @@ export const ProductManagement = () => {
         </div>
 
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => setShowCreateDialog(false)}>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowCreateDialog(false);
+            }}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={editingProduct}>
