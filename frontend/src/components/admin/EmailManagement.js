@@ -331,7 +331,15 @@ The Memories Team`
         </div>
 
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => setShowComposeDialog(false)}>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowComposeDialog(false);
+            }}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={sending}>
