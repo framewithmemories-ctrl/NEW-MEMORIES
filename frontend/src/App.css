@@ -184,8 +184,8 @@ img[src] {
 }
 
 .brand-nav-item:hover {
-  color: #be123c !important; /* Deep maroon/red from brand */
-  background-color: #fef2f2 !important; /* Light red background */
+  color: var(--color-primary) !important; /* Primary pink from brand */
+  background-color: #fef2f2 !important; /* Light rose background */
   transform: translateY(-1px) !important;
 }
 
