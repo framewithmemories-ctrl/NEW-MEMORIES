@@ -273,7 +273,7 @@ nav button:hover * {
 }
 
 .nav-hover-fix:hover {
-  color: #991b1b !important;
+  color: var(--color-primary) !important;
   background-color: #fef2f2 !important;
 }
 
