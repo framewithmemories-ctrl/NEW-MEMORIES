@@ -81,7 +81,7 @@ header nav a {
 
 header nav button:hover,
 header nav a:hover {
-  color: #e11d48 !important; /* Rose text */
+  color: var(--color-primary) !important; /* Primary pink text */
   background-color: #fef2f2 !important; /* Light rose background */
   /* NO SCALE OR SHADOW - just color change */
 }
