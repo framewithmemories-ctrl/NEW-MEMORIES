@@ -478,18 +478,7 @@ export const AdminDashboard = () => {
 
             {/* Settings */}
             <TabsContent value="settings">
-              <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900">Admin Settings</h2>
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="text-center py-12">
-                      <Settings className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Settings Panel Coming Soon</h3>
-                      <p className="text-gray-600">Admin configuration settings will be available in Phase 2</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              <SettingsManagement />
             </TabsContent>
           </Tabs>
         </main>
