@@ -44,6 +44,9 @@ export const AdminDashboard = () => {
     topProducts: []
   });
   const [loading, setLoading] = useState(false);
+  const [businessMetrics, setBusinessMetrics] = useState({});
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [alertsNotifications, setAlertsNotifications] = useState([]);
 
   useEffect(() => {
     // Check for existing admin session
