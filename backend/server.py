@@ -1875,6 +1875,325 @@ async def delete_user_photo(user_id: str, photo_id: str):
         print(f"Delete photo error: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete photo")
 
+# ===== COMPREHENSIVE ADMIN MANAGEMENT ENDPOINTS =====
+
+# Settings Models
+class BusinessSettings(BaseModel):
+    business_name: str
+    business_phone: str
+    business_email: str
+    business_address: str
+    business_hours: str
+    gst_number: Optional[str] = None
+    website_url: Optional[str] = None
+    social_facebook: Optional[str] = None
+    social_instagram: Optional[str] = None
+
+class PaymentSettings(BaseModel):
+    razorpay_enabled: bool = False
+    razorpay_key_id: Optional[str] = None
+    cash_on_delivery: bool = True
+    minimum_cod_amount: int = 0
+    maximum_cod_amount: int = 50000
+    payment_gateway_fee: float = 2.5
+
+class NotificationSettings(BaseModel):
+    email_notifications: bool = True
+    sms_notifications: bool = False
+    whatsapp_notifications: bool = False
+    order_confirmation_email: bool = True
+    shipping_updates: bool = True
+    admin_order_alerts: bool = True
+
+# Banner Model
+class Banner(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str
+    description: str
+    image_url: str
+    link_url: Optional[str] = None
+    position: str = "header"
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+# ===== ADMIN PRODUCT MANAGEMENT ENDPOINTS =====
+
+@api_router.get("/admin/products")
+async def get_admin_products():
+    """Get all products with admin details"""
+    try:
+        products = await db.products.find().sort("created_at", -1).to_list(1000)
+        return {
+            "success": True,
+            "products": products,
+            "total_count": len(products)
+        }
+    except Exception as e:
+        print(f"Get admin products error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch products")
+
+@api_router.post("/admin/products")
+async def create_admin_product(product_data: dict):
+    """Create a new product (admin only)"""
+    try:
+        # Create product with admin fields
+        product = {
+            "id": str(uuid.uuid4()),
+            "name": product_data["name"],
+            "description": product_data["description"],
+            "category": product_data["category"],
+            "base_price": product_data["base_price"],
+            "image_url": product_data["image_url"],
+            "sizes": product_data.get("sizes", [{"name": "Standard", "price_add": 0}]),
+            "materials": product_data.get("materials", [{"name": "Standard", "price_add": 0}]),
+            "colors": product_data.get("colors", [{"name": "Standard", "price_add": 0}]),
+            "stock_quantity": product_data.get("stock_quantity", 100),
+            "low_stock_threshold": product_data.get("low_stock_threshold", 10),
+            "sku": product_data.get("sku", f"SKU_{int(datetime.now().timestamp())}"),
+            "is_active": product_data.get("is_active", True),
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.products.insert_one(product)
+        
+        return {
+            "success": True,
+            "product": product,
+            "message": "Product created successfully"
+        }
+        
+    except Exception as e:
+        print(f"Create product error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create product")
+
+@api_router.put("/admin/products/{product_id}")
+async def update_admin_product(product_id: str, updates: dict):
+    """Update product details"""
+    try:
+        updates["updated_at"] = datetime.now(timezone.utc)
+        
+        result = await db.products.update_one(
+            {"id": product_id},
+            {"$set": updates}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        updated_product = await db.products.find_one({"id": product_id})
+        
+        return {
+            "success": True,
+            "product": updated_product,
+            "message": "Product updated successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Update product error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update product")
+
+@api_router.delete("/admin/products/{product_id}")
+async def delete_admin_product(product_id: str):
+    """Delete a product"""
+    try:
+        result = await db.products.delete_one({"id": product_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        return {
+            "success": True,
+            "message": "Product deleted successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Delete product error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete product")
+
+# ===== ADMIN SETTINGS ENDPOINTS =====
+
+@api_router.get("/admin/settings/{settings_type}")
+async def get_admin_settings(settings_type: str):
+    """Get specific settings configuration"""
+    try:
+        settings = await db.admin_settings.find_one({"type": settings_type})
+        
+        if not settings:
+            # Return default settings
+            default_settings = {
+                "business": {
+                    "business_name": "Memories - Photo Frames & Custom Gifts",
+                    "business_phone": "+91 81480 40148",
+                    "business_email": "hello@memoriesngifts.com",
+                    "business_address": "19B Kani Illam, Keeranatham Road, Coimbatore, Tamil Nadu - 641035",
+                    "business_hours": "9:00 AM - 9:00 PM (Mon-Sat)",
+                    "gst_number": ""
+                },
+                "payments": {
+                    "razorpay_enabled": True,
+                    "cash_on_delivery": True,
+                    "minimum_cod_amount": 0,
+                    "maximum_cod_amount": 10000
+                },
+                "notifications": {
+                    "email_notifications": True,
+                    "order_confirmation_email": True,
+                    "admin_order_alerts": True
+                }
+            }
+            
+            return {
+                "success": True,
+                "settings": default_settings.get(settings_type, {})
+            }
+        
+        return {
+            "success": True,
+            "settings": settings.get("data", {})
+        }
+        
+    except Exception as e:
+        print(f"Get settings error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get settings")
+
+@api_router.put("/admin/settings/{settings_type}")
+async def update_admin_settings(settings_type: str, settings_data: dict):
+    """Update admin settings"""
+    try:
+        settings_doc = {
+            "type": settings_type,
+            "data": settings_data,
+            "updated_at": datetime.now(timezone.utc)
+        }
+        
+        await db.admin_settings.update_one(
+            {"type": settings_type},
+            {"$set": settings_doc},
+            upsert=True
+        )
+        
+        return {
+            "success": True,
+            "message": f"{settings_type} settings updated successfully"
+        }
+        
+    except Exception as e:
+        print(f"Update settings error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update settings")
+
+# ===== ADMIN CONTENT MANAGEMENT ENDPOINTS =====
+
+@api_router.get("/admin/content/banners")
+async def get_admin_banners():
+    """Get all banners"""
+    try:
+        banners = await db.banners.find().sort("created_at", -1).to_list(100)
+        return {
+            "success": True,
+            "banners": banners
+        }
+    except Exception as e:
+        print(f"Get banners error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get banners")
+
+@api_router.post("/admin/content/banners")
+async def create_admin_banner(banner_data: dict):
+    """Create a new banner"""
+    try:
+        banner = Banner(**banner_data)
+        await db.banners.insert_one(banner.dict())
+        
+        return {
+            "success": True,
+            "banner": banner.dict(),
+            "message": "Banner created successfully"
+        }
+        
+    except Exception as e:
+        print(f"Create banner error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create banner")
+
+@api_router.put("/admin/content/banners/{banner_id}")
+async def update_admin_banner(banner_id: str, updates: dict):
+    """Update banner"""
+    try:
+        result = await db.banners.update_one(
+            {"id": banner_id},
+            {"$set": updates}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Banner not found")
+        
+        return {
+            "success": True,
+            "message": "Banner updated successfully"
+        }
+        
+    except Exception as e:
+        print(f"Update banner error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update banner")
+
+# ===== ADMIN ANALYTICS ENDPOINTS =====
+
+@api_router.get("/admin/analytics/overview")
+async def get_admin_analytics():
+    """Get comprehensive business analytics"""
+    try:
+        # Calculate analytics from existing data
+        
+        # Sales Analytics
+        all_orders = await db.orders.find().to_list(1000)
+        total_revenue = sum(order.get("total_amount", 0) for order in all_orders)
+        total_orders = len(all_orders)
+        average_order_value = total_revenue / total_orders if total_orders > 0 else 0
+        
+        # Customer Analytics  
+        all_customers = await db.users.find().to_list(1000)
+        total_customers = len(all_customers)
+        
+        # Product Analytics
+        all_products = await db.products.find().to_list(1000)
+        total_products = len(all_products)
+        
+        analytics = {
+            "sales": {
+                "total_revenue": total_revenue,
+                "total_orders": total_orders,
+                "average_order_value": average_order_value,
+                "conversion_rate": 3.2  # Mock data for now
+            },
+            "customers": {
+                "total_customers": total_customers,
+                "new_customers_this_month": 12,  # Mock data
+                "customer_retention_rate": 38.2  # Mock data
+            },
+            "products": {
+                "total_products": total_products,
+                "low_stock_products": 0,  # Calculate from inventory
+                "top_selling_category": "Photo Frames"  # Mock data
+            },
+            "performance": {
+                "website_visitors": 2840,  # Mock data - integrate with analytics service
+                "bounce_rate": 32.5,
+                "mobile_visitors_percentage": 68.2
+            }
+        }
+        
+        return {
+            "success": True,
+            "analytics": analytics,
+            "generated_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+    except Exception as e:
+        print(f"Get analytics error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get analytics")
+
 # ===== RAZORPAY PAYMENT INTEGRATION =====
 
 # Initialize Razorpay client
