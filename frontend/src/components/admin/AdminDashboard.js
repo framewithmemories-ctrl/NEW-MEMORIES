@@ -266,6 +266,13 @@ export const AdminDashboard = () => {
                   Email Center
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="content" 
+                  className="w-full justify-start data-[state=active]:bg-rose-50 data-[state=active]:text-rose-600"
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Content
+                </TabsTrigger>
+                <TabsTrigger 
                   value="analytics" 
                   className="w-full justify-start data-[state=active]:bg-rose-50 data-[state=active]:text-rose-600"
                 >
