@@ -10,6 +10,9 @@ import OrderManagement from "./OrderManagement";
 import CustomerManagement from "./CustomerManagement";
 import ProductManagement from "./ProductManagement";
 import EmailManagement from "./EmailManagement";
+import ContentManagement from "./ContentManagement";
+import SettingsManagement from "./SettingsManagement";
+import AnalyticsReports from "./AnalyticsReports";
 import { 
   LayoutDashboard, 
   ShoppingCart, 
