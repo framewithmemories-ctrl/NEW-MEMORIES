@@ -466,20 +466,14 @@ export const AdminDashboard = () => {
               <EmailManagement />
             </TabsContent>
 
+            {/* Content Management */}
+            <TabsContent value="content">
+              <ContentManagement />
+            </TabsContent>
+
             {/* Analytics */}
             <TabsContent value="analytics">
-              <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900">Analytics & Reports</h2>
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="text-center py-12">
-                      <BarChart3 className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Advanced Analytics Coming Soon</h3>
-                      <p className="text-gray-600">Detailed analytics and reporting features will be available in Phase 2</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              <AnalyticsReports />
             </TabsContent>
 
             {/* Settings */}
