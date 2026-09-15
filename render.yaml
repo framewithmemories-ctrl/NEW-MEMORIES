@@ -24,9 +24,8 @@ services:
       - key: FRONTEND_URL
         value: https://memories-web-2026.onrender.com
 
-  - type: web
+  - type: static
     name: memories-web-2026
-    runtime: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: build
