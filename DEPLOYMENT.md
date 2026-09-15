@@ -6,6 +6,7 @@ FastAPI + MongoDB backend for the Memories Photo Frames & Gift Shop.
 ```
 backend/
 ├── server.py            # FastAPI app (all routes, models, auth). App object: `app`
+├── hardened.py          # Production security wrapper used by the Docker entrypoint
 ├── requirements.txt     # Python dependencies (pip freeze)
 ├── .env                 # Your real secrets (NOT committed) — copy from .env.example
 ├── .env.example         # Template of all required/optional env vars
@@ -20,10 +21,11 @@ docker-compose.yml       # backend + MongoDB (one command to run everything)
 |---|---|---|
 | `MONGO_URL` | yes | Mongo connection string (e.g. `mongodb://mongo:27017` in compose, or an Atlas URI) |
 | `DB_NAME` | yes | Database name (e.g. `memories`) |
-| `CORS_ORIGINS` | yes | `*` or your frontend domain |
+| `CORS_ORIGINS` | yes | Comma-separated trusted frontend origins in production; do not use `*` with credentials |
 | `JWT_SECRET` | yes | 64-char random hex. Generate: `openssl rand -hex 32` |
-| `ADMIN_USERNAME` | yes | Admin login username (default `admin`) |
-| `ADMIN_PASSWORD` | yes | Admin login password (seeded on startup) |
+| `ADMIN_USERNAME` | yes | Admin login username |
+| `ADMIN_PASSWORD` | yes | Strong admin password; at least 12 characters in production |
+| `ENVIRONMENT` | recommended | Set to `production` for production deployments; enables strict env checks |
 | `EMERGENT_LLM_KEY` | optional | For AI Gift Finder (Emergent proxy). Blank = AI finder disabled |
 | `GOOGLE_PLACES_API_KEY` | optional | Live Google reviews. Blank = mock fallback |
 | `GOOGLE_PLACE_ID` | optional | Your business Place ID |
@@ -31,15 +33,17 @@ docker-compose.yml       # backend + MongoDB (one command to run everything)
 | `SHOP_WHATSAPP_NUMBER` | optional | WhatsApp number for order notifications (digits + country code) |
 
 > The admin account is auto-seeded into the `admins` collection on startup from
-> `ADMIN_USERNAME` / `ADMIN_PASSWORD` (bcrypt-hashed). Change the password before going live.
+> `ADMIN_USERNAME` / `ADMIN_PASSWORD` (bcrypt-hashed). Never rely on the old fallback password.
 
 ## 3. Run with Docker (recommended)
 ```bash
-cp backend/.env.example backend/.env      # then edit secrets in backend/.env
+cp backend/.env.example backend/.env      # then edit secrets
 docker compose up --build -d
-# Backend: http://localhost:8001    Mongo: localhost:27017
+# Backend: http://localhost:8001    Mongo: internal Docker network only
 docker compose logs -f backend            # watch logs
 ```
+The Docker image now starts `hardened:app`, which applies customer ownership checks,
+admin-only product creation, wallet safeguards, order validation, and production env checks.
 
 ## 4. Run without Docker
 ```bash
@@ -48,8 +52,9 @@ python3.11 -m venv .venv && source .venv/bin/activate
 pip install --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/ -r requirements.txt
 cp .env.example .env                      # edit secrets
 # Make sure MongoDB is running and MONGO_URL points to it
-uvicorn server:app --host 0.0.0.0 --port 8001
+uvicorn hardened:app --host 0.0.0.0 --port 8001
 ```
+Do not start `uvicorn server:app` for production, because that bypasses the hardening wrapper.
 
 ## 5. API base URL
 - All endpoints are prefixed with **`/api`**.
@@ -70,15 +75,18 @@ Admin:     POST /api/admin/login   (returns JWT, role=admin)
 Store:     GET  /api/products | GET /api/reviews | POST /api/reviews
            GET  /api/google-reviews | GET /api/config
 Orders:    POST /api/orders | GET /api/orders/{user_id}
-Wallet:    GET  /api/users/{id}/wallet | POST .../add-money | .../convert-points | .../pay
+Wallet:    GET  /api/users/{id}/wallet | .../convert-points | .../pay
            GET  /api/users/{id}/wallet/transactions
 Photos:    GET/POST /api/users/{id}/photos | DELETE .../{photoId} | PUT .../favorite | .../use
-AI:        POST /api/gift-suggestions   (requires EMERGENT_LLM_KEY)
+AI:        POST /api/gift-suggestions   (requires configured AI key)
 ```
-All `/api/admin/*` (except `/admin/login`) require `Authorization: Bearer <admin JWT>`.
-Wallet/photo routes require the owner's `Authorization: Bearer <user JWT>`.
+**Wallet top-up is intentionally disabled** until a real payment provider verifies each transaction server-side.
+Do not re-enable direct balance mutation from the browser.
 
-## 7. Database schema (MongoDB collections)
+All `/api/admin/*` (except `/admin/login`) require `Authorization: Bearer <admin JWT>`.
+Wallet/photo routes and other private customer resources require the owner's `Authorization: Bearer <user JWT>`.
+
+## 7. Database schema (MongoDB)
 IDs are UUID strings (field `id`), not Mongo `_id`. Datetimes are UTC.
 
 **users**
@@ -99,10 +107,8 @@ sizes[], materials[], colors[], image_url, created_at
 **orders**
 ```
 id, user_id, items: [{ product_id, name, price, quantity, image, category }],
-total_amount (float), delivery_type ("delivery"|"pickup"),
-delivery_address: { name, phone, email, address, instructions },
-status ("pending"|"processing"|"completed"|"cancelled"|"refunded"),
-points_earned (int), created_at
+total_amount (float), delivery_type ("delivery"|"pickup"), delivery_address: { name, phone, email, address, instructions },
+status, points_earned, created_at
 ```
 **reviews**
 ```
@@ -112,8 +118,7 @@ approved (bool), pinned (bool), verified (bool), created_at
 **wallet_transactions**
 ```
 id, user_id, type ("credit"|"debit"|"conversion"), amount (float),
-description, category ("topup"|"purchase"|"rewards"|"admin_adjustment"|...),
-balance_after (float), is_points (bool), credit_earned (float), created_at
+description, category, balance_after (float), is_points (bool), credit_earned (float), created_at
 ```
 **saved_photos**
 ```
@@ -125,8 +130,9 @@ No migrations are required — collections are created on first write and the ad
 
 ## 8. Important notes
 - **`emergentintegrations`** (AI Gift Finder) is not on public PyPI; it installs from the extra index
-  in the Dockerfile and only works with an `EMERGENT_LLM_KEY` via Emergent's proxy. For fully
-  independent AI, replace that call in `server.py` with your own OpenAI/Anthropic/Gemini SDK + key.
-- Set a strong `JWT_SECRET` and `ADMIN_PASSWORD` before production.
+  in the Dockerfile and only works with the configured Emergent integration. For fully independent AI,
+  replace that call in `server.py` with your own supported provider SDK + key.
+- Set a strong `JWT_SECRET`, `ADMIN_PASSWORD`, and explicit `CORS_ORIGINS` before production.
 - For a managed DB (MongoDB Atlas), set `MONGO_URL` to the Atlas SRV URI and remove the `mongo`
   service from docker-compose.
+- The frontend must use the real deployed backend URL in `REACT_APP_BACKEND_URL`; do not ship a preview URL as canonical SEO metadata.
