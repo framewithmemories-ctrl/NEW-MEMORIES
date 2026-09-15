@@ -82,8 +82,6 @@ async def validate_order_request(request: Request):
     if not math.isfinite(client_total) or client_total < 0 or client_total > 100000:
         raise HTTPException(status_code=400, detail="Order total must be between ₹0 and ₹100,000")
 
-    # Verify every cart line against the current catalog. The client may not
-    # invent products, prices, quantities, or a negative line value.
     catalog_total = 0.0
     for item in items:
         product_id = item.get("product_id")
@@ -136,6 +134,9 @@ async def validate_positive_amount(request: Request):
         raise HTTPException(status_code=409, detail="This order cannot be paid")
     if amount > float(order.get("total_amount", 0)) + 0.01:
         raise HTTPException(status_code=400, detail="Wallet payment cannot exceed the order total")
+    existing_txn = await server.db.wallet_transactions.find_one({"user_id": payload["sub"], "order_id": order_id, "type": "debit", "status": "completed"})
+    if existing_txn:
+        raise HTTPException(status_code=409, detail="Wallet payment for this order has already been processed")
 
 
 async def validate_positive_points(request: Request):
