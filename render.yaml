@@ -7,13 +7,15 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn hardened:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /api/health
+    healthCheckPath: /api/
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.11
       - key: ENVIRONMENT
         value: staging
       - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
         sync: false
       - key: JWT_SECRET
         sync: false
@@ -27,7 +29,7 @@ services:
   - type: static
     name: memories-web-2026
     rootDir: frontend
-    buildCommand: npm ci && npm run build
+    buildCommand: npm install && npm run build
     staticPublishPath: build
     envVars:
       - key: REACT_APP_BACKEND_URL
