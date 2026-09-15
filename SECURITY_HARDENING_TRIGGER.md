@@ -1,0 +1,1 @@
+Automated security hardening workflow trigger. This file can remain as an audit marker.
