@@ -57,13 +57,20 @@ async def require_owner_body(request: Request):
 
 
 async def validate_order_request(request: Request):
-    payload = _decode_user(request)
     try:
         body = await request.json()
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid request body")
-    if body.get("user_id") != payload["sub"]:
-        raise HTTPException(status_code=403, detail="Not authorized for this account")
+
+    user_id = body.get("user_id")
+    auth = (request.headers.get("authorization") or "").strip()
+    is_guest = isinstance(user_id, str) and user_id.startswith("guest_") and 12 <= len(user_id) <= 80
+    if auth:
+        payload = _decode_user(request)
+        if user_id != payload["sub"]:
+            raise HTTPException(status_code=403, detail="Not authorized for this account")
+    elif not is_guest:
+        raise HTTPException(status_code=401, detail="Please log in before placing an account order")
 
     items = body.get("items")
     try:
@@ -111,7 +118,7 @@ async def validate_order_request(request: Request):
 
 
 async def validate_positive_amount(request: Request):
-    _decode_user(request)
+    payload = _decode_user(request)
     try:
         amount = float(request.query_params.get("amount", "nan"))
     except ValueError:
@@ -122,7 +129,6 @@ async def validate_positive_amount(request: Request):
     order_id = request.query_params.get("order_id")
     if not order_id or len(order_id) > 100:
         raise HTTPException(status_code=400, detail="Invalid order id")
-    payload = _decode_user(request)
     order = await server.db.orders.find_one({"id": order_id, "user_id": payload["sub"]})
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
