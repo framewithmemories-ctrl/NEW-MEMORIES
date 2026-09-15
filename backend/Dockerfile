@@ -22,5 +22,5 @@ COPY . .
 
 EXPOSE 8001
 
-# FastAPI app object is `app` inside server.py
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8001"]
+# Hardened entrypoint applies ownership, admin, wallet, and production-env controls.
+CMD ["uvicorn", "hardened:app", "--host", "0.0.0.0", "--port", "8001"]
