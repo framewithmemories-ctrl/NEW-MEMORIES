@@ -6,9 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - mongo_data:/data/db
-    # Expose only if you need external DB access; otherwise keep internal
-    ports:
-      - "27017:27017"
+    # MongoDB stays on the internal Docker network; do not expose it publicly.
 
   backend:
     build: ./backend
@@ -16,7 +14,6 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      # Override so the backend talks to the mongo service (not localhost)
       - MONGO_URL=mongodb://mongo:27017
       - DB_NAME=memories
     depends_on:
