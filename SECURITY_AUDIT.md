@@ -3,88 +3,62 @@
 Date: 2026-09-15
 Branch: `NEW-MEMORIES-2026`
 
-## Critical findings
+## Completed hardening
 
-### 1. Customer order authorization
-`GET /api/orders/{user_id}` currently accepts an arbitrary user ID without JWT ownership validation.
+Production now uses `backend/hardened.py` through the Docker entrypoint. The wrapper applies controls without rewriting the large legacy `server.py` in-place.
 
-Required fix:
-- Require the authenticated user.
-- Return 403 when the token subject does not match `{user_id}`.
-- Do not expose another customer's orders.
+Completed:
+- Customer `GET /api/orders/{user_id}` ownership enforcement.
+- Authenticated `POST /api/orders` ownership and basic total/item/delivery validation.
+- Customer `GET/PUT /api/users/{user_id}` ownership enforcement.
+- Customer design creation/list ownership enforcement.
+- Public `POST /api/products` is no longer trusted; admin authentication is required.
+- Wallet payment and points operations reject invalid/negative values at the hardened entrypoint.
+- Direct browser wallet top-up is disabled until a real payment provider verifies the transaction server-side. This closes the critical free-money vulnerability in the legacy `add-money` endpoint.
+- Production refuses the legacy default admin password and requires an explicit strong `ADMIN_PASSWORD`.
+- Production requires explicit `CORS_ORIGINS` and rejects wildcard CORS when `ENVIRONMENT=production`.
+- MongoDB is no longer exposed on host port 27017 by the supplied docker-compose configuration.
+- Docker and non-Docker deployment instructions now use `hardened:app`.
 
-### 2. Order creation trusts client `user_id`
-`POST /api/orders` currently accepts `user_id` from the request body and awards points to that ID.
+## Remaining launch blockers
 
-Required fix:
-- Authenticate the request with the user JWT.
-- Derive the effective user ID from the JWT subject.
-- Ignore/reject a mismatching body `user_id`.
-- Validate the authenticated user exists.
+### 1. Real payment top-up / online payments
+The current application has no verified online payment gateway. Wallet top-up is intentionally disabled.
 
-### 3. Wallet amounts need server-side validation
-Wallet endpoints accept numeric amounts directly from the request. Negative values can invert the intended operation.
+For a production e-commerce launch, choose one:
+- Launch with COD only and do not expose wallet top-up, or
+- Implement Razorpay/another gateway with server-side signature verification, webhooks, payment states, idempotency, and refunds.
 
-Affected operations:
-- wallet add-money
-- wallet convert-points
-- wallet pay
+Do not re-enable direct wallet balance mutation from the browser.
 
-Required fix:
-- Require finite values.
-- Require `amount > 0` for money operations.
-- Require `points > 0` and `points <= current_points` for conversion.
-- Use atomic MongoDB conditional updates for wallet debits to prevent race-condition double spending.
+### 2. Server-side catalog price validation
+`POST /api/orders` still receives the final amount and item prices from the client. Basic bounds are enforced, but a full production implementation must load the referenced products/options from MongoDB and calculate the payable total on the server.
 
-## High-priority checkout consistency
+### 3. Final production environment values
+Before launch, configure:
+- `MONGO_URL`
+- `DB_NAME`
+- `JWT_SECRET`
+- `ADMIN_USERNAME`
+- strong `ADMIN_PASSWORD` (12+ chars)
+- `ENVIRONMENT=production`
+- exact `CORS_ORIGINS`
+- frontend `REACT_APP_BACKEND_URL`
+- AI/Google/WhatsApp variables if those features are required
 
-The frontend creates an order and then calls wallet payment. If wallet payment fails, an order can remain created without the wallet deduction.
+## Production checklist
 
-Required production flow:
-1. Validate authenticated customer.
-2. Validate cart/product data server-side.
-3. Validate final payable amount server-side.
-4. Reserve/deduct wallet atomically when wallet payment is selected.
-5. Create/mark the order as paid only after successful payment.
-6. On failure, do not leave a falsely successful order.
-7. Make wallet payment idempotent using the order ID.
-
-## Additional authorization review
-
-The following customer-owned resources already use `verify_user_access` and should remain protected:
-- saved photos
-- wallet balance
-- wallet transactions
-- wallet payment
-
-The generic user endpoints should also be reviewed before production:
-- `GET /api/users/{user_id}`
-- `PUT /api/users/{user_id}`
-- `GET/POST /api/designs/{user_id}`
-
-These currently accept a user ID directly and should be restricted to the owner where they expose or mutate private customer data.
-
-## Payment gateway
-
-No Razorpay/Stripe integration was found in the audited checkout/backend flow. Current checkout supports COD and internal wallet payment.
-
-Before launch, explicitly decide whether the first production release will be:
-- COD + wallet only, or
-- COD + wallet + an online payment gateway (recommended for a full e-commerce flow).
-
-Do not advertise an online payment option until server-side payment verification is implemented.
-
-## Production security checklist
-
-- [ ] Strong `JWT_SECRET`
-- [ ] Strong `ADMIN_PASSWORD`
-- [ ] Production `CORS_ORIGINS` restricted to the real frontend domain
-- [ ] MongoDB Atlas/private production database configured
+- [x] Customer resource ownership hardening
+- [x] Order authentication and basic validation
+- [x] Wallet negative/invalid-value protection
+- [x] Wallet top-up abuse closed
+- [x] MongoDB host exposure removed from compose
+- [x] Production admin-password guard
+- [x] Production CORS guard
+- [x] Docker entrypoint hardened
+- [ ] Server-side product/price calculation
+- [ ] Verified online payment gateway, if online payment is required
 - [ ] HTTPS for frontend and API
-- [ ] No secrets committed to Git
-- [ ] Server-side order price validation
-- [ ] Server-side ownership validation for all private resources
-- [ ] Atomic wallet operations
-- [ ] Idempotent payment/order processing
-- [ ] Production error logging without leaking secrets or customer data
-- [ ] Final mobile and customer purchase-flow regression
+- [ ] Secrets configured only in deployment environment
+- [ ] Final mobile/customer purchase-flow regression
+- [ ] Production smoke test against the deployed API/frontend
