@@ -1,0 +1,8 @@
+{
+  "name": "Memories - Photo Frames & Customized Gifts",
+  "description": "Memories - Premium photo frames & customized gifts in Coimbatore. Sublimation printing, custom mugs, t-shirts, corporate gifts, AI gift finder, wallet rewards, and admin panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
